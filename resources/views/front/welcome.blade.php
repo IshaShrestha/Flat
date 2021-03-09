@@ -6,11 +6,11 @@
         <div id="nivo-slider">
             <div class="nivo-slider">
                 <!-- Slide #1 image -->
-                <img src="img/slides/nivo/bg-1.jpg" alt="" title="#caption-1" />
+                <img src="{{asset('images/bg-1.jpg')}}" alt="" title="#caption-1" />
                 <!-- Slide #2 image -->
-                <img src="img/slides/nivo/bg-2.jpg" alt="" title="#caption-2" />
+                <img src="{{asset('images/bg-2.jpg')}}" alt="" title="#caption-2" />
                 <!-- Slide #3 image -->
-                <img src="img/slides/nivo/bg-3.jpg" alt="" title="#caption-3" />
+                <img src="{{asset('images/bg-3.jpg')}}" alt="" title="#caption-3" />
             </div>
             <div class="container">
                 <div class="row">
@@ -142,7 +142,7 @@
             <!-- Portfolio Projects -->
             <div class="row">
                 <div class="span12">
-                    <h4 class="heading">Some of recent <strong>works</strong></h4>
+                    <h4 class="heading">Featured <strong>Blogss</strong></h4>
                     <div class="row">
                         <section id="projects">
                             <ul id="thumbs" class="portfolio">
@@ -240,81 +240,6 @@
                 </div>
             </div>
             <!-- End Portfolio Projects -->
-            <!-- divider -->
-            <div class="row">
-                <div class="span12">
-                    <div class="solidline">
-                    </div>
-                </div>
-            </div>
-            <!-- end divider -->
-            <div class="row">
-                <div class="span12">
-                    <h4>Very satisfied <strong>clients</strong></h4>
-                    <ul id="mycarousel" class="jcarousel-skin-tango recent-jcarousel clients">
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client1.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client2.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client3.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client4.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client5.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client6.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client1.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client2.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client3.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client4.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client5.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/dummies/clients/client6.png" class="client-logo" alt="" />
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
         </div>
     </section>
     <section id="bottom">

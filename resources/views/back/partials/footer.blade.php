@@ -1,6 +1,8 @@
+
 </div>
 </div>
 <!--/.container-->
+</div>
 </div>
 <!--/.wrapper-->
 <div class="footer">
@@ -13,3 +15,4 @@
 @yield('script')
 
 </body>
+</html>

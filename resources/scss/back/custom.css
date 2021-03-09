@@ -59,3 +59,14 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.first_box{
+    background-color: rgb(213, 218, 223);
+    color: white;
+
+}
+
+.second_box{
+    background-color: rgb(213, 218, 233);
+    color: white;
+}

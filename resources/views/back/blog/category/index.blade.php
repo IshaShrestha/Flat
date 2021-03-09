@@ -17,6 +17,24 @@
             </tr>
             </thead>
             <tbody>
+            @foreach($categories as $category)
+                <tr>
+                    <th scope="row">{{$loop->iteration}}</th>
+                    <td>{{$category->name}}</td>
+                    <td>{{substr($category->description,0,30)}}</td>
+                    <td>
+                        <a href="{{route('category.edit',$category->slug)}}" class="btn btn-primary">Edit</a>
+                    </td>
+                    <td>
+                        <form action="{{ route('category.delete', $category->slug)}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+
+                    </td>
+                </tr>
+            @endforeach
 
             </tbody>
         </table>

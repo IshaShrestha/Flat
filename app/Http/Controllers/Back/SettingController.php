@@ -11,7 +11,14 @@ use Illuminate\Support\Str;
 class SettingController extends Controller
 {
     public function create(){
-        return view('back.setting.create');
+        $setting = Setting::first();
+        if(!$setting){
+            Setting::create([
+
+
+            ]);
+        }
+        return view('back.setting.create',compact('setting'));
     }
 
     public function store(AddSettingRequest $request){
@@ -26,7 +33,10 @@ class SettingController extends Controller
             $path=null;
         }
 
-        Setting::create([
+        $setting = Setting::first();
+
+
+        $setting->update([
             'name'=> $request->name,
             'description'=>$request->description,
             'meta_title'=> $request->meta_title,

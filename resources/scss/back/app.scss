@@ -1,6 +1,7 @@
-@import"~bootstrap/dist/css/bootstrap.min.css";
+$fa-font-path : '/';
+@import"./bootstrap.min.css";
 @import "./boootstrap-responsive.min.css";
 @import "~@fortawesome/fontawesome-free/css/all.css";
-@import "./custom.css";
 @import "./theme.css";
+@import "./custom.css";
 

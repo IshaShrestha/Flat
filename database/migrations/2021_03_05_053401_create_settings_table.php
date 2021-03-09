@@ -15,15 +15,15 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('description');
-            $table->string('meta_title');
-            $table->string('meta_description');
-            $table->string('primary_email');
-            $table->string('secondary_email');
-            $table->string('haunting_line');
-            $table->string('contact');
-            $table->string('address');
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('primary_email')->nullable();
+            $table->string('secondary_email')->nullable();
+            $table->string('haunting_line')->nullable();
+            $table->string('contact')->nullable();
+            $table->string('address')->nullable();
             $table->string('image')->nullable();
             $table->unsignedBigInteger('user_id')->nullable()->index('settings_user_id_foreign');
             $table->timestamps();

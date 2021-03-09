@@ -18,7 +18,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="inputDescription">Description</label>
-                    <input type="text" value="{{old('description')}}" name="description" class="form-control" id="inputDescription" placeholder="Describe">
+                    <input type="text" value="{{old('description',$setting->description)}}" name="description" class="form-control" id="inputDescription" placeholder="Describe">
                     @error('description')
                     <div class="text-danger">
                         {{ $message }}
@@ -99,6 +99,11 @@
                 <div class="form-group col-md-6">
                     <label for="inputLogo">Logo</label>
                     <input type="file" name="image" class="form-control" id="inputContact" placeholder="">
+                    @if($setting->image)
+                        <img src="{{ $setting->image }}" alt="">
+                    @else
+                    <div class="text-danger">Image not found</div>
+                    @endif
                 </div>
 
             </div>

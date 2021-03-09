@@ -4490,13 +4490,933 @@ __webpack_require__(/*! @fortawesome/fontawesome-free/js/all */ "./node_modules/
 
 __webpack_require__(/*! ./jquery-ui-1.10.1.custom.min */ "./resources/js/back/jquery-ui-1.10.1.custom.min.js");
 
-__webpack_require__(/*! jquery.flot/jquery.flot */ "./node_modules/jquery.flot/jquery.flot.js");
+__webpack_require__(/*! ./jquery.float */ "./resources/js/back/jquery.float.js"); // require('./jquery.flot.resize');
 
-__webpack_require__(/*! ./jquery.flot.resize */ "./resources/js/back/jquery.flot.resize.js");
 
 __webpack_require__(/*! datatables.net-dt */ "./node_modules/datatables.net-dt/js/dataTables.dataTables.js");
 
 __webpack_require__(/*! ./common */ "./resources/js/back/common.js");
+
+/***/ }),
+
+/***/ "./resources/js/back/bootstrap-main.js":
+/*!*********************************************!*\
+  !*** ./resources/js/back/bootstrap-main.js ***!
+  \*********************************************/
+/***/ (() => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/**
+ * Bootstrap.js by @fat & @mdo
+ * plugins: bootstrap-transition.js, bootstrap-modal.js, bootstrap-dropdown.js, bootstrap-scrollspy.js, bootstrap-tab.js, bootstrap-tooltip.js, bootstrap-popover.js, bootstrap-affix.js, bootstrap-alert.js, bootstrap-button.js, bootstrap-collapse.js, bootstrap-carousel.js, bootstrap-typeahead.js
+ * Copyright 2012 Twitter, Inc.
+ * http://www.apache.org/licenses/LICENSE-2.0.txt
+ */
+!function (a) {
+  a(function () {
+    a.support.transition = function () {
+      var a = function () {
+        var a = document.createElement("bootstrap"),
+            b = {
+          WebkitTransition: "webkitTransitionEnd",
+          MozTransition: "transitionend",
+          OTransition: "oTransitionEnd otransitionend",
+          transition: "transitionend"
+        },
+            c;
+
+        for (c in b) {
+          if (a.style[c] !== undefined) return b[c];
+        }
+      }();
+
+      return a && {
+        end: a
+      };
+    }();
+  });
+}(window.jQuery), !function (a) {
+  var b = function b(_b, c) {
+    this.options = c, this.$element = a(_b).delegate('[data-dismiss="modal"]', "click.dismiss.modal", a.proxy(this.hide, this)), this.options.remote && this.$element.find(".modal-body").load(this.options.remote);
+  };
+
+  b.prototype = {
+    constructor: b,
+    toggle: function toggle() {
+      return this[this.isShown ? "hide" : "show"]();
+    },
+    show: function show() {
+      var b = this,
+          c = a.Event("show");
+      this.$element.trigger(c);
+      if (this.isShown || c.isDefaultPrevented()) return;
+      this.isShown = !0, this.escape(), this.backdrop(function () {
+        var c = a.support.transition && b.$element.hasClass("fade");
+        b.$element.parent().length || b.$element.appendTo(document.body), b.$element.show(), c && b.$element[0].offsetWidth, b.$element.addClass("in").attr("aria-hidden", !1), b.enforceFocus(), c ? b.$element.one(a.support.transition.end, function () {
+          b.$element.focus().trigger("shown");
+        }) : b.$element.focus().trigger("shown");
+      });
+    },
+    hide: function hide(b) {
+      b && b.preventDefault();
+      var c = this;
+      b = a.Event("hide"), this.$element.trigger(b);
+      if (!this.isShown || b.isDefaultPrevented()) return;
+      this.isShown = !1, this.escape(), a(document).off("focusin.modal"), this.$element.removeClass("in").attr("aria-hidden", !0), a.support.transition && this.$element.hasClass("fade") ? this.hideWithTransition() : this.hideModal();
+    },
+    enforceFocus: function enforceFocus() {
+      var b = this;
+      a(document).on("focusin.modal", function (a) {
+        b.$element[0] !== a.target && !b.$element.has(a.target).length && b.$element.focus();
+      });
+    },
+    escape: function escape() {
+      var a = this;
+      this.isShown && this.options.keyboard ? this.$element.on("keyup.dismiss.modal", function (b) {
+        b.which == 27 && a.hide();
+      }) : this.isShown || this.$element.off("keyup.dismiss.modal");
+    },
+    hideWithTransition: function hideWithTransition() {
+      var b = this,
+          c = setTimeout(function () {
+        b.$element.off(a.support.transition.end), b.hideModal();
+      }, 500);
+      this.$element.one(a.support.transition.end, function () {
+        clearTimeout(c), b.hideModal();
+      });
+    },
+    hideModal: function hideModal(a) {
+      this.$element.hide().trigger("hidden"), this.backdrop();
+    },
+    removeBackdrop: function removeBackdrop() {
+      this.$backdrop.remove(), this.$backdrop = null;
+    },
+    backdrop: function backdrop(b) {
+      var c = this,
+          d = this.$element.hasClass("fade") ? "fade" : "";
+
+      if (this.isShown && this.options.backdrop) {
+        var e = a.support.transition && d;
+        this.$backdrop = a('<div class="modal-backdrop ' + d + '" />').appendTo(document.body), this.$backdrop.click(this.options.backdrop == "static" ? a.proxy(this.$element[0].focus, this.$element[0]) : a.proxy(this.hide, this)), e && this.$backdrop[0].offsetWidth, this.$backdrop.addClass("in"), e ? this.$backdrop.one(a.support.transition.end, b) : b();
+      } else !this.isShown && this.$backdrop ? (this.$backdrop.removeClass("in"), a.support.transition && this.$element.hasClass("fade") ? this.$backdrop.one(a.support.transition.end, a.proxy(this.removeBackdrop, this)) : this.removeBackdrop()) : b && b();
+    }
+  };
+  var c = a.fn.modal;
+  a.fn.modal = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("modal"),
+          f = a.extend({}, a.fn.modal.defaults, d.data(), _typeof(c) == "object" && c);
+      e || d.data("modal", e = new b(this, f)), typeof c == "string" ? e[c]() : f.show && e.show();
+    });
+  }, a.fn.modal.defaults = {
+    backdrop: !0,
+    keyboard: !0,
+    show: !0
+  }, a.fn.modal.Constructor = b, a.fn.modal.noConflict = function () {
+    return a.fn.modal = c, this;
+  }, a(document).on("click.modal.data-api", '[data-toggle="modal"]', function (b) {
+    var c = a(this),
+        d = c.attr("href"),
+        e = a(c.attr("data-target") || d && d.replace(/.*(?=#[^\s]+$)/, "")),
+        f = e.data("modal") ? "toggle" : a.extend({
+      remote: !/#/.test(d) && d
+    }, e.data(), c.data());
+    b.preventDefault(), e.modal(f).one("hide", function () {
+      c.focus();
+    });
+  });
+}(window.jQuery), !function (a) {
+  function d() {
+    a(b).each(function () {
+      e(a(this)).removeClass("open");
+    });
+  }
+
+  function e(b) {
+    var c = b.attr("data-target"),
+        d;
+    return c || (c = b.attr("href"), c = c && /#/.test(c) && c.replace(/.*(?=#[^\s]*$)/, "")), d = a(c), d.length || (d = b.parent()), d;
+  }
+
+  var b = "[data-toggle=dropdown]",
+      c = function c(b) {
+    var c = a(b).on("click.dropdown.data-api", this.toggle);
+    a("html").on("click.dropdown.data-api", function () {
+      c.parent().removeClass("open");
+    });
+  };
+
+  c.prototype = {
+    constructor: c,
+    toggle: function toggle(b) {
+      var c = a(this),
+          f,
+          g;
+      if (c.is(".disabled, :disabled")) return;
+      return f = e(c), g = f.hasClass("open"), d(), g || f.toggleClass("open"), c.focus(), !1;
+    },
+    keydown: function keydown(b) {
+      var c, d, f, g, h, i;
+      if (!/(38|40|27)/.test(b.keyCode)) return;
+      c = a(this), b.preventDefault(), b.stopPropagation();
+      if (c.is(".disabled, :disabled")) return;
+      g = e(c), h = g.hasClass("open");
+      if (!h || h && b.keyCode == 27) return c.click();
+      d = a("[role=menu] li:not(.divider):visible a", g);
+      if (!d.length) return;
+      i = d.index(d.filter(":focus")), b.keyCode == 38 && i > 0 && i--, b.keyCode == 40 && i < d.length - 1 && i++, ~i || (i = 0), d.eq(i).focus();
+    }
+  };
+  var f = a.fn.dropdown;
+  a.fn.dropdown = function (b) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("dropdown");
+      e || d.data("dropdown", e = new c(this)), typeof b == "string" && e[b].call(d);
+    });
+  }, a.fn.dropdown.Constructor = c, a.fn.dropdown.noConflict = function () {
+    return a.fn.dropdown = f, this;
+  }, a(document).on("click.dropdown.data-api touchstart.dropdown.data-api", d).on("click.dropdown touchstart.dropdown.data-api", ".dropdown form", function (a) {
+    a.stopPropagation();
+  }).on("touchstart.dropdown.data-api", ".dropdown-menu", function (a) {
+    a.stopPropagation();
+  }).on("click.dropdown.data-api touchstart.dropdown.data-api", b, c.prototype.toggle).on("keydown.dropdown.data-api touchstart.dropdown.data-api", b + ", [role=menu]", c.prototype.keydown);
+}(window.jQuery), !function (a) {
+  function b(b, c) {
+    var d = a.proxy(this.process, this),
+        e = a(b).is("body") ? a(window) : a(b),
+        f;
+    this.options = a.extend({}, a.fn.scrollspy.defaults, c), this.$scrollElement = e.on("scroll.scroll-spy.data-api", d), this.selector = (this.options.target || (f = a(b).attr("href")) && f.replace(/.*(?=#[^\s]+$)/, "") || "") + " .nav li > a", this.$body = a("body"), this.refresh(), this.process();
+  }
+
+  b.prototype = {
+    constructor: b,
+    refresh: function refresh() {
+      var b = this,
+          c;
+      this.offsets = a([]), this.targets = a([]), c = this.$body.find(this.selector).map(function () {
+        var c = a(this),
+            d = c.data("target") || c.attr("href"),
+            e = /^#\w/.test(d) && a(d);
+        return e && e.length && [[e.position().top + b.$scrollElement.scrollTop(), d]] || null;
+      }).sort(function (a, b) {
+        return a[0] - b[0];
+      }).each(function () {
+        b.offsets.push(this[0]), b.targets.push(this[1]);
+      });
+    },
+    process: function process() {
+      var a = this.$scrollElement.scrollTop() + this.options.offset,
+          b = this.$scrollElement[0].scrollHeight || this.$body[0].scrollHeight,
+          c = b - this.$scrollElement.height(),
+          d = this.offsets,
+          e = this.targets,
+          f = this.activeTarget,
+          g;
+      if (a >= c) return f != (g = e.last()[0]) && this.activate(g);
+
+      for (g = d.length; g--;) {
+        f != e[g] && a >= d[g] && (!d[g + 1] || a <= d[g + 1]) && this.activate(e[g]);
+      }
+    },
+    activate: function activate(b) {
+      var c, d;
+      this.activeTarget = b, a(this.selector).parent(".active").removeClass("active"), d = this.selector + '[data-target="' + b + '"],' + this.selector + '[href="' + b + '"]', c = a(d).parent("li").addClass("active"), c.parent(".dropdown-menu").length && (c = c.closest("li.dropdown").addClass("active")), c.trigger("activate");
+    }
+  };
+  var c = a.fn.scrollspy;
+  a.fn.scrollspy = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("scrollspy"),
+          f = _typeof(c) == "object" && c;
+      e || d.data("scrollspy", e = new b(this, f)), typeof c == "string" && e[c]();
+    });
+  }, a.fn.scrollspy.Constructor = b, a.fn.scrollspy.defaults = {
+    offset: 10
+  }, a.fn.scrollspy.noConflict = function () {
+    return a.fn.scrollspy = c, this;
+  }, a(window).on("load", function () {
+    a('[data-spy="scroll"]').each(function () {
+      var b = a(this);
+      b.scrollspy(b.data());
+    });
+  });
+}(window.jQuery), !function (a) {
+  var b = function b(_b2) {
+    this.element = a(_b2);
+  };
+
+  b.prototype = {
+    constructor: b,
+    show: function show() {
+      var b = this.element,
+          c = b.closest("ul:not(.dropdown-menu)"),
+          d = b.attr("data-target"),
+          e,
+          f,
+          g;
+      d || (d = b.attr("href"), d = d && d.replace(/.*(?=#[^\s]*$)/, ""));
+      if (b.parent("li").hasClass("active")) return;
+      e = c.find(".active:last a")[0], g = a.Event("show", {
+        relatedTarget: e
+      }), b.trigger(g);
+      if (g.isDefaultPrevented()) return;
+      f = a(d), this.activate(b.parent("li"), c), this.activate(f, f.parent(), function () {
+        b.trigger({
+          type: "shown",
+          relatedTarget: e
+        });
+      });
+    },
+    activate: function activate(b, c, d) {
+      function g() {
+        e.removeClass("active").find("> .dropdown-menu > .active").removeClass("active"), b.addClass("active"), f ? (b[0].offsetWidth, b.addClass("in")) : b.removeClass("fade"), b.parent(".dropdown-menu") && b.closest("li.dropdown").addClass("active"), d && d();
+      }
+
+      var e = c.find("> .active"),
+          f = d && a.support.transition && e.hasClass("fade");
+      f ? e.one(a.support.transition.end, g) : g(), e.removeClass("in");
+    }
+  };
+  var c = a.fn.tab;
+  a.fn.tab = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("tab");
+      e || d.data("tab", e = new b(this)), typeof c == "string" && e[c]();
+    });
+  }, a.fn.tab.Constructor = b, a.fn.tab.noConflict = function () {
+    return a.fn.tab = c, this;
+  }, a(document).on("click.tab.data-api", '[data-toggle="tab"], [data-toggle="pill"]', function (b) {
+    b.preventDefault(), a(this).tab("show");
+  });
+}(window.jQuery), !function (a) {
+  var b = function b(a, _b3) {
+    this.init("tooltip", a, _b3);
+  };
+
+  b.prototype = {
+    constructor: b,
+    init: function init(b, c, d) {
+      var e, f;
+      this.type = b, this.$element = a(c), this.options = this.getOptions(d), this.enabled = !0, this.options.trigger == "click" ? this.$element.on("click." + this.type, this.options.selector, a.proxy(this.toggle, this)) : this.options.trigger != "manual" && (e = this.options.trigger == "hover" ? "mouseenter" : "focus", f = this.options.trigger == "hover" ? "mouseleave" : "blur", this.$element.on(e + "." + this.type, this.options.selector, a.proxy(this.enter, this)), this.$element.on(f + "." + this.type, this.options.selector, a.proxy(this.leave, this))), this.options.selector ? this._options = a.extend({}, this.options, {
+        trigger: "manual",
+        selector: ""
+      }) : this.fixTitle();
+    },
+    getOptions: function getOptions(b) {
+      return b = a.extend({}, a.fn[this.type].defaults, b, this.$element.data()), b.delay && typeof b.delay == "number" && (b.delay = {
+        show: b.delay,
+        hide: b.delay
+      }), b;
+    },
+    enter: function enter(b) {
+      var c = a(b.currentTarget)[this.type](this._options).data(this.type);
+      if (!c.options.delay || !c.options.delay.show) return c.show();
+      clearTimeout(this.timeout), c.hoverState = "in", this.timeout = setTimeout(function () {
+        c.hoverState == "in" && c.show();
+      }, c.options.delay.show);
+    },
+    leave: function leave(b) {
+      var c = a(b.currentTarget)[this.type](this._options).data(this.type);
+      this.timeout && clearTimeout(this.timeout);
+      if (!c.options.delay || !c.options.delay.hide) return c.hide();
+      c.hoverState = "out", this.timeout = setTimeout(function () {
+        c.hoverState == "out" && c.hide();
+      }, c.options.delay.hide);
+    },
+    show: function show() {
+      var a, b, c, d, e, f, g;
+
+      if (this.hasContent() && this.enabled) {
+        a = this.tip(), this.setContent(), this.options.animation && a.addClass("fade"), f = typeof this.options.placement == "function" ? this.options.placement.call(this, a[0], this.$element[0]) : this.options.placement, b = /in/.test(f), a.detach().css({
+          top: 0,
+          left: 0,
+          display: "block"
+        }).insertAfter(this.$element), c = this.getPosition(b), d = a[0].offsetWidth, e = a[0].offsetHeight;
+
+        switch (b ? f.split(" ")[1] : f) {
+          case "bottom":
+            g = {
+              top: c.top + c.height,
+              left: c.left + c.width / 2 - d / 2
+            };
+            break;
+
+          case "top":
+            g = {
+              top: c.top - e,
+              left: c.left + c.width / 2 - d / 2
+            };
+            break;
+
+          case "left":
+            g = {
+              top: c.top + c.height / 2 - e / 2,
+              left: c.left - d
+            };
+            break;
+
+          case "right":
+            g = {
+              top: c.top + c.height / 2 - e / 2,
+              left: c.left + c.width
+            };
+        }
+
+        a.offset(g).addClass(f).addClass("in");
+      }
+    },
+    setContent: function setContent() {
+      var a = this.tip(),
+          b = this.getTitle();
+      a.find(".tooltip-inner")[this.options.html ? "html" : "text"](b), a.removeClass("fade in top bottom left right");
+    },
+    hide: function hide() {
+      function d() {
+        var b = setTimeout(function () {
+          c.off(a.support.transition.end).detach();
+        }, 500);
+        c.one(a.support.transition.end, function () {
+          clearTimeout(b), c.detach();
+        });
+      }
+
+      var b = this,
+          c = this.tip();
+      return c.removeClass("in"), a.support.transition && this.$tip.hasClass("fade") ? d() : c.detach(), this;
+    },
+    fixTitle: function fixTitle() {
+      var a = this.$element;
+      (a.attr("title") || typeof a.attr("data-original-title") != "string") && a.attr("data-original-title", a.attr("title") || "").removeAttr("title");
+    },
+    hasContent: function hasContent() {
+      return this.getTitle();
+    },
+    getPosition: function getPosition(b) {
+      return a.extend({}, b ? {
+        top: 0,
+        left: 0
+      } : this.$element.offset(), {
+        width: this.$element[0].offsetWidth,
+        height: this.$element[0].offsetHeight
+      });
+    },
+    getTitle: function getTitle() {
+      var a,
+          b = this.$element,
+          c = this.options;
+      return a = b.attr("data-original-title") || (typeof c.title == "function" ? c.title.call(b[0]) : c.title), a;
+    },
+    tip: function tip() {
+      return this.$tip = this.$tip || a(this.options.template);
+    },
+    validate: function validate() {
+      this.$element[0].parentNode || (this.hide(), this.$element = null, this.options = null);
+    },
+    enable: function enable() {
+      this.enabled = !0;
+    },
+    disable: function disable() {
+      this.enabled = !1;
+    },
+    toggleEnabled: function toggleEnabled() {
+      this.enabled = !this.enabled;
+    },
+    toggle: function toggle(b) {
+      var c = a(b.currentTarget)[this.type](this._options).data(this.type);
+      c[c.tip().hasClass("in") ? "hide" : "show"]();
+    },
+    destroy: function destroy() {
+      this.hide().$element.off("." + this.type).removeData(this.type);
+    }
+  };
+  var c = a.fn.tooltip;
+  a.fn.tooltip = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("tooltip"),
+          f = _typeof(c) == "object" && c;
+      e || d.data("tooltip", e = new b(this, f)), typeof c == "string" && e[c]();
+    });
+  }, a.fn.tooltip.Constructor = b, a.fn.tooltip.defaults = {
+    animation: !0,
+    placement: "top",
+    selector: !1,
+    template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+    trigger: "hover",
+    title: "",
+    delay: 0,
+    html: !1
+  }, a.fn.tooltip.noConflict = function () {
+    return a.fn.tooltip = c, this;
+  };
+}(window.jQuery), !function (a) {
+  var b = function b(a, _b4) {
+    this.init("popover", a, _b4);
+  };
+
+  b.prototype = a.extend({}, a.fn.tooltip.Constructor.prototype, {
+    constructor: b,
+    setContent: function setContent() {
+      var a = this.tip(),
+          b = this.getTitle(),
+          c = this.getContent();
+      a.find(".popover-title")[this.options.html ? "html" : "text"](b), a.find(".popover-content")[this.options.html ? "html" : "text"](c), a.removeClass("fade top bottom left right in");
+    },
+    hasContent: function hasContent() {
+      return this.getTitle() || this.getContent();
+    },
+    getContent: function getContent() {
+      var a,
+          b = this.$element,
+          c = this.options;
+      return a = b.attr("data-content") || (typeof c.content == "function" ? c.content.call(b[0]) : c.content), a;
+    },
+    tip: function tip() {
+      return this.$tip || (this.$tip = a(this.options.template)), this.$tip;
+    },
+    destroy: function destroy() {
+      this.hide().$element.off("." + this.type).removeData(this.type);
+    }
+  });
+  var c = a.fn.popover;
+  a.fn.popover = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("popover"),
+          f = _typeof(c) == "object" && c;
+      e || d.data("popover", e = new b(this, f)), typeof c == "string" && e[c]();
+    });
+  }, a.fn.popover.Constructor = b, a.fn.popover.defaults = a.extend({}, a.fn.tooltip.defaults, {
+    placement: "right",
+    trigger: "click",
+    content: "",
+    template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"></div></div></div>'
+  }), a.fn.popover.noConflict = function () {
+    return a.fn.popover = c, this;
+  };
+}(window.jQuery), !function (a) {
+  var b = function b(_b5, c) {
+    this.options = a.extend({}, a.fn.affix.defaults, c), this.$window = a(window).on("scroll.affix.data-api", a.proxy(this.checkPosition, this)).on("click.affix.data-api", a.proxy(function () {
+      setTimeout(a.proxy(this.checkPosition, this), 1);
+    }, this)), this.$element = a(_b5), this.checkPosition();
+  };
+
+  b.prototype.checkPosition = function () {
+    if (!this.$element.is(":visible")) return;
+    var b = a(document).height(),
+        c = this.$window.scrollTop(),
+        d = this.$element.offset(),
+        e = this.options.offset,
+        f = e.bottom,
+        g = e.top,
+        h = "affix affix-top affix-bottom",
+        i;
+    _typeof(e) != "object" && (f = g = e), typeof g == "function" && (g = e.top()), typeof f == "function" && (f = e.bottom()), i = this.unpin != null && c + this.unpin <= d.top ? !1 : f != null && d.top + this.$element.height() >= b - f ? "bottom" : g != null && c <= g ? "top" : !1;
+    if (this.affixed === i) return;
+    this.affixed = i, this.unpin = i == "bottom" ? d.top - c : null, this.$element.removeClass(h).addClass("affix" + (i ? "-" + i : ""));
+  };
+
+  var c = a.fn.affix;
+  a.fn.affix = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("affix"),
+          f = _typeof(c) == "object" && c;
+      e || d.data("affix", e = new b(this, f)), typeof c == "string" && e[c]();
+    });
+  }, a.fn.affix.Constructor = b, a.fn.affix.defaults = {
+    offset: 0
+  }, a.fn.affix.noConflict = function () {
+    return a.fn.affix = c, this;
+  }, a(window).on("load", function () {
+    a('[data-spy="affix"]').each(function () {
+      var b = a(this),
+          c = b.data();
+      c.offset = c.offset || {}, c.offsetBottom && (c.offset.bottom = c.offsetBottom), c.offsetTop && (c.offset.top = c.offsetTop), b.affix(c);
+    });
+  });
+}(window.jQuery), !function (a) {
+  var b = '[data-dismiss="alert"]',
+      c = function c(_c) {
+    a(_c).on("click", b, this.close);
+  };
+
+  c.prototype.close = function (b) {
+    function f() {
+      e.trigger("closed").remove();
+    }
+
+    var c = a(this),
+        d = c.attr("data-target"),
+        e;
+    d || (d = c.attr("href"), d = d && d.replace(/.*(?=#[^\s]*$)/, "")), e = a(d), b && b.preventDefault(), e.length || (e = c.hasClass("alert") ? c : c.parent()), e.trigger(b = a.Event("close"));
+    if (b.isDefaultPrevented()) return;
+    e.removeClass("in"), a.support.transition && e.hasClass("fade") ? e.on(a.support.transition.end, f) : f();
+  };
+
+  var d = a.fn.alert;
+  a.fn.alert = function (b) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("alert");
+      e || d.data("alert", e = new c(this)), typeof b == "string" && e[b].call(d);
+    });
+  }, a.fn.alert.Constructor = c, a.fn.alert.noConflict = function () {
+    return a.fn.alert = d, this;
+  }, a(document).on("click.alert.data-api", b, c.prototype.close);
+}(window.jQuery), !function (a) {
+  var b = function b(_b6, c) {
+    this.$element = a(_b6), this.options = a.extend({}, a.fn.button.defaults, c);
+  };
+
+  b.prototype.setState = function (a) {
+    var b = "disabled",
+        c = this.$element,
+        d = c.data(),
+        e = c.is("input") ? "val" : "html";
+    a += "Text", d.resetText || c.data("resetText", c[e]()), c[e](d[a] || this.options[a]), setTimeout(function () {
+      a == "loadingText" ? c.addClass(b).attr(b, b) : c.removeClass(b).removeAttr(b);
+    }, 0);
+  }, b.prototype.toggle = function () {
+    var a = this.$element.closest('[data-toggle="buttons-radio"]');
+    a && a.find(".active").removeClass("active"), this.$element.toggleClass("active");
+  };
+  var c = a.fn.button;
+  a.fn.button = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("button"),
+          f = _typeof(c) == "object" && c;
+      e || d.data("button", e = new b(this, f)), c == "toggle" ? e.toggle() : c && e.setState(c);
+    });
+  }, a.fn.button.defaults = {
+    loadingText: "loading..."
+  }, a.fn.button.Constructor = b, a.fn.button.noConflict = function () {
+    return a.fn.button = c, this;
+  }, a(document).on("click.button.data-api", "[data-toggle^=button]", function (b) {
+    var c = a(b.target);
+    c.hasClass("btn") || (c = c.closest(".btn")), c.button("toggle");
+  });
+}(window.jQuery), !function (a) {
+  var b = function b(_b7, c) {
+    this.$element = a(_b7), this.options = a.extend({}, a.fn.collapse.defaults, c), this.options.parent && (this.$parent = a(this.options.parent)), this.options.toggle && this.toggle();
+  };
+
+  b.prototype = {
+    constructor: b,
+    dimension: function dimension() {
+      var a = this.$element.hasClass("width");
+      return a ? "width" : "height";
+    },
+    show: function show() {
+      var b, c, d, e;
+      if (this.transitioning) return;
+      b = this.dimension(), c = a.camelCase(["scroll", b].join("-")), d = this.$parent && this.$parent.find("> .accordion-group > .in");
+
+      if (d && d.length) {
+        e = d.data("collapse");
+        if (e && e.transitioning) return;
+        d.collapse("hide"), e || d.data("collapse", null);
+      }
+
+      this.$element[b](0), this.transition("addClass", a.Event("show"), "shown"), a.support.transition && this.$element[b](this.$element[0][c]);
+    },
+    hide: function hide() {
+      var b;
+      if (this.transitioning) return;
+      b = this.dimension(), this.reset(this.$element[b]()), this.transition("removeClass", a.Event("hide"), "hidden"), this.$element[b](0);
+    },
+    reset: function reset(a) {
+      var b = this.dimension();
+      return this.$element.removeClass("collapse")[b](a || "auto")[0].offsetWidth, this.$element[a !== null ? "addClass" : "removeClass"]("collapse"), this;
+    },
+    transition: function transition(b, c, d) {
+      var e = this,
+          f = function f() {
+        c.type == "show" && e.reset(), e.transitioning = 0, e.$element.trigger(d);
+      };
+
+      this.$element.trigger(c);
+      if (c.isDefaultPrevented()) return;
+      this.transitioning = 1, this.$element[b]("in"), a.support.transition && this.$element.hasClass("collapse") ? this.$element.one(a.support.transition.end, f) : f();
+    },
+    toggle: function toggle() {
+      this[this.$element.hasClass("in") ? "hide" : "show"]();
+    }
+  };
+  var c = a.fn.collapse;
+  a.fn.collapse = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("collapse"),
+          f = _typeof(c) == "object" && c;
+      e || d.data("collapse", e = new b(this, f)), typeof c == "string" && e[c]();
+    });
+  }, a.fn.collapse.defaults = {
+    toggle: !0
+  }, a.fn.collapse.Constructor = b, a.fn.collapse.noConflict = function () {
+    return a.fn.collapse = c, this;
+  }, a(document).on("click.collapse.data-api", "[data-toggle=collapse]", function (b) {
+    var c = a(this),
+        d,
+        e = c.attr("data-target") || b.preventDefault() || (d = c.attr("href")) && d.replace(/.*(?=#[^\s]+$)/, ""),
+        f = a(e).data("collapse") ? "toggle" : c.data();
+    c[a(e).hasClass("in") ? "addClass" : "removeClass"]("collapsed"), a(e).collapse(f);
+  });
+}(window.jQuery), !function (a) {
+  var b = function b(_b8, c) {
+    this.$element = a(_b8), this.options = c, this.options.pause == "hover" && this.$element.on("mouseenter", a.proxy(this.pause, this)).on("mouseleave", a.proxy(this.cycle, this));
+  };
+
+  b.prototype = {
+    cycle: function cycle(b) {
+      return b || (this.paused = !1), this.options.interval && !this.paused && (this.interval = setInterval(a.proxy(this.next, this), this.options.interval)), this;
+    },
+    to: function to(b) {
+      var c = this.$element.find(".item.active"),
+          d = c.parent().children(),
+          e = d.index(c),
+          f = this;
+      if (b > d.length - 1 || b < 0) return;
+      return this.sliding ? this.$element.one("slid", function () {
+        f.to(b);
+      }) : e == b ? this.pause().cycle() : this.slide(b > e ? "next" : "prev", a(d[b]));
+    },
+    pause: function pause(b) {
+      return b || (this.paused = !0), this.$element.find(".next, .prev").length && a.support.transition.end && (this.$element.trigger(a.support.transition.end), this.cycle()), clearInterval(this.interval), this.interval = null, this;
+    },
+    next: function next() {
+      if (this.sliding) return;
+      return this.slide("next");
+    },
+    prev: function prev() {
+      if (this.sliding) return;
+      return this.slide("prev");
+    },
+    slide: function slide(b, c) {
+      var d = this.$element.find(".item.active"),
+          e = c || d[b](),
+          f = this.interval,
+          g = b == "next" ? "left" : "right",
+          h = b == "next" ? "first" : "last",
+          i = this,
+          j;
+      this.sliding = !0, f && this.pause(), e = e.length ? e : this.$element.find(".item")[h](), j = a.Event("slide", {
+        relatedTarget: e[0]
+      });
+      if (e.hasClass("active")) return;
+
+      if (a.support.transition && this.$element.hasClass("slide")) {
+        this.$element.trigger(j);
+        if (j.isDefaultPrevented()) return;
+        e.addClass(b), e[0].offsetWidth, d.addClass(g), e.addClass(g), this.$element.one(a.support.transition.end, function () {
+          e.removeClass([b, g].join(" ")).addClass("active"), d.removeClass(["active", g].join(" ")), i.sliding = !1, setTimeout(function () {
+            i.$element.trigger("slid");
+          }, 0);
+        });
+      } else {
+        this.$element.trigger(j);
+        if (j.isDefaultPrevented()) return;
+        d.removeClass("active"), e.addClass("active"), this.sliding = !1, this.$element.trigger("slid");
+      }
+
+      return f && this.cycle(), this;
+    }
+  };
+  var c = a.fn.carousel;
+  a.fn.carousel = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("carousel"),
+          f = a.extend({}, a.fn.carousel.defaults, _typeof(c) == "object" && c),
+          g = typeof c == "string" ? c : f.slide;
+      e || d.data("carousel", e = new b(this, f)), typeof c == "number" ? e.to(c) : g ? e[g]() : f.interval && e.cycle();
+    });
+  }, a.fn.carousel.defaults = {
+    interval: 5e3,
+    pause: "hover"
+  }, a.fn.carousel.Constructor = b, a.fn.carousel.noConflict = function () {
+    return a.fn.carousel = c, this;
+  }, a(document).on("click.carousel.data-api", "[data-slide]", function (b) {
+    var c = a(this),
+        d,
+        e = a(c.attr("data-target") || (d = c.attr("href")) && d.replace(/.*(?=#[^\s]+$)/, "")),
+        f = a.extend({}, e.data(), c.data());
+    e.carousel(f), b.preventDefault();
+  });
+}(window.jQuery), !function (a) {
+  var b = function b(_b9, c) {
+    this.$element = a(_b9), this.options = a.extend({}, a.fn.typeahead.defaults, c), this.matcher = this.options.matcher || this.matcher, this.sorter = this.options.sorter || this.sorter, this.highlighter = this.options.highlighter || this.highlighter, this.updater = this.options.updater || this.updater, this.source = this.options.source, this.$menu = a(this.options.menu), this.shown = !1, this.listen();
+  };
+
+  b.prototype = {
+    constructor: b,
+    select: function select() {
+      var a = this.$menu.find(".active").attr("data-value");
+      return this.$element.val(this.updater(a)).change(), this.hide();
+    },
+    updater: function updater(a) {
+      return a;
+    },
+    show: function show() {
+      var b = a.extend({}, this.$element.position(), {
+        height: this.$element[0].offsetHeight
+      });
+      return this.$menu.insertAfter(this.$element).css({
+        top: b.top + b.height,
+        left: b.left
+      }).show(), this.shown = !0, this;
+    },
+    hide: function hide() {
+      return this.$menu.hide(), this.shown = !1, this;
+    },
+    lookup: function lookup(b) {
+      var c;
+      return this.query = this.$element.val(), !this.query || this.query.length < this.options.minLength ? this.shown ? this.hide() : this : (c = a.isFunction(this.source) ? this.source(this.query, a.proxy(this.process, this)) : this.source, c ? this.process(c) : this);
+    },
+    process: function process(b) {
+      var c = this;
+      return b = a.grep(b, function (a) {
+        return c.matcher(a);
+      }), b = this.sorter(b), b.length ? this.render(b.slice(0, this.options.items)).show() : this.shown ? this.hide() : this;
+    },
+    matcher: function matcher(a) {
+      return ~a.toLowerCase().indexOf(this.query.toLowerCase());
+    },
+    sorter: function sorter(a) {
+      var b = [],
+          c = [],
+          d = [],
+          e;
+
+      while (e = a.shift()) {
+        e.toLowerCase().indexOf(this.query.toLowerCase()) ? ~e.indexOf(this.query) ? c.push(e) : d.push(e) : b.push(e);
+      }
+
+      return b.concat(c, d);
+    },
+    highlighter: function highlighter(a) {
+      var b = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+      return a.replace(new RegExp("(" + b + ")", "ig"), function (a, b) {
+        return "<strong>" + b + "</strong>";
+      });
+    },
+    render: function render(b) {
+      var c = this;
+      return b = a(b).map(function (b, d) {
+        return b = a(c.options.item).attr("data-value", d), b.find("a").html(c.highlighter(d)), b[0];
+      }), b.first().addClass("active"), this.$menu.html(b), this;
+    },
+    next: function next(b) {
+      var c = this.$menu.find(".active").removeClass("active"),
+          d = c.next();
+      d.length || (d = a(this.$menu.find("li")[0])), d.addClass("active");
+    },
+    prev: function prev(a) {
+      var b = this.$menu.find(".active").removeClass("active"),
+          c = b.prev();
+      c.length || (c = this.$menu.find("li").last()), c.addClass("active");
+    },
+    listen: function listen() {
+      this.$element.on("blur", a.proxy(this.blur, this)).on("keypress", a.proxy(this.keypress, this)).on("keyup", a.proxy(this.keyup, this)), this.eventSupported("keydown") && this.$element.on("keydown", a.proxy(this.keydown, this)), this.$menu.on("click", a.proxy(this.click, this)).on("mouseenter", "li", a.proxy(this.mouseenter, this));
+    },
+    eventSupported: function eventSupported(a) {
+      var b = (a in this.$element);
+      return b || (this.$element.setAttribute(a, "return;"), b = typeof this.$element[a] == "function"), b;
+    },
+    move: function move(a) {
+      if (!this.shown) return;
+
+      switch (a.keyCode) {
+        case 9:
+        case 13:
+        case 27:
+          a.preventDefault();
+          break;
+
+        case 38:
+          a.preventDefault(), this.prev();
+          break;
+
+        case 40:
+          a.preventDefault(), this.next();
+      }
+
+      a.stopPropagation();
+    },
+    keydown: function keydown(b) {
+      this.suppressKeyPressRepeat = ~a.inArray(b.keyCode, [40, 38, 9, 13, 27]), this.move(b);
+    },
+    keypress: function keypress(a) {
+      if (this.suppressKeyPressRepeat) return;
+      this.move(a);
+    },
+    keyup: function keyup(a) {
+      switch (a.keyCode) {
+        case 40:
+        case 38:
+        case 16:
+        case 17:
+        case 18:
+          break;
+
+        case 9:
+        case 13:
+          if (!this.shown) return;
+          this.select();
+          break;
+
+        case 27:
+          if (!this.shown) return;
+          this.hide();
+          break;
+
+        default:
+          this.lookup();
+      }
+
+      a.stopPropagation(), a.preventDefault();
+    },
+    blur: function blur(a) {
+      var b = this;
+      setTimeout(function () {
+        b.hide();
+      }, 150);
+    },
+    click: function click(a) {
+      a.stopPropagation(), a.preventDefault(), this.select();
+    },
+    mouseenter: function mouseenter(b) {
+      this.$menu.find(".active").removeClass("active"), a(b.currentTarget).addClass("active");
+    }
+  };
+  var c = a.fn.typeahead;
+  a.fn.typeahead = function (c) {
+    return this.each(function () {
+      var d = a(this),
+          e = d.data("typeahead"),
+          f = _typeof(c) == "object" && c;
+      e || d.data("typeahead", e = new b(this, f)), typeof c == "string" && e[c]();
+    });
+  }, a.fn.typeahead.defaults = {
+    source: [],
+    items: 8,
+    menu: '<ul class="typeahead dropdown-menu"></ul>',
+    item: '<li><a href="#"></a></li>',
+    minLength: 1
+  }, a.fn.typeahead.Constructor = b, a.fn.typeahead.noConflict = function () {
+    return a.fn.typeahead = c, this;
+  }, a(document).on("focus.typeahead.data-api", '[data-provide="typeahead"]', function (b) {
+    var c = a(this);
+    if (c.data("typeahead")) return;
+    b.preventDefault(), c.typeahead(c.data());
+  });
+}(window.jQuery);
 
 /***/ }),
 
@@ -4512,7 +5432,7 @@ try {
   window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js").default;
   window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 
-  __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
+  __webpack_require__(/*! ./bootstrap-main */ "./resources/js/back/bootstrap-main.js");
 } catch (e) {}
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -12065,4569 +12985,2630 @@ jQuery.effects || function (e, t) {
 
 /***/ }),
 
-/***/ "./resources/js/back/jquery.flot.resize.js":
-/*!*************************************************!*\
-  !*** ./resources/js/back/jquery.flot.resize.js ***!
-  \*************************************************/
-/***/ (function() {
+/***/ "./resources/js/back/jquery.float.js":
+/*!*******************************************!*\
+  !*** ./resources/js/back/jquery.float.js ***!
+  \*******************************************/
+/***/ (() => {
 
-(function ($, h, c) {
-  var a = $([]),
-      e = $.resize = $.extend($.resize, {}),
-      i,
-      k = "setTimeout",
-      j = "resize",
-      d = j + "-special-event",
-      b = "delay",
-      f = "throttleWindow";
-  e[b] = 250;
-  e[f] = true;
-  $.event.special[j] = {
-    setup: function setup() {
-      if (!e[f] && this[k]) {
-        return false;
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/*! Javascript plotting library for jQuery, v. 0.7.
+ *
+ * Released under the MIT license by IOLA, December 2007.
+ *
+ */
+// first an inline dependency, jquery.colorhelpers.js, we inline it here
+// for convenience
+
+/* Plugin for jQuery for working with colors.
+ *
+ * Version 1.1.
+ *
+ * Inspiration from jQuery color animation plugin by John Resig.
+ *
+ * Released under the MIT license by Ole Laursen, October 2009.
+ *
+ * Examples:
+ *
+ *   $.color.parse("#fff").scale('rgb', 0.25).add('a', -0.5).toString()
+ *   var c = $.color.extract($("#mydiv"), 'background-color');
+ *   console.log(c.r, c.g, c.b, c.a);
+ *   $.color.make(100, 50, 25, 0.4).toString() // returns "rgba(100,50,25,0.4)"
+ *
+ * Note that .scale() and .add() return the same modified object
+ * instead of making a new one.
+ *
+ * V. 1.1: Fix error handling so e.g. parsing an empty string does
+ * produce a color rather than just crashing.
+ */
+(function (B) {
+  B.color = {};
+
+  B.color.make = function (F, E, C, D) {
+    var G = {};
+    G.r = F || 0;
+    G.g = E || 0;
+    G.b = C || 0;
+    G.a = D != null ? D : 1;
+
+    G.add = function (J, I) {
+      for (var H = 0; H < J.length; ++H) {
+        G[J.charAt(H)] += I;
       }
 
-      var l = $(this);
-      a = a.add(l);
-      $.data(this, d, {
-        w: l.width(),
-        h: l.height()
-      });
+      return G.normalize();
+    };
 
-      if (a.length === 1) {
-        g();
-      }
-    },
-    teardown: function teardown() {
-      if (!e[f] && this[k]) {
-        return false;
+    G.scale = function (J, I) {
+      for (var H = 0; H < J.length; ++H) {
+        G[J.charAt(H)] *= I;
       }
 
-      var l = $(this);
-      a = a.not(l);
-      l.removeData(d);
+      return G.normalize();
+    };
 
-      if (!a.length) {
-        clearTimeout(i);
-      }
-    },
-    add: function add(l) {
-      if (!e[f] && this[k]) {
-        return false;
-      }
-
-      var n;
-
-      function m(s, o, p) {
-        var q = $(this),
-            r = $.data(this, d);
-        r.w = o !== c ? o : q.width();
-        r.h = p !== c ? p : q.height();
-        n.apply(this, arguments);
-      }
-
-      if ($.isFunction(l)) {
-        n = l;
-        return m;
+    G.toString = function () {
+      if (G.a >= 1) {
+        return "rgb(" + [G.r, G.g, G.b].join(",") + ")";
       } else {
-        n = l.handler;
-        l.handler = m;
+        return "rgba(" + [G.r, G.g, G.b, G.a].join(",") + ")";
       }
+    };
+
+    G.normalize = function () {
+      function H(J, K, I) {
+        return K < J ? J : K > I ? I : K;
+      }
+
+      G.r = H(0, parseInt(G.r), 255);
+      G.g = H(0, parseInt(G.g), 255);
+      G.b = H(0, parseInt(G.b), 255);
+      G.a = H(0, G.a, 1);
+      return G;
+    };
+
+    G.clone = function () {
+      return B.color.make(G.r, G.b, G.g, G.a);
+    };
+
+    return G.normalize();
+  };
+
+  B.color.extract = function (D, C) {
+    var E;
+
+    do {
+      E = D.css(C).toLowerCase();
+
+      if (E != "" && E != "transparent") {
+        break;
+      }
+
+      D = D.parent();
+    } while (!B.nodeName(D.get(0), "body"));
+
+    if (E == "rgba(0, 0, 0, 0)") {
+      E = "transparent";
+    }
+
+    return B.color.parse(E);
+  };
+
+  B.color.parse = function (F) {
+    var E,
+        C = B.color.make;
+
+    if (E = /rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(F)) {
+      return C(parseInt(E[1], 10), parseInt(E[2], 10), parseInt(E[3], 10));
+    }
+
+    if (E = /rgba\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(F)) {
+      return C(parseInt(E[1], 10), parseInt(E[2], 10), parseInt(E[3], 10), parseFloat(E[4]));
+    }
+
+    if (E = /rgb\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*\)/.exec(F)) {
+      return C(parseFloat(E[1]) * 2.55, parseFloat(E[2]) * 2.55, parseFloat(E[3]) * 2.55);
+    }
+
+    if (E = /rgba\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(F)) {
+      return C(parseFloat(E[1]) * 2.55, parseFloat(E[2]) * 2.55, parseFloat(E[3]) * 2.55, parseFloat(E[4]));
+    }
+
+    if (E = /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(F)) {
+      return C(parseInt(E[1], 16), parseInt(E[2], 16), parseInt(E[3], 16));
+    }
+
+    if (E = /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(F)) {
+      return C(parseInt(E[1] + E[1], 16), parseInt(E[2] + E[2], 16), parseInt(E[3] + E[3], 16));
+    }
+
+    var D = B.trim(F).toLowerCase();
+
+    if (D == "transparent") {
+      return C(255, 255, 255, 0);
+    } else {
+      E = A[D] || [0, 0, 0];
+      return C(E[0], E[1], E[2]);
     }
   };
 
-  function g() {
-    i = h[k](function () {
-      a.each(function () {
-        var n = $(this),
-            m = n.width(),
-            l = n.height(),
-            o = $.data(this, d);
+  var A = {
+    aqua: [0, 255, 255],
+    azure: [240, 255, 255],
+    beige: [245, 245, 220],
+    black: [0, 0, 0],
+    blue: [0, 0, 255],
+    brown: [165, 42, 42],
+    cyan: [0, 255, 255],
+    darkblue: [0, 0, 139],
+    darkcyan: [0, 139, 139],
+    darkgrey: [169, 169, 169],
+    darkgreen: [0, 100, 0],
+    darkkhaki: [189, 183, 107],
+    darkmagenta: [139, 0, 139],
+    darkolivegreen: [85, 107, 47],
+    darkorange: [255, 140, 0],
+    darkorchid: [153, 50, 204],
+    darkred: [139, 0, 0],
+    darksalmon: [233, 150, 122],
+    darkviolet: [148, 0, 211],
+    fuchsia: [255, 0, 255],
+    gold: [255, 215, 0],
+    green: [0, 128, 0],
+    indigo: [75, 0, 130],
+    khaki: [240, 230, 140],
+    lightblue: [173, 216, 230],
+    lightcyan: [224, 255, 255],
+    lightgreen: [144, 238, 144],
+    lightgrey: [211, 211, 211],
+    lightpink: [255, 182, 193],
+    lightyellow: [255, 255, 224],
+    lime: [0, 255, 0],
+    magenta: [255, 0, 255],
+    maroon: [128, 0, 0],
+    navy: [0, 0, 128],
+    olive: [128, 128, 0],
+    orange: [255, 165, 0],
+    pink: [255, 192, 203],
+    purple: [128, 0, 128],
+    violet: [128, 0, 128],
+    red: [255, 0, 0],
+    silver: [192, 192, 192],
+    white: [255, 255, 255],
+    yellow: [255, 255, 0]
+  };
+})(jQuery); // the actual Flot code
 
-        if (m !== o.w || l !== o.h) {
-          n.trigger(j, [o.w = m, o.h = l]);
-        }
-      });
-      g();
-    }, e[b]);
-  }
-})(jQuery, this);
 
 (function ($) {
-  var options = {}; // no options
+  function Plot(placeholder, data_, options_, plugins) {
+    // data is on the form:
+    //   [ series1, series2 ... ]
+    // where series is either just the data as [ [x1, y1], [x2, y2], ... ]
+    // or { data: [ [x1, y1], [x2, y2], ... ], label: "some label", ... }
+    var series = [],
+        options = {
+      // the color theme used for graphs
+      colors: ["#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"],
+      legend: {
+        show: true,
+        noColumns: 1,
+        // number of colums in legend table
+        labelFormatter: null,
+        // fn: string -> string
+        labelBoxBorderColor: "#ccc",
+        // border color for the little label boxes
+        container: null,
+        // container (as jQuery object) to put legend in, null means default on top of graph
+        position: "ne",
+        // position of default legend container within plot
+        margin: 5,
+        // distance from grid edge to default legend container within plot
+        backgroundColor: null,
+        // null means auto-detect
+        backgroundOpacity: 0.85 // set to 0 to avoid background
 
-  function init(plot) {
-    function onResize() {
-      var placeholder = plot.getPlaceholder(); // somebody might have hidden us and we can't plot
-      // when we don't have the dimensions
+      },
+      xaxis: {
+        show: null,
+        // null = auto-detect, true = always, false = never
+        position: "bottom",
+        // or "top"
+        mode: null,
+        // null or "time"
+        color: null,
+        // base color, labels, ticks
+        tickColor: null,
+        // possibly different color of ticks, e.g. "rgba(0,0,0,0.15)"
+        transform: null,
+        // null or f: number -> number to transform axis
+        inverseTransform: null,
+        // if transform is set, this should be the inverse function
+        min: null,
+        // min. value to show, null means set automatically
+        max: null,
+        // max. value to show, null means set automatically
+        autoscaleMargin: null,
+        // margin in % to add if auto-setting min/max
+        ticks: null,
+        // either [1, 3] or [[1, "a"], 3] or (fn: axis info -> ticks) or app. number of ticks for auto-ticks
+        tickFormatter: null,
+        // fn: number -> string
+        labelWidth: null,
+        // size of tick labels in pixels
+        labelHeight: null,
+        reserveSpace: null,
+        // whether to reserve space even if axis isn't shown
+        tickLength: null,
+        // size in pixels of ticks, or "full" for whole line
+        alignTicksWithAxis: null,
+        // axis number or null for no sync
+        // mode specific options
+        tickDecimals: null,
+        // no. of decimals, null means auto
+        tickSize: null,
+        // number or [number, "unit"]
+        minTickSize: null,
+        // number or [number, "unit"]
+        monthNames: null,
+        // list of names of months
+        timeformat: null,
+        // format string to use
+        twelveHourClock: false // 12 or 24 time in time mode
 
-      if (placeholder.width() == 0 || placeholder.height() == 0) return;
-      plot.resize();
-      plot.setupGrid();
-      plot.draw();
-    }
+      },
+      yaxis: {
+        autoscaleMargin: 0.02,
+        position: "left" // or "right"
 
-    function bindEvents(plot, eventHolder) {
-      plot.getPlaceholder().resize(onResize);
-    }
+      },
+      xaxes: [],
+      yaxes: [],
+      series: {
+        points: {
+          show: false,
+          radius: 3,
+          lineWidth: 2,
+          // in pixels
+          fill: true,
+          fillColor: "#ffffff",
+          symbol: "circle" // or callback
 
-    function shutdown(plot, eventHolder) {
-      plot.getPlaceholder().unbind("resize", onResize);
-    }
+        },
+        lines: {
+          // we don't put in show: false so we can see
+          // whether lines were actively disabled
+          lineWidth: 2,
+          // in pixels
+          fill: false,
+          fillColor: null,
+          steps: false
+        },
+        bars: {
+          show: false,
+          lineWidth: 2,
+          // in pixels
+          barWidth: 1,
+          // in units of the x axis
+          fill: true,
+          fillColor: null,
+          align: "left",
+          // or "center"
+          horizontal: false
+        },
+        shadowSize: 3
+      },
+      grid: {
+        show: true,
+        aboveData: false,
+        color: "#545454",
+        // primary color used for outline and labels
+        backgroundColor: null,
+        // null for transparent, else color
+        borderColor: null,
+        // set if different from the grid color
+        tickColor: null,
+        // color for the ticks, e.g. "rgba(0,0,0,0.15)"
+        labelMargin: 5,
+        // in pixels
+        axisMargin: 8,
+        // in pixels
+        borderWidth: 2,
+        // in pixels
+        minBorderMargin: null,
+        // in pixels, null means taken from points radius
+        markings: null,
+        // array of ranges or fn: axes -> array of ranges
+        markingsColor: "#f4f4f4",
+        markingsLineWidth: 2,
+        // interactive stuff
+        clickable: false,
+        hoverable: false,
+        autoHighlight: true,
+        // highlight in case mouse is near
+        mouseActiveRadius: 10 // how far the mouse can be away to activate an item
 
-    plot.hooks.bindEvents.push(bindEvents);
-    plot.hooks.shutdown.push(shutdown);
-  }
+      },
+      hooks: {}
+    },
+        canvas = null,
+        // the canvas for the plot itself
+    overlay = null,
+        // canvas for interactive stuff on top of plot
+    eventHolder = null,
+        // jQuery object that events should be bound to
+    ctx = null,
+        octx = null,
+        xaxes = [],
+        yaxes = [],
+        plotOffset = {
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0
+    },
+        canvasWidth = 0,
+        canvasHeight = 0,
+        plotWidth = 0,
+        plotHeight = 0,
+        hooks = {
+      processOptions: [],
+      processRawData: [],
+      processDatapoints: [],
+      drawSeries: [],
+      draw: [],
+      bindEvents: [],
+      drawOverlay: [],
+      shutdown: []
+    },
+        plot = this; // public functions
 
-  $.plot.plugins.push({
-    init: init,
-    options: options,
-    name: 'resize',
-    version: '1.0'
-  });
-})(jQuery);
+    plot.setData = setData;
+    plot.setupGrid = setupGrid;
+    plot.draw = draw;
 
-/***/ }),
-
-/***/ "./node_modules/bootstrap/dist/js/bootstrap.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/bootstrap/dist/js/bootstrap.js ***!
-  \*****************************************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-/*!
-  * Bootstrap v4.6.0 (https://getbootstrap.com/)
-  * Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
-  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
-  */
-(function (global, factory) {
-   true ? factory(exports, __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"), __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")) :
-  0;
-}(this, (function (exports, $, Popper) { 'use strict';
-
-  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-  var $__default = /*#__PURE__*/_interopDefaultLegacy($);
-  var Popper__default = /*#__PURE__*/_interopDefaultLegacy(Popper);
-
-  function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-  }
-
-  function _extends() {
-    _extends = Object.assign || function (target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        }
-      }
-
-      return target;
+    plot.getPlaceholder = function () {
+      return placeholder;
     };
 
-    return _extends.apply(this, arguments);
-  }
-
-  function _inheritsLoose(subClass, superClass) {
-    subClass.prototype = Object.create(superClass.prototype);
-    subClass.prototype.constructor = subClass;
-    subClass.__proto__ = superClass;
-  }
-
-  /**
-   * --------------------------------------------------------------------------
-   * Bootstrap (v4.6.0): util.js
-   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
-   * --------------------------------------------------------------------------
-   */
-  /**
-   * ------------------------------------------------------------------------
-   * Private TransitionEnd Helpers
-   * ------------------------------------------------------------------------
-   */
-
-  var TRANSITION_END = 'transitionend';
-  var MAX_UID = 1000000;
-  var MILLISECONDS_MULTIPLIER = 1000; // Shoutout AngusCroll (https://goo.gl/pxwQGp)
-
-  function toType(obj) {
-    if (obj === null || typeof obj === 'undefined') {
-      return "" + obj;
-    }
-
-    return {}.toString.call(obj).match(/\s([a-z]+)/i)[1].toLowerCase();
-  }
-
-  function getSpecialTransitionEndEvent() {
-    return {
-      bindType: TRANSITION_END,
-      delegateType: TRANSITION_END,
-      handle: function handle(event) {
-        if ($__default['default'](event.target).is(this)) {
-          return event.handleObj.handler.apply(this, arguments); // eslint-disable-line prefer-rest-params
-        }
-
-        return undefined;
-      }
-    };
-  }
-
-  function transitionEndEmulator(duration) {
-    var _this = this;
-
-    var called = false;
-    $__default['default'](this).one(Util.TRANSITION_END, function () {
-      called = true;
-    });
-    setTimeout(function () {
-      if (!called) {
-        Util.triggerTransitionEnd(_this);
-      }
-    }, duration);
-    return this;
-  }
-
-  function setTransitionEndSupport() {
-    $__default['default'].fn.emulateTransitionEnd = transitionEndEmulator;
-    $__default['default'].event.special[Util.TRANSITION_END] = getSpecialTransitionEndEvent();
-  }
-  /**
-   * --------------------------------------------------------------------------
-   * Public Util Api
-   * --------------------------------------------------------------------------
-   */
-
-
-  var Util = {
-    TRANSITION_END: 'bsTransitionEnd',
-    getUID: function getUID(prefix) {
-      do {
-        prefix += ~~(Math.random() * MAX_UID); // "~~" acts like a faster Math.floor() here
-      } while (document.getElementById(prefix));
-
-      return prefix;
-    },
-    getSelectorFromElement: function getSelectorFromElement(element) {
-      var selector = element.getAttribute('data-target');
-
-      if (!selector || selector === '#') {
-        var hrefAttr = element.getAttribute('href');
-        selector = hrefAttr && hrefAttr !== '#' ? hrefAttr.trim() : '';
-      }
-
-      try {
-        return document.querySelector(selector) ? selector : null;
-      } catch (_) {
-        return null;
-      }
-    },
-    getTransitionDurationFromElement: function getTransitionDurationFromElement(element) {
-      if (!element) {
-        return 0;
-      } // Get transition-duration of the element
-
-
-      var transitionDuration = $__default['default'](element).css('transition-duration');
-      var transitionDelay = $__default['default'](element).css('transition-delay');
-      var floatTransitionDuration = parseFloat(transitionDuration);
-      var floatTransitionDelay = parseFloat(transitionDelay); // Return 0 if element or transition duration is not found
-
-      if (!floatTransitionDuration && !floatTransitionDelay) {
-        return 0;
-      } // If multiple durations are defined, take the first
-
-
-      transitionDuration = transitionDuration.split(',')[0];
-      transitionDelay = transitionDelay.split(',')[0];
-      return (parseFloat(transitionDuration) + parseFloat(transitionDelay)) * MILLISECONDS_MULTIPLIER;
-    },
-    reflow: function reflow(element) {
-      return element.offsetHeight;
-    },
-    triggerTransitionEnd: function triggerTransitionEnd(element) {
-      $__default['default'](element).trigger(TRANSITION_END);
-    },
-    supportsTransitionEnd: function supportsTransitionEnd() {
-      return Boolean(TRANSITION_END);
-    },
-    isElement: function isElement(obj) {
-      return (obj[0] || obj).nodeType;
-    },
-    typeCheckConfig: function typeCheckConfig(componentName, config, configTypes) {
-      for (var property in configTypes) {
-        if (Object.prototype.hasOwnProperty.call(configTypes, property)) {
-          var expectedTypes = configTypes[property];
-          var value = config[property];
-          var valueType = value && Util.isElement(value) ? 'element' : toType(value);
-
-          if (!new RegExp(expectedTypes).test(valueType)) {
-            throw new Error(componentName.toUpperCase() + ": " + ("Option \"" + property + "\" provided type \"" + valueType + "\" ") + ("but expected type \"" + expectedTypes + "\"."));
-          }
-        }
-      }
-    },
-    findShadowRoot: function findShadowRoot(element) {
-      if (!document.documentElement.attachShadow) {
-        return null;
-      } // Can find the shadow root otherwise it'll return the document
-
-
-      if (typeof element.getRootNode === 'function') {
-        var root = element.getRootNode();
-        return root instanceof ShadowRoot ? root : null;
-      }
-
-      if (element instanceof ShadowRoot) {
-        return element;
-      } // when we don't find a shadow root
-
-
-      if (!element.parentNode) {
-        return null;
-      }
-
-      return Util.findShadowRoot(element.parentNode);
-    },
-    jQueryDetection: function jQueryDetection() {
-      if (typeof $__default['default'] === 'undefined') {
-        throw new TypeError('Bootstrap\'s JavaScript requires jQuery. jQuery must be included before Bootstrap\'s JavaScript.');
-      }
-
-      var version = $__default['default'].fn.jquery.split(' ')[0].split('.');
-      var minMajor = 1;
-      var ltMajor = 2;
-      var minMinor = 9;
-      var minPatch = 1;
-      var maxMajor = 4;
-
-      if (version[0] < ltMajor && version[1] < minMinor || version[0] === minMajor && version[1] === minMinor && version[2] < minPatch || version[0] >= maxMajor) {
-        throw new Error('Bootstrap\'s JavaScript requires at least jQuery v1.9.1 but less than v4.0.0');
-      }
-    }
-  };
-  Util.jQueryDetection();
-  setTransitionEndSupport();
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME = 'alert';
-  var VERSION = '4.6.0';
-  var DATA_KEY = 'bs.alert';
-  var EVENT_KEY = "." + DATA_KEY;
-  var DATA_API_KEY = '.data-api';
-  var JQUERY_NO_CONFLICT = $__default['default'].fn[NAME];
-  var SELECTOR_DISMISS = '[data-dismiss="alert"]';
-  var EVENT_CLOSE = "close" + EVENT_KEY;
-  var EVENT_CLOSED = "closed" + EVENT_KEY;
-  var EVENT_CLICK_DATA_API = "click" + EVENT_KEY + DATA_API_KEY;
-  var CLASS_NAME_ALERT = 'alert';
-  var CLASS_NAME_FADE = 'fade';
-  var CLASS_NAME_SHOW = 'show';
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Alert = /*#__PURE__*/function () {
-    function Alert(element) {
-      this._element = element;
-    } // Getters
-
-
-    var _proto = Alert.prototype;
-
-    // Public
-    _proto.close = function close(element) {
-      var rootElement = this._element;
-
-      if (element) {
-        rootElement = this._getRootElement(element);
-      }
-
-      var customEvent = this._triggerCloseEvent(rootElement);
-
-      if (customEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      this._removeElement(rootElement);
+    plot.getCanvas = function () {
+      return canvas;
     };
 
-    _proto.dispose = function dispose() {
-      $__default['default'].removeData(this._element, DATA_KEY);
-      this._element = null;
-    } // Private
-    ;
-
-    _proto._getRootElement = function _getRootElement(element) {
-      var selector = Util.getSelectorFromElement(element);
-      var parent = false;
-
-      if (selector) {
-        parent = document.querySelector(selector);
-      }
-
-      if (!parent) {
-        parent = $__default['default'](element).closest("." + CLASS_NAME_ALERT)[0];
-      }
-
-      return parent;
+    plot.getPlotOffset = function () {
+      return plotOffset;
     };
 
-    _proto._triggerCloseEvent = function _triggerCloseEvent(element) {
-      var closeEvent = $__default['default'].Event(EVENT_CLOSE);
-      $__default['default'](element).trigger(closeEvent);
-      return closeEvent;
+    plot.width = function () {
+      return plotWidth;
     };
 
-    _proto._removeElement = function _removeElement(element) {
-      var _this = this;
-
-      $__default['default'](element).removeClass(CLASS_NAME_SHOW);
-
-      if (!$__default['default'](element).hasClass(CLASS_NAME_FADE)) {
-        this._destroyElement(element);
-
-        return;
-      }
-
-      var transitionDuration = Util.getTransitionDurationFromElement(element);
-      $__default['default'](element).one(Util.TRANSITION_END, function (event) {
-        return _this._destroyElement(element, event);
-      }).emulateTransitionEnd(transitionDuration);
+    plot.height = function () {
+      return plotHeight;
     };
 
-    _proto._destroyElement = function _destroyElement(element) {
-      $__default['default'](element).detach().trigger(EVENT_CLOSED).remove();
-    } // Static
-    ;
+    plot.offset = function () {
+      var o = eventHolder.offset();
+      o.left += plotOffset.left;
+      o.top += plotOffset.top;
+      return o;
+    };
 
-    Alert._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var $element = $__default['default'](this);
-        var data = $element.data(DATA_KEY);
+    plot.getData = function () {
+      return series;
+    };
 
-        if (!data) {
-          data = new Alert(this);
-          $element.data(DATA_KEY, data);
-        }
-
-        if (config === 'close') {
-          data[config](this);
-        }
+    plot.getAxes = function () {
+      var res = {},
+          i;
+      $.each(xaxes.concat(yaxes), function (_, axis) {
+        if (axis) res[axis.direction + (axis.n != 1 ? axis.n : "") + "axis"] = axis;
       });
+      return res;
     };
 
-    Alert._handleDismiss = function _handleDismiss(alertInstance) {
-      return function (event) {
-        if (event) {
-          event.preventDefault();
-        }
+    plot.getXAxes = function () {
+      return xaxes;
+    };
 
-        alertInstance.close(this);
+    plot.getYAxes = function () {
+      return yaxes;
+    };
+
+    plot.c2p = canvasToAxisCoords;
+    plot.p2c = axisToCanvasCoords;
+
+    plot.getOptions = function () {
+      return options;
+    };
+
+    plot.highlight = highlight;
+    plot.unhighlight = unhighlight;
+    plot.triggerRedrawOverlay = triggerRedrawOverlay;
+
+    plot.pointOffset = function (point) {
+      return {
+        left: parseInt(xaxes[axisNumber(point, "x") - 1].p2c(+point.x) + plotOffset.left),
+        top: parseInt(yaxes[axisNumber(point, "y") - 1].p2c(+point.y) + plotOffset.top)
       };
     };
 
-    _createClass(Alert, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION;
+    plot.shutdown = shutdown;
+
+    plot.resize = function () {
+      getCanvasDimensions();
+      resizeCanvas(canvas);
+      resizeCanvas(overlay);
+    }; // public attributes
+
+
+    plot.hooks = hooks; // initialize
+
+    initPlugins(plot);
+    parseOptions(options_);
+    setupCanvases();
+    setData(data_);
+    setupGrid();
+    draw();
+    bindEvents();
+
+    function executeHooks(hook, args) {
+      args = [plot].concat(args);
+
+      for (var i = 0; i < hook.length; ++i) {
+        hook[i].apply(this, args);
       }
-    }]);
+    }
 
-    return Alert;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
+    function initPlugins() {
+      for (var i = 0; i < plugins.length; ++i) {
+        var p = plugins[i];
+        p.init(plot);
+        if (p.options) $.extend(true, options, p.options);
+      }
+    }
 
+    function parseOptions(opts) {
+      var i;
+      $.extend(true, options, opts);
+      if (options.xaxis.color == null) options.xaxis.color = options.grid.color;
+      if (options.yaxis.color == null) options.yaxis.color = options.grid.color;
+      if (options.xaxis.tickColor == null) // backwards-compatibility
+        options.xaxis.tickColor = options.grid.tickColor;
+      if (options.yaxis.tickColor == null) // backwards-compatibility
+        options.yaxis.tickColor = options.grid.tickColor;
+      if (options.grid.borderColor == null) options.grid.borderColor = options.grid.color;
+      if (options.grid.tickColor == null) options.grid.tickColor = $.color.parse(options.grid.color).scale('a', 0.22).toString(); // fill in defaults in axes, copy at least always the
+      // first as the rest of the code assumes it'll be there
 
-  $__default['default'](document).on(EVENT_CLICK_DATA_API, SELECTOR_DISMISS, Alert._handleDismiss(new Alert()));
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
+      for (i = 0; i < Math.max(1, options.xaxes.length); ++i) {
+        options.xaxes[i] = $.extend(true, {}, options.xaxis, options.xaxes[i]);
+      }
 
-  $__default['default'].fn[NAME] = Alert._jQueryInterface;
-  $__default['default'].fn[NAME].Constructor = Alert;
-
-  $__default['default'].fn[NAME].noConflict = function () {
-    $__default['default'].fn[NAME] = JQUERY_NO_CONFLICT;
-    return Alert._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$1 = 'button';
-  var VERSION$1 = '4.6.0';
-  var DATA_KEY$1 = 'bs.button';
-  var EVENT_KEY$1 = "." + DATA_KEY$1;
-  var DATA_API_KEY$1 = '.data-api';
-  var JQUERY_NO_CONFLICT$1 = $__default['default'].fn[NAME$1];
-  var CLASS_NAME_ACTIVE = 'active';
-  var CLASS_NAME_BUTTON = 'btn';
-  var CLASS_NAME_FOCUS = 'focus';
-  var SELECTOR_DATA_TOGGLE_CARROT = '[data-toggle^="button"]';
-  var SELECTOR_DATA_TOGGLES = '[data-toggle="buttons"]';
-  var SELECTOR_DATA_TOGGLE = '[data-toggle="button"]';
-  var SELECTOR_DATA_TOGGLES_BUTTONS = '[data-toggle="buttons"] .btn';
-  var SELECTOR_INPUT = 'input:not([type="hidden"])';
-  var SELECTOR_ACTIVE = '.active';
-  var SELECTOR_BUTTON = '.btn';
-  var EVENT_CLICK_DATA_API$1 = "click" + EVENT_KEY$1 + DATA_API_KEY$1;
-  var EVENT_FOCUS_BLUR_DATA_API = "focus" + EVENT_KEY$1 + DATA_API_KEY$1 + " " + ("blur" + EVENT_KEY$1 + DATA_API_KEY$1);
-  var EVENT_LOAD_DATA_API = "load" + EVENT_KEY$1 + DATA_API_KEY$1;
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Button = /*#__PURE__*/function () {
-    function Button(element) {
-      this._element = element;
-      this.shouldAvoidTriggerChange = false;
-    } // Getters
+      for (i = 0; i < Math.max(1, options.yaxes.length); ++i) {
+        options.yaxes[i] = $.extend(true, {}, options.yaxis, options.yaxes[i]);
+      } // backwards compatibility, to be removed in future
 
 
-    var _proto = Button.prototype;
+      if (options.xaxis.noTicks && options.xaxis.ticks == null) options.xaxis.ticks = options.xaxis.noTicks;
+      if (options.yaxis.noTicks && options.yaxis.ticks == null) options.yaxis.ticks = options.yaxis.noTicks;
 
-    // Public
-    _proto.toggle = function toggle() {
-      var triggerChangeEvent = true;
-      var addAriaPressed = true;
-      var rootElement = $__default['default'](this._element).closest(SELECTOR_DATA_TOGGLES)[0];
+      if (options.x2axis) {
+        options.xaxes[1] = $.extend(true, {}, options.xaxis, options.x2axis);
+        options.xaxes[1].position = "top";
+      }
 
-      if (rootElement) {
-        var input = this._element.querySelector(SELECTOR_INPUT);
+      if (options.y2axis) {
+        options.yaxes[1] = $.extend(true, {}, options.yaxis, options.y2axis);
+        options.yaxes[1].position = "right";
+      }
 
-        if (input) {
-          if (input.type === 'radio') {
-            if (input.checked && this._element.classList.contains(CLASS_NAME_ACTIVE)) {
-              triggerChangeEvent = false;
-            } else {
-              var activeElement = rootElement.querySelector(SELECTOR_ACTIVE);
+      if (options.grid.coloredAreas) options.grid.markings = options.grid.coloredAreas;
+      if (options.grid.coloredAreasColor) options.grid.markingsColor = options.grid.coloredAreasColor;
+      if (options.lines) $.extend(true, options.series.lines, options.lines);
+      if (options.points) $.extend(true, options.series.points, options.points);
+      if (options.bars) $.extend(true, options.series.bars, options.bars);
+      if (options.shadowSize != null) options.series.shadowSize = options.shadowSize; // save options on axes for future reference
 
-              if (activeElement) {
-                $__default['default'](activeElement).removeClass(CLASS_NAME_ACTIVE);
+      for (i = 0; i < options.xaxes.length; ++i) {
+        getOrCreateAxis(xaxes, i + 1).options = options.xaxes[i];
+      }
+
+      for (i = 0; i < options.yaxes.length; ++i) {
+        getOrCreateAxis(yaxes, i + 1).options = options.yaxes[i];
+      } // add hooks from options
+
+
+      for (var n in hooks) {
+        if (options.hooks[n] && options.hooks[n].length) hooks[n] = hooks[n].concat(options.hooks[n]);
+      }
+
+      executeHooks(hooks.processOptions, [options]);
+    }
+
+    function setData(d) {
+      series = parseData(d);
+      fillInSeriesOptions();
+      processData();
+    }
+
+    function parseData(d) {
+      var res = [];
+
+      for (var i = 0; i < d.length; ++i) {
+        var s = $.extend(true, {}, options.series);
+
+        if (d[i].data != null) {
+          s.data = d[i].data; // move the data instead of deep-copy
+
+          delete d[i].data;
+          $.extend(true, s, d[i]);
+          d[i].data = s.data;
+        } else s.data = d[i];
+
+        res.push(s);
+      }
+
+      return res;
+    }
+
+    function axisNumber(obj, coord) {
+      var a = obj[coord + "axis"];
+      if (_typeof(a) == "object") // if we got a real axis, extract number
+        a = a.n;
+      if (typeof a != "number") a = 1; // default to first axis
+
+      return a;
+    }
+
+    function allAxes() {
+      // return flat array without annoying null entries
+      return $.grep(xaxes.concat(yaxes), function (a) {
+        return a;
+      });
+    }
+
+    function canvasToAxisCoords(pos) {
+      // return an object with x/y corresponding to all used axes
+      var res = {},
+          i,
+          axis;
+
+      for (i = 0; i < xaxes.length; ++i) {
+        axis = xaxes[i];
+        if (axis && axis.used) res["x" + axis.n] = axis.c2p(pos.left);
+      }
+
+      for (i = 0; i < yaxes.length; ++i) {
+        axis = yaxes[i];
+        if (axis && axis.used) res["y" + axis.n] = axis.c2p(pos.top);
+      }
+
+      if (res.x1 !== undefined) res.x = res.x1;
+      if (res.y1 !== undefined) res.y = res.y1;
+      return res;
+    }
+
+    function axisToCanvasCoords(pos) {
+      // get canvas coords from the first pair of x/y found in pos
+      var res = {},
+          i,
+          axis,
+          key;
+
+      for (i = 0; i < xaxes.length; ++i) {
+        axis = xaxes[i];
+
+        if (axis && axis.used) {
+          key = "x" + axis.n;
+          if (pos[key] == null && axis.n == 1) key = "x";
+
+          if (pos[key] != null) {
+            res.left = axis.p2c(pos[key]);
+            break;
+          }
+        }
+      }
+
+      for (i = 0; i < yaxes.length; ++i) {
+        axis = yaxes[i];
+
+        if (axis && axis.used) {
+          key = "y" + axis.n;
+          if (pos[key] == null && axis.n == 1) key = "y";
+
+          if (pos[key] != null) {
+            res.top = axis.p2c(pos[key]);
+            break;
+          }
+        }
+      }
+
+      return res;
+    }
+
+    function getOrCreateAxis(axes, number) {
+      if (!axes[number - 1]) axes[number - 1] = {
+        n: number,
+        // save the number for future reference
+        direction: axes == xaxes ? "x" : "y",
+        options: $.extend(true, {}, axes == xaxes ? options.xaxis : options.yaxis)
+      };
+      return axes[number - 1];
+    }
+
+    function fillInSeriesOptions() {
+      var i; // collect what we already got of colors
+
+      var neededColors = series.length,
+          usedColors = [],
+          assignedColors = [];
+
+      for (i = 0; i < series.length; ++i) {
+        var sc = series[i].color;
+
+        if (sc != null) {
+          --neededColors;
+          if (typeof sc == "number") assignedColors.push(sc);else usedColors.push($.color.parse(series[i].color));
+        }
+      } // we might need to generate more colors if higher indices
+      // are assigned
+
+
+      for (i = 0; i < assignedColors.length; ++i) {
+        neededColors = Math.max(neededColors, assignedColors[i] + 1);
+      } // produce colors as needed
+
+
+      var colors = [],
+          variation = 0;
+      i = 0;
+
+      while (colors.length < neededColors) {
+        var c;
+        if (options.colors.length == i) // check degenerate case
+          c = $.color.make(100, 100, 100);else c = $.color.parse(options.colors[i]); // vary color if needed
+
+        var sign = variation % 2 == 1 ? -1 : 1;
+        c.scale('rgb', 1 + sign * Math.ceil(variation / 2) * 0.2); // FIXME: if we're getting to close to something else,
+        // we should probably skip this one
+
+        colors.push(c);
+        ++i;
+
+        if (i >= options.colors.length) {
+          i = 0;
+          ++variation;
+        }
+      } // fill in the options
+
+
+      var colori = 0,
+          s;
+
+      for (i = 0; i < series.length; ++i) {
+        s = series[i]; // assign colors
+
+        if (s.color == null) {
+          s.color = colors[colori].toString();
+          ++colori;
+        } else if (typeof s.color == "number") s.color = colors[s.color].toString(); // turn on lines automatically in case nothing is set
+
+
+        if (s.lines.show == null) {
+          var v,
+              show = true;
+
+          for (v in s) {
+            if (s[v] && s[v].show) {
+              show = false;
+              break;
+            }
+          }
+
+          if (show) s.lines.show = true;
+        } // setup axes
+
+
+        s.xaxis = getOrCreateAxis(xaxes, axisNumber(s, "x"));
+        s.yaxis = getOrCreateAxis(yaxes, axisNumber(s, "y"));
+      }
+    }
+
+    function processData() {
+      var topSentry = Number.POSITIVE_INFINITY,
+          bottomSentry = Number.NEGATIVE_INFINITY,
+          fakeInfinity = Number.MAX_VALUE,
+          i,
+          j,
+          k,
+          m,
+          length,
+          s,
+          points,
+          ps,
+          x,
+          y,
+          axis,
+          val,
+          f,
+          p;
+
+      function updateAxis(axis, min, max) {
+        if (min < axis.datamin && min != -fakeInfinity) axis.datamin = min;
+        if (max > axis.datamax && max != fakeInfinity) axis.datamax = max;
+      }
+
+      $.each(allAxes(), function (_, axis) {
+        // init axis
+        axis.datamin = topSentry;
+        axis.datamax = bottomSentry;
+        axis.used = false;
+      });
+
+      for (i = 0; i < series.length; ++i) {
+        s = series[i];
+        s.datapoints = {
+          points: []
+        };
+        executeHooks(hooks.processRawData, [s, s.data, s.datapoints]);
+      } // first pass: clean and copy data
+
+
+      for (i = 0; i < series.length; ++i) {
+        s = series[i];
+        var data = s.data,
+            format = s.datapoints.format;
+
+        if (!format) {
+          format = []; // find out how to copy
+
+          format.push({
+            x: true,
+            number: true,
+            required: true
+          });
+          format.push({
+            y: true,
+            number: true,
+            required: true
+          });
+
+          if (s.bars.show || s.lines.show && s.lines.fill) {
+            format.push({
+              y: true,
+              number: true,
+              required: false,
+              defaultValue: 0
+            });
+
+            if (s.bars.horizontal) {
+              delete format[format.length - 1].y;
+              format[format.length - 1].x = true;
+            }
+          }
+
+          s.datapoints.format = format;
+        }
+
+        if (s.datapoints.pointsize != null) continue; // already filled in
+
+        s.datapoints.pointsize = format.length;
+        ps = s.datapoints.pointsize;
+        points = s.datapoints.points;
+        insertSteps = s.lines.show && s.lines.steps;
+        s.xaxis.used = s.yaxis.used = true;
+
+        for (j = k = 0; j < data.length; ++j, k += ps) {
+          p = data[j];
+          var nullify = p == null;
+
+          if (!nullify) {
+            for (m = 0; m < ps; ++m) {
+              val = p[m];
+              f = format[m];
+
+              if (f) {
+                if (f.number && val != null) {
+                  val = +val; // convert to number
+
+                  if (isNaN(val)) val = null;else if (val == Infinity) val = fakeInfinity;else if (val == -Infinity) val = -fakeInfinity;
+                }
+
+                if (val == null) {
+                  if (f.required) nullify = true;
+                  if (f.defaultValue != null) val = f.defaultValue;
+                }
               }
+
+              points[k + m] = val;
             }
           }
 
-          if (triggerChangeEvent) {
-            // if it's not a radio button or checkbox don't add a pointless/invalid checked property to the input
-            if (input.type === 'checkbox' || input.type === 'radio') {
-              input.checked = !this._element.classList.contains(CLASS_NAME_ACTIVE);
+          if (nullify) {
+            for (m = 0; m < ps; ++m) {
+              val = points[k + m];
+
+              if (val != null) {
+                f = format[m]; // extract min/max info
+
+                if (f.x) updateAxis(s.xaxis, val, val);
+                if (f.y) updateAxis(s.yaxis, val, val);
+              }
+
+              points[k + m] = null;
             }
-
-            if (!this.shouldAvoidTriggerChange) {
-              $__default['default'](input).trigger('change');
-            }
-          }
-
-          input.focus();
-          addAriaPressed = false;
-        }
-      }
-
-      if (!(this._element.hasAttribute('disabled') || this._element.classList.contains('disabled'))) {
-        if (addAriaPressed) {
-          this._element.setAttribute('aria-pressed', !this._element.classList.contains(CLASS_NAME_ACTIVE));
-        }
-
-        if (triggerChangeEvent) {
-          $__default['default'](this._element).toggleClass(CLASS_NAME_ACTIVE);
-        }
-      }
-    };
-
-    _proto.dispose = function dispose() {
-      $__default['default'].removeData(this._element, DATA_KEY$1);
-      this._element = null;
-    } // Static
-    ;
-
-    Button._jQueryInterface = function _jQueryInterface(config, avoidTriggerChange) {
-      return this.each(function () {
-        var $element = $__default['default'](this);
-        var data = $element.data(DATA_KEY$1);
-
-        if (!data) {
-          data = new Button(this);
-          $element.data(DATA_KEY$1, data);
-        }
-
-        data.shouldAvoidTriggerChange = avoidTriggerChange;
-
-        if (config === 'toggle') {
-          data[config]();
-        }
-      });
-    };
-
-    _createClass(Button, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$1;
-      }
-    }]);
-
-    return Button;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'](document).on(EVENT_CLICK_DATA_API$1, SELECTOR_DATA_TOGGLE_CARROT, function (event) {
-    var button = event.target;
-    var initialButton = button;
-
-    if (!$__default['default'](button).hasClass(CLASS_NAME_BUTTON)) {
-      button = $__default['default'](button).closest(SELECTOR_BUTTON)[0];
-    }
-
-    if (!button || button.hasAttribute('disabled') || button.classList.contains('disabled')) {
-      event.preventDefault(); // work around Firefox bug #1540995
-    } else {
-      var inputBtn = button.querySelector(SELECTOR_INPUT);
-
-      if (inputBtn && (inputBtn.hasAttribute('disabled') || inputBtn.classList.contains('disabled'))) {
-        event.preventDefault(); // work around Firefox bug #1540995
-
-        return;
-      }
-
-      if (initialButton.tagName === 'INPUT' || button.tagName !== 'LABEL') {
-        Button._jQueryInterface.call($__default['default'](button), 'toggle', initialButton.tagName === 'INPUT');
-      }
-    }
-  }).on(EVENT_FOCUS_BLUR_DATA_API, SELECTOR_DATA_TOGGLE_CARROT, function (event) {
-    var button = $__default['default'](event.target).closest(SELECTOR_BUTTON)[0];
-    $__default['default'](button).toggleClass(CLASS_NAME_FOCUS, /^focus(in)?$/.test(event.type));
-  });
-  $__default['default'](window).on(EVENT_LOAD_DATA_API, function () {
-    // ensure correct active class is set to match the controls' actual values/states
-    // find all checkboxes/readio buttons inside data-toggle groups
-    var buttons = [].slice.call(document.querySelectorAll(SELECTOR_DATA_TOGGLES_BUTTONS));
-
-    for (var i = 0, len = buttons.length; i < len; i++) {
-      var button = buttons[i];
-      var input = button.querySelector(SELECTOR_INPUT);
-
-      if (input.checked || input.hasAttribute('checked')) {
-        button.classList.add(CLASS_NAME_ACTIVE);
-      } else {
-        button.classList.remove(CLASS_NAME_ACTIVE);
-      }
-    } // find all button toggles
-
-
-    buttons = [].slice.call(document.querySelectorAll(SELECTOR_DATA_TOGGLE));
-
-    for (var _i = 0, _len = buttons.length; _i < _len; _i++) {
-      var _button = buttons[_i];
-
-      if (_button.getAttribute('aria-pressed') === 'true') {
-        _button.classList.add(CLASS_NAME_ACTIVE);
-      } else {
-        _button.classList.remove(CLASS_NAME_ACTIVE);
-      }
-    }
-  });
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $__default['default'].fn[NAME$1] = Button._jQueryInterface;
-  $__default['default'].fn[NAME$1].Constructor = Button;
-
-  $__default['default'].fn[NAME$1].noConflict = function () {
-    $__default['default'].fn[NAME$1] = JQUERY_NO_CONFLICT$1;
-    return Button._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$2 = 'carousel';
-  var VERSION$2 = '4.6.0';
-  var DATA_KEY$2 = 'bs.carousel';
-  var EVENT_KEY$2 = "." + DATA_KEY$2;
-  var DATA_API_KEY$2 = '.data-api';
-  var JQUERY_NO_CONFLICT$2 = $__default['default'].fn[NAME$2];
-  var ARROW_LEFT_KEYCODE = 37; // KeyboardEvent.which value for left arrow key
-
-  var ARROW_RIGHT_KEYCODE = 39; // KeyboardEvent.which value for right arrow key
-
-  var TOUCHEVENT_COMPAT_WAIT = 500; // Time for mouse compat events to fire after touch
-
-  var SWIPE_THRESHOLD = 40;
-  var Default = {
-    interval: 5000,
-    keyboard: true,
-    slide: false,
-    pause: 'hover',
-    wrap: true,
-    touch: true
-  };
-  var DefaultType = {
-    interval: '(number|boolean)',
-    keyboard: 'boolean',
-    slide: '(boolean|string)',
-    pause: '(string|boolean)',
-    wrap: 'boolean',
-    touch: 'boolean'
-  };
-  var DIRECTION_NEXT = 'next';
-  var DIRECTION_PREV = 'prev';
-  var DIRECTION_LEFT = 'left';
-  var DIRECTION_RIGHT = 'right';
-  var EVENT_SLIDE = "slide" + EVENT_KEY$2;
-  var EVENT_SLID = "slid" + EVENT_KEY$2;
-  var EVENT_KEYDOWN = "keydown" + EVENT_KEY$2;
-  var EVENT_MOUSEENTER = "mouseenter" + EVENT_KEY$2;
-  var EVENT_MOUSELEAVE = "mouseleave" + EVENT_KEY$2;
-  var EVENT_TOUCHSTART = "touchstart" + EVENT_KEY$2;
-  var EVENT_TOUCHMOVE = "touchmove" + EVENT_KEY$2;
-  var EVENT_TOUCHEND = "touchend" + EVENT_KEY$2;
-  var EVENT_POINTERDOWN = "pointerdown" + EVENT_KEY$2;
-  var EVENT_POINTERUP = "pointerup" + EVENT_KEY$2;
-  var EVENT_DRAG_START = "dragstart" + EVENT_KEY$2;
-  var EVENT_LOAD_DATA_API$1 = "load" + EVENT_KEY$2 + DATA_API_KEY$2;
-  var EVENT_CLICK_DATA_API$2 = "click" + EVENT_KEY$2 + DATA_API_KEY$2;
-  var CLASS_NAME_CAROUSEL = 'carousel';
-  var CLASS_NAME_ACTIVE$1 = 'active';
-  var CLASS_NAME_SLIDE = 'slide';
-  var CLASS_NAME_RIGHT = 'carousel-item-right';
-  var CLASS_NAME_LEFT = 'carousel-item-left';
-  var CLASS_NAME_NEXT = 'carousel-item-next';
-  var CLASS_NAME_PREV = 'carousel-item-prev';
-  var CLASS_NAME_POINTER_EVENT = 'pointer-event';
-  var SELECTOR_ACTIVE$1 = '.active';
-  var SELECTOR_ACTIVE_ITEM = '.active.carousel-item';
-  var SELECTOR_ITEM = '.carousel-item';
-  var SELECTOR_ITEM_IMG = '.carousel-item img';
-  var SELECTOR_NEXT_PREV = '.carousel-item-next, .carousel-item-prev';
-  var SELECTOR_INDICATORS = '.carousel-indicators';
-  var SELECTOR_DATA_SLIDE = '[data-slide], [data-slide-to]';
-  var SELECTOR_DATA_RIDE = '[data-ride="carousel"]';
-  var PointerType = {
-    TOUCH: 'touch',
-    PEN: 'pen'
-  };
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Carousel = /*#__PURE__*/function () {
-    function Carousel(element, config) {
-      this._items = null;
-      this._interval = null;
-      this._activeElement = null;
-      this._isPaused = false;
-      this._isSliding = false;
-      this.touchTimeout = null;
-      this.touchStartX = 0;
-      this.touchDeltaX = 0;
-      this._config = this._getConfig(config);
-      this._element = element;
-      this._indicatorsElement = this._element.querySelector(SELECTOR_INDICATORS);
-      this._touchSupported = 'ontouchstart' in document.documentElement || navigator.maxTouchPoints > 0;
-      this._pointerEvent = Boolean(window.PointerEvent || window.MSPointerEvent);
-
-      this._addEventListeners();
-    } // Getters
-
-
-    var _proto = Carousel.prototype;
-
-    // Public
-    _proto.next = function next() {
-      if (!this._isSliding) {
-        this._slide(DIRECTION_NEXT);
-      }
-    };
-
-    _proto.nextWhenVisible = function nextWhenVisible() {
-      var $element = $__default['default'](this._element); // Don't call next when the page isn't visible
-      // or the carousel or its parent isn't visible
-
-      if (!document.hidden && $element.is(':visible') && $element.css('visibility') !== 'hidden') {
-        this.next();
-      }
-    };
-
-    _proto.prev = function prev() {
-      if (!this._isSliding) {
-        this._slide(DIRECTION_PREV);
-      }
-    };
-
-    _proto.pause = function pause(event) {
-      if (!event) {
-        this._isPaused = true;
-      }
-
-      if (this._element.querySelector(SELECTOR_NEXT_PREV)) {
-        Util.triggerTransitionEnd(this._element);
-        this.cycle(true);
-      }
-
-      clearInterval(this._interval);
-      this._interval = null;
-    };
-
-    _proto.cycle = function cycle(event) {
-      if (!event) {
-        this._isPaused = false;
-      }
-
-      if (this._interval) {
-        clearInterval(this._interval);
-        this._interval = null;
-      }
-
-      if (this._config.interval && !this._isPaused) {
-        this._updateInterval();
-
-        this._interval = setInterval((document.visibilityState ? this.nextWhenVisible : this.next).bind(this), this._config.interval);
-      }
-    };
-
-    _proto.to = function to(index) {
-      var _this = this;
-
-      this._activeElement = this._element.querySelector(SELECTOR_ACTIVE_ITEM);
-
-      var activeIndex = this._getItemIndex(this._activeElement);
-
-      if (index > this._items.length - 1 || index < 0) {
-        return;
-      }
-
-      if (this._isSliding) {
-        $__default['default'](this._element).one(EVENT_SLID, function () {
-          return _this.to(index);
-        });
-        return;
-      }
-
-      if (activeIndex === index) {
-        this.pause();
-        this.cycle();
-        return;
-      }
-
-      var direction = index > activeIndex ? DIRECTION_NEXT : DIRECTION_PREV;
-
-      this._slide(direction, this._items[index]);
-    };
-
-    _proto.dispose = function dispose() {
-      $__default['default'](this._element).off(EVENT_KEY$2);
-      $__default['default'].removeData(this._element, DATA_KEY$2);
-      this._items = null;
-      this._config = null;
-      this._element = null;
-      this._interval = null;
-      this._isPaused = null;
-      this._isSliding = null;
-      this._activeElement = null;
-      this._indicatorsElement = null;
-    } // Private
-    ;
-
-    _proto._getConfig = function _getConfig(config) {
-      config = _extends({}, Default, config);
-      Util.typeCheckConfig(NAME$2, config, DefaultType);
-      return config;
-    };
-
-    _proto._handleSwipe = function _handleSwipe() {
-      var absDeltax = Math.abs(this.touchDeltaX);
-
-      if (absDeltax <= SWIPE_THRESHOLD) {
-        return;
-      }
-
-      var direction = absDeltax / this.touchDeltaX;
-      this.touchDeltaX = 0; // swipe left
-
-      if (direction > 0) {
-        this.prev();
-      } // swipe right
-
-
-      if (direction < 0) {
-        this.next();
-      }
-    };
-
-    _proto._addEventListeners = function _addEventListeners() {
-      var _this2 = this;
-
-      if (this._config.keyboard) {
-        $__default['default'](this._element).on(EVENT_KEYDOWN, function (event) {
-          return _this2._keydown(event);
-        });
-      }
-
-      if (this._config.pause === 'hover') {
-        $__default['default'](this._element).on(EVENT_MOUSEENTER, function (event) {
-          return _this2.pause(event);
-        }).on(EVENT_MOUSELEAVE, function (event) {
-          return _this2.cycle(event);
-        });
-      }
-
-      if (this._config.touch) {
-        this._addTouchEventListeners();
-      }
-    };
-
-    _proto._addTouchEventListeners = function _addTouchEventListeners() {
-      var _this3 = this;
-
-      if (!this._touchSupported) {
-        return;
-      }
-
-      var start = function start(event) {
-        if (_this3._pointerEvent && PointerType[event.originalEvent.pointerType.toUpperCase()]) {
-          _this3.touchStartX = event.originalEvent.clientX;
-        } else if (!_this3._pointerEvent) {
-          _this3.touchStartX = event.originalEvent.touches[0].clientX;
-        }
-      };
-
-      var move = function move(event) {
-        // ensure swiping with one touch and not pinching
-        if (event.originalEvent.touches && event.originalEvent.touches.length > 1) {
-          _this3.touchDeltaX = 0;
-        } else {
-          _this3.touchDeltaX = event.originalEvent.touches[0].clientX - _this3.touchStartX;
-        }
-      };
-
-      var end = function end(event) {
-        if (_this3._pointerEvent && PointerType[event.originalEvent.pointerType.toUpperCase()]) {
-          _this3.touchDeltaX = event.originalEvent.clientX - _this3.touchStartX;
-        }
-
-        _this3._handleSwipe();
-
-        if (_this3._config.pause === 'hover') {
-          // If it's a touch-enabled device, mouseenter/leave are fired as
-          // part of the mouse compatibility events on first tap - the carousel
-          // would stop cycling until user tapped out of it;
-          // here, we listen for touchend, explicitly pause the carousel
-          // (as if it's the second time we tap on it, mouseenter compat event
-          // is NOT fired) and after a timeout (to allow for mouse compatibility
-          // events to fire) we explicitly restart cycling
-          _this3.pause();
-
-          if (_this3.touchTimeout) {
-            clearTimeout(_this3.touchTimeout);
-          }
-
-          _this3.touchTimeout = setTimeout(function (event) {
-            return _this3.cycle(event);
-          }, TOUCHEVENT_COMPAT_WAIT + _this3._config.interval);
-        }
-      };
-
-      $__default['default'](this._element.querySelectorAll(SELECTOR_ITEM_IMG)).on(EVENT_DRAG_START, function (e) {
-        return e.preventDefault();
-      });
-
-      if (this._pointerEvent) {
-        $__default['default'](this._element).on(EVENT_POINTERDOWN, function (event) {
-          return start(event);
-        });
-        $__default['default'](this._element).on(EVENT_POINTERUP, function (event) {
-          return end(event);
-        });
-
-        this._element.classList.add(CLASS_NAME_POINTER_EVENT);
-      } else {
-        $__default['default'](this._element).on(EVENT_TOUCHSTART, function (event) {
-          return start(event);
-        });
-        $__default['default'](this._element).on(EVENT_TOUCHMOVE, function (event) {
-          return move(event);
-        });
-        $__default['default'](this._element).on(EVENT_TOUCHEND, function (event) {
-          return end(event);
-        });
-      }
-    };
-
-    _proto._keydown = function _keydown(event) {
-      if (/input|textarea/i.test(event.target.tagName)) {
-        return;
-      }
-
-      switch (event.which) {
-        case ARROW_LEFT_KEYCODE:
-          event.preventDefault();
-          this.prev();
-          break;
-
-        case ARROW_RIGHT_KEYCODE:
-          event.preventDefault();
-          this.next();
-          break;
-      }
-    };
-
-    _proto._getItemIndex = function _getItemIndex(element) {
-      this._items = element && element.parentNode ? [].slice.call(element.parentNode.querySelectorAll(SELECTOR_ITEM)) : [];
-      return this._items.indexOf(element);
-    };
-
-    _proto._getItemByDirection = function _getItemByDirection(direction, activeElement) {
-      var isNextDirection = direction === DIRECTION_NEXT;
-      var isPrevDirection = direction === DIRECTION_PREV;
-
-      var activeIndex = this._getItemIndex(activeElement);
-
-      var lastItemIndex = this._items.length - 1;
-      var isGoingToWrap = isPrevDirection && activeIndex === 0 || isNextDirection && activeIndex === lastItemIndex;
-
-      if (isGoingToWrap && !this._config.wrap) {
-        return activeElement;
-      }
-
-      var delta = direction === DIRECTION_PREV ? -1 : 1;
-      var itemIndex = (activeIndex + delta) % this._items.length;
-      return itemIndex === -1 ? this._items[this._items.length - 1] : this._items[itemIndex];
-    };
-
-    _proto._triggerSlideEvent = function _triggerSlideEvent(relatedTarget, eventDirectionName) {
-      var targetIndex = this._getItemIndex(relatedTarget);
-
-      var fromIndex = this._getItemIndex(this._element.querySelector(SELECTOR_ACTIVE_ITEM));
-
-      var slideEvent = $__default['default'].Event(EVENT_SLIDE, {
-        relatedTarget: relatedTarget,
-        direction: eventDirectionName,
-        from: fromIndex,
-        to: targetIndex
-      });
-      $__default['default'](this._element).trigger(slideEvent);
-      return slideEvent;
-    };
-
-    _proto._setActiveIndicatorElement = function _setActiveIndicatorElement(element) {
-      if (this._indicatorsElement) {
-        var indicators = [].slice.call(this._indicatorsElement.querySelectorAll(SELECTOR_ACTIVE$1));
-        $__default['default'](indicators).removeClass(CLASS_NAME_ACTIVE$1);
-
-        var nextIndicator = this._indicatorsElement.children[this._getItemIndex(element)];
-
-        if (nextIndicator) {
-          $__default['default'](nextIndicator).addClass(CLASS_NAME_ACTIVE$1);
-        }
-      }
-    };
-
-    _proto._updateInterval = function _updateInterval() {
-      var element = this._activeElement || this._element.querySelector(SELECTOR_ACTIVE_ITEM);
-
-      if (!element) {
-        return;
-      }
-
-      var elementInterval = parseInt(element.getAttribute('data-interval'), 10);
-
-      if (elementInterval) {
-        this._config.defaultInterval = this._config.defaultInterval || this._config.interval;
-        this._config.interval = elementInterval;
-      } else {
-        this._config.interval = this._config.defaultInterval || this._config.interval;
-      }
-    };
-
-    _proto._slide = function _slide(direction, element) {
-      var _this4 = this;
-
-      var activeElement = this._element.querySelector(SELECTOR_ACTIVE_ITEM);
-
-      var activeElementIndex = this._getItemIndex(activeElement);
-
-      var nextElement = element || activeElement && this._getItemByDirection(direction, activeElement);
-
-      var nextElementIndex = this._getItemIndex(nextElement);
-
-      var isCycling = Boolean(this._interval);
-      var directionalClassName;
-      var orderClassName;
-      var eventDirectionName;
-
-      if (direction === DIRECTION_NEXT) {
-        directionalClassName = CLASS_NAME_LEFT;
-        orderClassName = CLASS_NAME_NEXT;
-        eventDirectionName = DIRECTION_LEFT;
-      } else {
-        directionalClassName = CLASS_NAME_RIGHT;
-        orderClassName = CLASS_NAME_PREV;
-        eventDirectionName = DIRECTION_RIGHT;
-      }
-
-      if (nextElement && $__default['default'](nextElement).hasClass(CLASS_NAME_ACTIVE$1)) {
-        this._isSliding = false;
-        return;
-      }
-
-      var slideEvent = this._triggerSlideEvent(nextElement, eventDirectionName);
-
-      if (slideEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      if (!activeElement || !nextElement) {
-        // Some weirdness is happening, so we bail
-        return;
-      }
-
-      this._isSliding = true;
-
-      if (isCycling) {
-        this.pause();
-      }
-
-      this._setActiveIndicatorElement(nextElement);
-
-      this._activeElement = nextElement;
-      var slidEvent = $__default['default'].Event(EVENT_SLID, {
-        relatedTarget: nextElement,
-        direction: eventDirectionName,
-        from: activeElementIndex,
-        to: nextElementIndex
-      });
-
-      if ($__default['default'](this._element).hasClass(CLASS_NAME_SLIDE)) {
-        $__default['default'](nextElement).addClass(orderClassName);
-        Util.reflow(nextElement);
-        $__default['default'](activeElement).addClass(directionalClassName);
-        $__default['default'](nextElement).addClass(directionalClassName);
-        var transitionDuration = Util.getTransitionDurationFromElement(activeElement);
-        $__default['default'](activeElement).one(Util.TRANSITION_END, function () {
-          $__default['default'](nextElement).removeClass(directionalClassName + " " + orderClassName).addClass(CLASS_NAME_ACTIVE$1);
-          $__default['default'](activeElement).removeClass(CLASS_NAME_ACTIVE$1 + " " + orderClassName + " " + directionalClassName);
-          _this4._isSliding = false;
-          setTimeout(function () {
-            return $__default['default'](_this4._element).trigger(slidEvent);
-          }, 0);
-        }).emulateTransitionEnd(transitionDuration);
-      } else {
-        $__default['default'](activeElement).removeClass(CLASS_NAME_ACTIVE$1);
-        $__default['default'](nextElement).addClass(CLASS_NAME_ACTIVE$1);
-        this._isSliding = false;
-        $__default['default'](this._element).trigger(slidEvent);
-      }
-
-      if (isCycling) {
-        this.cycle();
-      }
-    } // Static
-    ;
-
-    Carousel._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var data = $__default['default'](this).data(DATA_KEY$2);
-
-        var _config = _extends({}, Default, $__default['default'](this).data());
-
-        if (typeof config === 'object') {
-          _config = _extends({}, _config, config);
-        }
-
-        var action = typeof config === 'string' ? config : _config.slide;
-
-        if (!data) {
-          data = new Carousel(this, _config);
-          $__default['default'](this).data(DATA_KEY$2, data);
-        }
-
-        if (typeof config === 'number') {
-          data.to(config);
-        } else if (typeof action === 'string') {
-          if (typeof data[action] === 'undefined') {
-            throw new TypeError("No method named \"" + action + "\"");
-          }
-
-          data[action]();
-        } else if (_config.interval && _config.ride) {
-          data.pause();
-          data.cycle();
-        }
-      });
-    };
-
-    Carousel._dataApiClickHandler = function _dataApiClickHandler(event) {
-      var selector = Util.getSelectorFromElement(this);
-
-      if (!selector) {
-        return;
-      }
-
-      var target = $__default['default'](selector)[0];
-
-      if (!target || !$__default['default'](target).hasClass(CLASS_NAME_CAROUSEL)) {
-        return;
-      }
-
-      var config = _extends({}, $__default['default'](target).data(), $__default['default'](this).data());
-
-      var slideIndex = this.getAttribute('data-slide-to');
-
-      if (slideIndex) {
-        config.interval = false;
-      }
-
-      Carousel._jQueryInterface.call($__default['default'](target), config);
-
-      if (slideIndex) {
-        $__default['default'](target).data(DATA_KEY$2).to(slideIndex);
-      }
-
-      event.preventDefault();
-    };
-
-    _createClass(Carousel, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$2;
-      }
-    }, {
-      key: "Default",
-      get: function get() {
-        return Default;
-      }
-    }]);
-
-    return Carousel;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'](document).on(EVENT_CLICK_DATA_API$2, SELECTOR_DATA_SLIDE, Carousel._dataApiClickHandler);
-  $__default['default'](window).on(EVENT_LOAD_DATA_API$1, function () {
-    var carousels = [].slice.call(document.querySelectorAll(SELECTOR_DATA_RIDE));
-
-    for (var i = 0, len = carousels.length; i < len; i++) {
-      var $carousel = $__default['default'](carousels[i]);
-
-      Carousel._jQueryInterface.call($carousel, $carousel.data());
-    }
-  });
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $__default['default'].fn[NAME$2] = Carousel._jQueryInterface;
-  $__default['default'].fn[NAME$2].Constructor = Carousel;
-
-  $__default['default'].fn[NAME$2].noConflict = function () {
-    $__default['default'].fn[NAME$2] = JQUERY_NO_CONFLICT$2;
-    return Carousel._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$3 = 'collapse';
-  var VERSION$3 = '4.6.0';
-  var DATA_KEY$3 = 'bs.collapse';
-  var EVENT_KEY$3 = "." + DATA_KEY$3;
-  var DATA_API_KEY$3 = '.data-api';
-  var JQUERY_NO_CONFLICT$3 = $__default['default'].fn[NAME$3];
-  var Default$1 = {
-    toggle: true,
-    parent: ''
-  };
-  var DefaultType$1 = {
-    toggle: 'boolean',
-    parent: '(string|element)'
-  };
-  var EVENT_SHOW = "show" + EVENT_KEY$3;
-  var EVENT_SHOWN = "shown" + EVENT_KEY$3;
-  var EVENT_HIDE = "hide" + EVENT_KEY$3;
-  var EVENT_HIDDEN = "hidden" + EVENT_KEY$3;
-  var EVENT_CLICK_DATA_API$3 = "click" + EVENT_KEY$3 + DATA_API_KEY$3;
-  var CLASS_NAME_SHOW$1 = 'show';
-  var CLASS_NAME_COLLAPSE = 'collapse';
-  var CLASS_NAME_COLLAPSING = 'collapsing';
-  var CLASS_NAME_COLLAPSED = 'collapsed';
-  var DIMENSION_WIDTH = 'width';
-  var DIMENSION_HEIGHT = 'height';
-  var SELECTOR_ACTIVES = '.show, .collapsing';
-  var SELECTOR_DATA_TOGGLE$1 = '[data-toggle="collapse"]';
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Collapse = /*#__PURE__*/function () {
-    function Collapse(element, config) {
-      this._isTransitioning = false;
-      this._element = element;
-      this._config = this._getConfig(config);
-      this._triggerArray = [].slice.call(document.querySelectorAll("[data-toggle=\"collapse\"][href=\"#" + element.id + "\"]," + ("[data-toggle=\"collapse\"][data-target=\"#" + element.id + "\"]")));
-      var toggleList = [].slice.call(document.querySelectorAll(SELECTOR_DATA_TOGGLE$1));
-
-      for (var i = 0, len = toggleList.length; i < len; i++) {
-        var elem = toggleList[i];
-        var selector = Util.getSelectorFromElement(elem);
-        var filterElement = [].slice.call(document.querySelectorAll(selector)).filter(function (foundElem) {
-          return foundElem === element;
-        });
-
-        if (selector !== null && filterElement.length > 0) {
-          this._selector = selector;
-
-          this._triggerArray.push(elem);
-        }
-      }
-
-      this._parent = this._config.parent ? this._getParent() : null;
-
-      if (!this._config.parent) {
-        this._addAriaAndCollapsedClass(this._element, this._triggerArray);
-      }
-
-      if (this._config.toggle) {
-        this.toggle();
-      }
-    } // Getters
-
-
-    var _proto = Collapse.prototype;
-
-    // Public
-    _proto.toggle = function toggle() {
-      if ($__default['default'](this._element).hasClass(CLASS_NAME_SHOW$1)) {
-        this.hide();
-      } else {
-        this.show();
-      }
-    };
-
-    _proto.show = function show() {
-      var _this = this;
-
-      if (this._isTransitioning || $__default['default'](this._element).hasClass(CLASS_NAME_SHOW$1)) {
-        return;
-      }
-
-      var actives;
-      var activesData;
-
-      if (this._parent) {
-        actives = [].slice.call(this._parent.querySelectorAll(SELECTOR_ACTIVES)).filter(function (elem) {
-          if (typeof _this._config.parent === 'string') {
-            return elem.getAttribute('data-parent') === _this._config.parent;
-          }
-
-          return elem.classList.contains(CLASS_NAME_COLLAPSE);
-        });
-
-        if (actives.length === 0) {
-          actives = null;
-        }
-      }
-
-      if (actives) {
-        activesData = $__default['default'](actives).not(this._selector).data(DATA_KEY$3);
-
-        if (activesData && activesData._isTransitioning) {
-          return;
-        }
-      }
-
-      var startEvent = $__default['default'].Event(EVENT_SHOW);
-      $__default['default'](this._element).trigger(startEvent);
-
-      if (startEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      if (actives) {
-        Collapse._jQueryInterface.call($__default['default'](actives).not(this._selector), 'hide');
-
-        if (!activesData) {
-          $__default['default'](actives).data(DATA_KEY$3, null);
-        }
-      }
-
-      var dimension = this._getDimension();
-
-      $__default['default'](this._element).removeClass(CLASS_NAME_COLLAPSE).addClass(CLASS_NAME_COLLAPSING);
-      this._element.style[dimension] = 0;
-
-      if (this._triggerArray.length) {
-        $__default['default'](this._triggerArray).removeClass(CLASS_NAME_COLLAPSED).attr('aria-expanded', true);
-      }
-
-      this.setTransitioning(true);
-
-      var complete = function complete() {
-        $__default['default'](_this._element).removeClass(CLASS_NAME_COLLAPSING).addClass(CLASS_NAME_COLLAPSE + " " + CLASS_NAME_SHOW$1);
-        _this._element.style[dimension] = '';
-
-        _this.setTransitioning(false);
-
-        $__default['default'](_this._element).trigger(EVENT_SHOWN);
-      };
-
-      var capitalizedDimension = dimension[0].toUpperCase() + dimension.slice(1);
-      var scrollSize = "scroll" + capitalizedDimension;
-      var transitionDuration = Util.getTransitionDurationFromElement(this._element);
-      $__default['default'](this._element).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-      this._element.style[dimension] = this._element[scrollSize] + "px";
-    };
-
-    _proto.hide = function hide() {
-      var _this2 = this;
-
-      if (this._isTransitioning || !$__default['default'](this._element).hasClass(CLASS_NAME_SHOW$1)) {
-        return;
-      }
-
-      var startEvent = $__default['default'].Event(EVENT_HIDE);
-      $__default['default'](this._element).trigger(startEvent);
-
-      if (startEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      var dimension = this._getDimension();
-
-      this._element.style[dimension] = this._element.getBoundingClientRect()[dimension] + "px";
-      Util.reflow(this._element);
-      $__default['default'](this._element).addClass(CLASS_NAME_COLLAPSING).removeClass(CLASS_NAME_COLLAPSE + " " + CLASS_NAME_SHOW$1);
-      var triggerArrayLength = this._triggerArray.length;
-
-      if (triggerArrayLength > 0) {
-        for (var i = 0; i < triggerArrayLength; i++) {
-          var trigger = this._triggerArray[i];
-          var selector = Util.getSelectorFromElement(trigger);
-
-          if (selector !== null) {
-            var $elem = $__default['default']([].slice.call(document.querySelectorAll(selector)));
-
-            if (!$elem.hasClass(CLASS_NAME_SHOW$1)) {
-              $__default['default'](trigger).addClass(CLASS_NAME_COLLAPSED).attr('aria-expanded', false);
-            }
-          }
-        }
-      }
-
-      this.setTransitioning(true);
-
-      var complete = function complete() {
-        _this2.setTransitioning(false);
-
-        $__default['default'](_this2._element).removeClass(CLASS_NAME_COLLAPSING).addClass(CLASS_NAME_COLLAPSE).trigger(EVENT_HIDDEN);
-      };
-
-      this._element.style[dimension] = '';
-      var transitionDuration = Util.getTransitionDurationFromElement(this._element);
-      $__default['default'](this._element).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-    };
-
-    _proto.setTransitioning = function setTransitioning(isTransitioning) {
-      this._isTransitioning = isTransitioning;
-    };
-
-    _proto.dispose = function dispose() {
-      $__default['default'].removeData(this._element, DATA_KEY$3);
-      this._config = null;
-      this._parent = null;
-      this._element = null;
-      this._triggerArray = null;
-      this._isTransitioning = null;
-    } // Private
-    ;
-
-    _proto._getConfig = function _getConfig(config) {
-      config = _extends({}, Default$1, config);
-      config.toggle = Boolean(config.toggle); // Coerce string values
-
-      Util.typeCheckConfig(NAME$3, config, DefaultType$1);
-      return config;
-    };
-
-    _proto._getDimension = function _getDimension() {
-      var hasWidth = $__default['default'](this._element).hasClass(DIMENSION_WIDTH);
-      return hasWidth ? DIMENSION_WIDTH : DIMENSION_HEIGHT;
-    };
-
-    _proto._getParent = function _getParent() {
-      var _this3 = this;
-
-      var parent;
-
-      if (Util.isElement(this._config.parent)) {
-        parent = this._config.parent; // It's a jQuery object
-
-        if (typeof this._config.parent.jquery !== 'undefined') {
-          parent = this._config.parent[0];
-        }
-      } else {
-        parent = document.querySelector(this._config.parent);
-      }
-
-      var selector = "[data-toggle=\"collapse\"][data-parent=\"" + this._config.parent + "\"]";
-      var children = [].slice.call(parent.querySelectorAll(selector));
-      $__default['default'](children).each(function (i, element) {
-        _this3._addAriaAndCollapsedClass(Collapse._getTargetFromElement(element), [element]);
-      });
-      return parent;
-    };
-
-    _proto._addAriaAndCollapsedClass = function _addAriaAndCollapsedClass(element, triggerArray) {
-      var isOpen = $__default['default'](element).hasClass(CLASS_NAME_SHOW$1);
-
-      if (triggerArray.length) {
-        $__default['default'](triggerArray).toggleClass(CLASS_NAME_COLLAPSED, !isOpen).attr('aria-expanded', isOpen);
-      }
-    } // Static
-    ;
-
-    Collapse._getTargetFromElement = function _getTargetFromElement(element) {
-      var selector = Util.getSelectorFromElement(element);
-      return selector ? document.querySelector(selector) : null;
-    };
-
-    Collapse._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var $element = $__default['default'](this);
-        var data = $element.data(DATA_KEY$3);
-
-        var _config = _extends({}, Default$1, $element.data(), typeof config === 'object' && config ? config : {});
-
-        if (!data && _config.toggle && typeof config === 'string' && /show|hide/.test(config)) {
-          _config.toggle = false;
-        }
-
-        if (!data) {
-          data = new Collapse(this, _config);
-          $element.data(DATA_KEY$3, data);
-        }
-
-        if (typeof config === 'string') {
-          if (typeof data[config] === 'undefined') {
-            throw new TypeError("No method named \"" + config + "\"");
-          }
-
-          data[config]();
-        }
-      });
-    };
-
-    _createClass(Collapse, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$3;
-      }
-    }, {
-      key: "Default",
-      get: function get() {
-        return Default$1;
-      }
-    }]);
-
-    return Collapse;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'](document).on(EVENT_CLICK_DATA_API$3, SELECTOR_DATA_TOGGLE$1, function (event) {
-    // preventDefault only for <a> elements (which change the URL) not inside the collapsible element
-    if (event.currentTarget.tagName === 'A') {
-      event.preventDefault();
-    }
-
-    var $trigger = $__default['default'](this);
-    var selector = Util.getSelectorFromElement(this);
-    var selectors = [].slice.call(document.querySelectorAll(selector));
-    $__default['default'](selectors).each(function () {
-      var $target = $__default['default'](this);
-      var data = $target.data(DATA_KEY$3);
-      var config = data ? 'toggle' : $trigger.data();
-
-      Collapse._jQueryInterface.call($target, config);
-    });
-  });
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $__default['default'].fn[NAME$3] = Collapse._jQueryInterface;
-  $__default['default'].fn[NAME$3].Constructor = Collapse;
-
-  $__default['default'].fn[NAME$3].noConflict = function () {
-    $__default['default'].fn[NAME$3] = JQUERY_NO_CONFLICT$3;
-    return Collapse._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$4 = 'dropdown';
-  var VERSION$4 = '4.6.0';
-  var DATA_KEY$4 = 'bs.dropdown';
-  var EVENT_KEY$4 = "." + DATA_KEY$4;
-  var DATA_API_KEY$4 = '.data-api';
-  var JQUERY_NO_CONFLICT$4 = $__default['default'].fn[NAME$4];
-  var ESCAPE_KEYCODE = 27; // KeyboardEvent.which value for Escape (Esc) key
-
-  var SPACE_KEYCODE = 32; // KeyboardEvent.which value for space key
-
-  var TAB_KEYCODE = 9; // KeyboardEvent.which value for tab key
-
-  var ARROW_UP_KEYCODE = 38; // KeyboardEvent.which value for up arrow key
-
-  var ARROW_DOWN_KEYCODE = 40; // KeyboardEvent.which value for down arrow key
-
-  var RIGHT_MOUSE_BUTTON_WHICH = 3; // MouseEvent.which value for the right button (assuming a right-handed mouse)
-
-  var REGEXP_KEYDOWN = new RegExp(ARROW_UP_KEYCODE + "|" + ARROW_DOWN_KEYCODE + "|" + ESCAPE_KEYCODE);
-  var EVENT_HIDE$1 = "hide" + EVENT_KEY$4;
-  var EVENT_HIDDEN$1 = "hidden" + EVENT_KEY$4;
-  var EVENT_SHOW$1 = "show" + EVENT_KEY$4;
-  var EVENT_SHOWN$1 = "shown" + EVENT_KEY$4;
-  var EVENT_CLICK = "click" + EVENT_KEY$4;
-  var EVENT_CLICK_DATA_API$4 = "click" + EVENT_KEY$4 + DATA_API_KEY$4;
-  var EVENT_KEYDOWN_DATA_API = "keydown" + EVENT_KEY$4 + DATA_API_KEY$4;
-  var EVENT_KEYUP_DATA_API = "keyup" + EVENT_KEY$4 + DATA_API_KEY$4;
-  var CLASS_NAME_DISABLED = 'disabled';
-  var CLASS_NAME_SHOW$2 = 'show';
-  var CLASS_NAME_DROPUP = 'dropup';
-  var CLASS_NAME_DROPRIGHT = 'dropright';
-  var CLASS_NAME_DROPLEFT = 'dropleft';
-  var CLASS_NAME_MENURIGHT = 'dropdown-menu-right';
-  var CLASS_NAME_POSITION_STATIC = 'position-static';
-  var SELECTOR_DATA_TOGGLE$2 = '[data-toggle="dropdown"]';
-  var SELECTOR_FORM_CHILD = '.dropdown form';
-  var SELECTOR_MENU = '.dropdown-menu';
-  var SELECTOR_NAVBAR_NAV = '.navbar-nav';
-  var SELECTOR_VISIBLE_ITEMS = '.dropdown-menu .dropdown-item:not(.disabled):not(:disabled)';
-  var PLACEMENT_TOP = 'top-start';
-  var PLACEMENT_TOPEND = 'top-end';
-  var PLACEMENT_BOTTOM = 'bottom-start';
-  var PLACEMENT_BOTTOMEND = 'bottom-end';
-  var PLACEMENT_RIGHT = 'right-start';
-  var PLACEMENT_LEFT = 'left-start';
-  var Default$2 = {
-    offset: 0,
-    flip: true,
-    boundary: 'scrollParent',
-    reference: 'toggle',
-    display: 'dynamic',
-    popperConfig: null
-  };
-  var DefaultType$2 = {
-    offset: '(number|string|function)',
-    flip: 'boolean',
-    boundary: '(string|element)',
-    reference: '(string|element)',
-    display: 'string',
-    popperConfig: '(null|object)'
-  };
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Dropdown = /*#__PURE__*/function () {
-    function Dropdown(element, config) {
-      this._element = element;
-      this._popper = null;
-      this._config = this._getConfig(config);
-      this._menu = this._getMenuElement();
-      this._inNavbar = this._detectNavbar();
-
-      this._addEventListeners();
-    } // Getters
-
-
-    var _proto = Dropdown.prototype;
-
-    // Public
-    _proto.toggle = function toggle() {
-      if (this._element.disabled || $__default['default'](this._element).hasClass(CLASS_NAME_DISABLED)) {
-        return;
-      }
-
-      var isActive = $__default['default'](this._menu).hasClass(CLASS_NAME_SHOW$2);
-
-      Dropdown._clearMenus();
-
-      if (isActive) {
-        return;
-      }
-
-      this.show(true);
-    };
-
-    _proto.show = function show(usePopper) {
-      if (usePopper === void 0) {
-        usePopper = false;
-      }
-
-      if (this._element.disabled || $__default['default'](this._element).hasClass(CLASS_NAME_DISABLED) || $__default['default'](this._menu).hasClass(CLASS_NAME_SHOW$2)) {
-        return;
-      }
-
-      var relatedTarget = {
-        relatedTarget: this._element
-      };
-      var showEvent = $__default['default'].Event(EVENT_SHOW$1, relatedTarget);
-
-      var parent = Dropdown._getParentFromElement(this._element);
-
-      $__default['default'](parent).trigger(showEvent);
-
-      if (showEvent.isDefaultPrevented()) {
-        return;
-      } // Totally disable Popper for Dropdowns in Navbar
-
-
-      if (!this._inNavbar && usePopper) {
-        /**
-         * Check for Popper dependency
-         * Popper - https://popper.js.org
-         */
-        if (typeof Popper__default['default'] === 'undefined') {
-          throw new TypeError('Bootstrap\'s dropdowns require Popper (https://popper.js.org)');
-        }
-
-        var referenceElement = this._element;
-
-        if (this._config.reference === 'parent') {
-          referenceElement = parent;
-        } else if (Util.isElement(this._config.reference)) {
-          referenceElement = this._config.reference; // Check if it's jQuery element
-
-          if (typeof this._config.reference.jquery !== 'undefined') {
-            referenceElement = this._config.reference[0];
-          }
-        } // If boundary is not `scrollParent`, then set position to `static`
-        // to allow the menu to "escape" the scroll parent's boundaries
-        // https://github.com/twbs/bootstrap/issues/24251
-
-
-        if (this._config.boundary !== 'scrollParent') {
-          $__default['default'](parent).addClass(CLASS_NAME_POSITION_STATIC);
-        }
-
-        this._popper = new Popper__default['default'](referenceElement, this._menu, this._getPopperConfig());
-      } // If this is a touch-enabled device we add extra
-      // empty mouseover listeners to the body's immediate children;
-      // only needed because of broken event delegation on iOS
-      // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
-
-
-      if ('ontouchstart' in document.documentElement && $__default['default'](parent).closest(SELECTOR_NAVBAR_NAV).length === 0) {
-        $__default['default'](document.body).children().on('mouseover', null, $__default['default'].noop);
-      }
-
-      this._element.focus();
-
-      this._element.setAttribute('aria-expanded', true);
-
-      $__default['default'](this._menu).toggleClass(CLASS_NAME_SHOW$2);
-      $__default['default'](parent).toggleClass(CLASS_NAME_SHOW$2).trigger($__default['default'].Event(EVENT_SHOWN$1, relatedTarget));
-    };
-
-    _proto.hide = function hide() {
-      if (this._element.disabled || $__default['default'](this._element).hasClass(CLASS_NAME_DISABLED) || !$__default['default'](this._menu).hasClass(CLASS_NAME_SHOW$2)) {
-        return;
-      }
-
-      var relatedTarget = {
-        relatedTarget: this._element
-      };
-      var hideEvent = $__default['default'].Event(EVENT_HIDE$1, relatedTarget);
-
-      var parent = Dropdown._getParentFromElement(this._element);
-
-      $__default['default'](parent).trigger(hideEvent);
-
-      if (hideEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      if (this._popper) {
-        this._popper.destroy();
-      }
-
-      $__default['default'](this._menu).toggleClass(CLASS_NAME_SHOW$2);
-      $__default['default'](parent).toggleClass(CLASS_NAME_SHOW$2).trigger($__default['default'].Event(EVENT_HIDDEN$1, relatedTarget));
-    };
-
-    _proto.dispose = function dispose() {
-      $__default['default'].removeData(this._element, DATA_KEY$4);
-      $__default['default'](this._element).off(EVENT_KEY$4);
-      this._element = null;
-      this._menu = null;
-
-      if (this._popper !== null) {
-        this._popper.destroy();
-
-        this._popper = null;
-      }
-    };
-
-    _proto.update = function update() {
-      this._inNavbar = this._detectNavbar();
-
-      if (this._popper !== null) {
-        this._popper.scheduleUpdate();
-      }
-    } // Private
-    ;
-
-    _proto._addEventListeners = function _addEventListeners() {
-      var _this = this;
-
-      $__default['default'](this._element).on(EVENT_CLICK, function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        _this.toggle();
-      });
-    };
-
-    _proto._getConfig = function _getConfig(config) {
-      config = _extends({}, this.constructor.Default, $__default['default'](this._element).data(), config);
-      Util.typeCheckConfig(NAME$4, config, this.constructor.DefaultType);
-      return config;
-    };
-
-    _proto._getMenuElement = function _getMenuElement() {
-      if (!this._menu) {
-        var parent = Dropdown._getParentFromElement(this._element);
-
-        if (parent) {
-          this._menu = parent.querySelector(SELECTOR_MENU);
-        }
-      }
-
-      return this._menu;
-    };
-
-    _proto._getPlacement = function _getPlacement() {
-      var $parentDropdown = $__default['default'](this._element.parentNode);
-      var placement = PLACEMENT_BOTTOM; // Handle dropup
-
-      if ($parentDropdown.hasClass(CLASS_NAME_DROPUP)) {
-        placement = $__default['default'](this._menu).hasClass(CLASS_NAME_MENURIGHT) ? PLACEMENT_TOPEND : PLACEMENT_TOP;
-      } else if ($parentDropdown.hasClass(CLASS_NAME_DROPRIGHT)) {
-        placement = PLACEMENT_RIGHT;
-      } else if ($parentDropdown.hasClass(CLASS_NAME_DROPLEFT)) {
-        placement = PLACEMENT_LEFT;
-      } else if ($__default['default'](this._menu).hasClass(CLASS_NAME_MENURIGHT)) {
-        placement = PLACEMENT_BOTTOMEND;
-      }
-
-      return placement;
-    };
-
-    _proto._detectNavbar = function _detectNavbar() {
-      return $__default['default'](this._element).closest('.navbar').length > 0;
-    };
-
-    _proto._getOffset = function _getOffset() {
-      var _this2 = this;
-
-      var offset = {};
-
-      if (typeof this._config.offset === 'function') {
-        offset.fn = function (data) {
-          data.offsets = _extends({}, data.offsets, _this2._config.offset(data.offsets, _this2._element) || {});
-          return data;
-        };
-      } else {
-        offset.offset = this._config.offset;
-      }
-
-      return offset;
-    };
-
-    _proto._getPopperConfig = function _getPopperConfig() {
-      var popperConfig = {
-        placement: this._getPlacement(),
-        modifiers: {
-          offset: this._getOffset(),
-          flip: {
-            enabled: this._config.flip
-          },
-          preventOverflow: {
-            boundariesElement: this._config.boundary
-          }
-        }
-      }; // Disable Popper if we have a static display
-
-      if (this._config.display === 'static') {
-        popperConfig.modifiers.applyStyle = {
-          enabled: false
-        };
-      }
-
-      return _extends({}, popperConfig, this._config.popperConfig);
-    } // Static
-    ;
-
-    Dropdown._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var data = $__default['default'](this).data(DATA_KEY$4);
-
-        var _config = typeof config === 'object' ? config : null;
-
-        if (!data) {
-          data = new Dropdown(this, _config);
-          $__default['default'](this).data(DATA_KEY$4, data);
-        }
-
-        if (typeof config === 'string') {
-          if (typeof data[config] === 'undefined') {
-            throw new TypeError("No method named \"" + config + "\"");
-          }
-
-          data[config]();
-        }
-      });
-    };
-
-    Dropdown._clearMenus = function _clearMenus(event) {
-      if (event && (event.which === RIGHT_MOUSE_BUTTON_WHICH || event.type === 'keyup' && event.which !== TAB_KEYCODE)) {
-        return;
-      }
-
-      var toggles = [].slice.call(document.querySelectorAll(SELECTOR_DATA_TOGGLE$2));
-
-      for (var i = 0, len = toggles.length; i < len; i++) {
-        var parent = Dropdown._getParentFromElement(toggles[i]);
-
-        var context = $__default['default'](toggles[i]).data(DATA_KEY$4);
-        var relatedTarget = {
-          relatedTarget: toggles[i]
-        };
-
-        if (event && event.type === 'click') {
-          relatedTarget.clickEvent = event;
-        }
-
-        if (!context) {
-          continue;
-        }
-
-        var dropdownMenu = context._menu;
-
-        if (!$__default['default'](parent).hasClass(CLASS_NAME_SHOW$2)) {
-          continue;
-        }
-
-        if (event && (event.type === 'click' && /input|textarea/i.test(event.target.tagName) || event.type === 'keyup' && event.which === TAB_KEYCODE) && $__default['default'].contains(parent, event.target)) {
-          continue;
-        }
-
-        var hideEvent = $__default['default'].Event(EVENT_HIDE$1, relatedTarget);
-        $__default['default'](parent).trigger(hideEvent);
-
-        if (hideEvent.isDefaultPrevented()) {
-          continue;
-        } // If this is a touch-enabled device we remove the extra
-        // empty mouseover listeners we added for iOS support
-
-
-        if ('ontouchstart' in document.documentElement) {
-          $__default['default'](document.body).children().off('mouseover', null, $__default['default'].noop);
-        }
-
-        toggles[i].setAttribute('aria-expanded', 'false');
-
-        if (context._popper) {
-          context._popper.destroy();
-        }
-
-        $__default['default'](dropdownMenu).removeClass(CLASS_NAME_SHOW$2);
-        $__default['default'](parent).removeClass(CLASS_NAME_SHOW$2).trigger($__default['default'].Event(EVENT_HIDDEN$1, relatedTarget));
-      }
-    };
-
-    Dropdown._getParentFromElement = function _getParentFromElement(element) {
-      var parent;
-      var selector = Util.getSelectorFromElement(element);
-
-      if (selector) {
-        parent = document.querySelector(selector);
-      }
-
-      return parent || element.parentNode;
-    } // eslint-disable-next-line complexity
-    ;
-
-    Dropdown._dataApiKeydownHandler = function _dataApiKeydownHandler(event) {
-      // If not input/textarea:
-      //  - And not a key in REGEXP_KEYDOWN => not a dropdown command
-      // If input/textarea:
-      //  - If space key => not a dropdown command
-      //  - If key is other than escape
-      //    - If key is not up or down => not a dropdown command
-      //    - If trigger inside the menu => not a dropdown command
-      if (/input|textarea/i.test(event.target.tagName) ? event.which === SPACE_KEYCODE || event.which !== ESCAPE_KEYCODE && (event.which !== ARROW_DOWN_KEYCODE && event.which !== ARROW_UP_KEYCODE || $__default['default'](event.target).closest(SELECTOR_MENU).length) : !REGEXP_KEYDOWN.test(event.which)) {
-        return;
-      }
-
-      if (this.disabled || $__default['default'](this).hasClass(CLASS_NAME_DISABLED)) {
-        return;
-      }
-
-      var parent = Dropdown._getParentFromElement(this);
-
-      var isActive = $__default['default'](parent).hasClass(CLASS_NAME_SHOW$2);
-
-      if (!isActive && event.which === ESCAPE_KEYCODE) {
-        return;
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      if (!isActive || event.which === ESCAPE_KEYCODE || event.which === SPACE_KEYCODE) {
-        if (event.which === ESCAPE_KEYCODE) {
-          $__default['default'](parent.querySelector(SELECTOR_DATA_TOGGLE$2)).trigger('focus');
-        }
-
-        $__default['default'](this).trigger('click');
-        return;
-      }
-
-      var items = [].slice.call(parent.querySelectorAll(SELECTOR_VISIBLE_ITEMS)).filter(function (item) {
-        return $__default['default'](item).is(':visible');
-      });
-
-      if (items.length === 0) {
-        return;
-      }
-
-      var index = items.indexOf(event.target);
-
-      if (event.which === ARROW_UP_KEYCODE && index > 0) {
-        // Up
-        index--;
-      }
-
-      if (event.which === ARROW_DOWN_KEYCODE && index < items.length - 1) {
-        // Down
-        index++;
-      }
-
-      if (index < 0) {
-        index = 0;
-      }
-
-      items[index].focus();
-    };
-
-    _createClass(Dropdown, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$4;
-      }
-    }, {
-      key: "Default",
-      get: function get() {
-        return Default$2;
-      }
-    }, {
-      key: "DefaultType",
-      get: function get() {
-        return DefaultType$2;
-      }
-    }]);
-
-    return Dropdown;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'](document).on(EVENT_KEYDOWN_DATA_API, SELECTOR_DATA_TOGGLE$2, Dropdown._dataApiKeydownHandler).on(EVENT_KEYDOWN_DATA_API, SELECTOR_MENU, Dropdown._dataApiKeydownHandler).on(EVENT_CLICK_DATA_API$4 + " " + EVENT_KEYUP_DATA_API, Dropdown._clearMenus).on(EVENT_CLICK_DATA_API$4, SELECTOR_DATA_TOGGLE$2, function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    Dropdown._jQueryInterface.call($__default['default'](this), 'toggle');
-  }).on(EVENT_CLICK_DATA_API$4, SELECTOR_FORM_CHILD, function (e) {
-    e.stopPropagation();
-  });
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $__default['default'].fn[NAME$4] = Dropdown._jQueryInterface;
-  $__default['default'].fn[NAME$4].Constructor = Dropdown;
-
-  $__default['default'].fn[NAME$4].noConflict = function () {
-    $__default['default'].fn[NAME$4] = JQUERY_NO_CONFLICT$4;
-    return Dropdown._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$5 = 'modal';
-  var VERSION$5 = '4.6.0';
-  var DATA_KEY$5 = 'bs.modal';
-  var EVENT_KEY$5 = "." + DATA_KEY$5;
-  var DATA_API_KEY$5 = '.data-api';
-  var JQUERY_NO_CONFLICT$5 = $__default['default'].fn[NAME$5];
-  var ESCAPE_KEYCODE$1 = 27; // KeyboardEvent.which value for Escape (Esc) key
-
-  var Default$3 = {
-    backdrop: true,
-    keyboard: true,
-    focus: true,
-    show: true
-  };
-  var DefaultType$3 = {
-    backdrop: '(boolean|string)',
-    keyboard: 'boolean',
-    focus: 'boolean',
-    show: 'boolean'
-  };
-  var EVENT_HIDE$2 = "hide" + EVENT_KEY$5;
-  var EVENT_HIDE_PREVENTED = "hidePrevented" + EVENT_KEY$5;
-  var EVENT_HIDDEN$2 = "hidden" + EVENT_KEY$5;
-  var EVENT_SHOW$2 = "show" + EVENT_KEY$5;
-  var EVENT_SHOWN$2 = "shown" + EVENT_KEY$5;
-  var EVENT_FOCUSIN = "focusin" + EVENT_KEY$5;
-  var EVENT_RESIZE = "resize" + EVENT_KEY$5;
-  var EVENT_CLICK_DISMISS = "click.dismiss" + EVENT_KEY$5;
-  var EVENT_KEYDOWN_DISMISS = "keydown.dismiss" + EVENT_KEY$5;
-  var EVENT_MOUSEUP_DISMISS = "mouseup.dismiss" + EVENT_KEY$5;
-  var EVENT_MOUSEDOWN_DISMISS = "mousedown.dismiss" + EVENT_KEY$5;
-  var EVENT_CLICK_DATA_API$5 = "click" + EVENT_KEY$5 + DATA_API_KEY$5;
-  var CLASS_NAME_SCROLLABLE = 'modal-dialog-scrollable';
-  var CLASS_NAME_SCROLLBAR_MEASURER = 'modal-scrollbar-measure';
-  var CLASS_NAME_BACKDROP = 'modal-backdrop';
-  var CLASS_NAME_OPEN = 'modal-open';
-  var CLASS_NAME_FADE$1 = 'fade';
-  var CLASS_NAME_SHOW$3 = 'show';
-  var CLASS_NAME_STATIC = 'modal-static';
-  var SELECTOR_DIALOG = '.modal-dialog';
-  var SELECTOR_MODAL_BODY = '.modal-body';
-  var SELECTOR_DATA_TOGGLE$3 = '[data-toggle="modal"]';
-  var SELECTOR_DATA_DISMISS = '[data-dismiss="modal"]';
-  var SELECTOR_FIXED_CONTENT = '.fixed-top, .fixed-bottom, .is-fixed, .sticky-top';
-  var SELECTOR_STICKY_CONTENT = '.sticky-top';
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Modal = /*#__PURE__*/function () {
-    function Modal(element, config) {
-      this._config = this._getConfig(config);
-      this._element = element;
-      this._dialog = element.querySelector(SELECTOR_DIALOG);
-      this._backdrop = null;
-      this._isShown = false;
-      this._isBodyOverflowing = false;
-      this._ignoreBackdropClick = false;
-      this._isTransitioning = false;
-      this._scrollbarWidth = 0;
-    } // Getters
-
-
-    var _proto = Modal.prototype;
-
-    // Public
-    _proto.toggle = function toggle(relatedTarget) {
-      return this._isShown ? this.hide() : this.show(relatedTarget);
-    };
-
-    _proto.show = function show(relatedTarget) {
-      var _this = this;
-
-      if (this._isShown || this._isTransitioning) {
-        return;
-      }
-
-      if ($__default['default'](this._element).hasClass(CLASS_NAME_FADE$1)) {
-        this._isTransitioning = true;
-      }
-
-      var showEvent = $__default['default'].Event(EVENT_SHOW$2, {
-        relatedTarget: relatedTarget
-      });
-      $__default['default'](this._element).trigger(showEvent);
-
-      if (this._isShown || showEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      this._isShown = true;
-
-      this._checkScrollbar();
-
-      this._setScrollbar();
-
-      this._adjustDialog();
-
-      this._setEscapeEvent();
-
-      this._setResizeEvent();
-
-      $__default['default'](this._element).on(EVENT_CLICK_DISMISS, SELECTOR_DATA_DISMISS, function (event) {
-        return _this.hide(event);
-      });
-      $__default['default'](this._dialog).on(EVENT_MOUSEDOWN_DISMISS, function () {
-        $__default['default'](_this._element).one(EVENT_MOUSEUP_DISMISS, function (event) {
-          if ($__default['default'](event.target).is(_this._element)) {
-            _this._ignoreBackdropClick = true;
-          }
-        });
-      });
-
-      this._showBackdrop(function () {
-        return _this._showElement(relatedTarget);
-      });
-    };
-
-    _proto.hide = function hide(event) {
-      var _this2 = this;
-
-      if (event) {
-        event.preventDefault();
-      }
-
-      if (!this._isShown || this._isTransitioning) {
-        return;
-      }
-
-      var hideEvent = $__default['default'].Event(EVENT_HIDE$2);
-      $__default['default'](this._element).trigger(hideEvent);
-
-      if (!this._isShown || hideEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      this._isShown = false;
-      var transition = $__default['default'](this._element).hasClass(CLASS_NAME_FADE$1);
-
-      if (transition) {
-        this._isTransitioning = true;
-      }
-
-      this._setEscapeEvent();
-
-      this._setResizeEvent();
-
-      $__default['default'](document).off(EVENT_FOCUSIN);
-      $__default['default'](this._element).removeClass(CLASS_NAME_SHOW$3);
-      $__default['default'](this._element).off(EVENT_CLICK_DISMISS);
-      $__default['default'](this._dialog).off(EVENT_MOUSEDOWN_DISMISS);
-
-      if (transition) {
-        var transitionDuration = Util.getTransitionDurationFromElement(this._element);
-        $__default['default'](this._element).one(Util.TRANSITION_END, function (event) {
-          return _this2._hideModal(event);
-        }).emulateTransitionEnd(transitionDuration);
-      } else {
-        this._hideModal();
-      }
-    };
-
-    _proto.dispose = function dispose() {
-      [window, this._element, this._dialog].forEach(function (htmlElement) {
-        return $__default['default'](htmlElement).off(EVENT_KEY$5);
-      });
-      /**
-       * `document` has 2 events `EVENT_FOCUSIN` and `EVENT_CLICK_DATA_API`
-       * Do not move `document` in `htmlElements` array
-       * It will remove `EVENT_CLICK_DATA_API` event that should remain
-       */
-
-      $__default['default'](document).off(EVENT_FOCUSIN);
-      $__default['default'].removeData(this._element, DATA_KEY$5);
-      this._config = null;
-      this._element = null;
-      this._dialog = null;
-      this._backdrop = null;
-      this._isShown = null;
-      this._isBodyOverflowing = null;
-      this._ignoreBackdropClick = null;
-      this._isTransitioning = null;
-      this._scrollbarWidth = null;
-    };
-
-    _proto.handleUpdate = function handleUpdate() {
-      this._adjustDialog();
-    } // Private
-    ;
-
-    _proto._getConfig = function _getConfig(config) {
-      config = _extends({}, Default$3, config);
-      Util.typeCheckConfig(NAME$5, config, DefaultType$3);
-      return config;
-    };
-
-    _proto._triggerBackdropTransition = function _triggerBackdropTransition() {
-      var _this3 = this;
-
-      var hideEventPrevented = $__default['default'].Event(EVENT_HIDE_PREVENTED);
-      $__default['default'](this._element).trigger(hideEventPrevented);
-
-      if (hideEventPrevented.isDefaultPrevented()) {
-        return;
-      }
-
-      var isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight;
-
-      if (!isModalOverflowing) {
-        this._element.style.overflowY = 'hidden';
-      }
-
-      this._element.classList.add(CLASS_NAME_STATIC);
-
-      var modalTransitionDuration = Util.getTransitionDurationFromElement(this._dialog);
-      $__default['default'](this._element).off(Util.TRANSITION_END);
-      $__default['default'](this._element).one(Util.TRANSITION_END, function () {
-        _this3._element.classList.remove(CLASS_NAME_STATIC);
-
-        if (!isModalOverflowing) {
-          $__default['default'](_this3._element).one(Util.TRANSITION_END, function () {
-            _this3._element.style.overflowY = '';
-          }).emulateTransitionEnd(_this3._element, modalTransitionDuration);
-        }
-      }).emulateTransitionEnd(modalTransitionDuration);
-
-      this._element.focus();
-    };
-
-    _proto._showElement = function _showElement(relatedTarget) {
-      var _this4 = this;
-
-      var transition = $__default['default'](this._element).hasClass(CLASS_NAME_FADE$1);
-      var modalBody = this._dialog ? this._dialog.querySelector(SELECTOR_MODAL_BODY) : null;
-
-      if (!this._element.parentNode || this._element.parentNode.nodeType !== Node.ELEMENT_NODE) {
-        // Don't move modal's DOM position
-        document.body.appendChild(this._element);
-      }
-
-      this._element.style.display = 'block';
-
-      this._element.removeAttribute('aria-hidden');
-
-      this._element.setAttribute('aria-modal', true);
-
-      this._element.setAttribute('role', 'dialog');
-
-      if ($__default['default'](this._dialog).hasClass(CLASS_NAME_SCROLLABLE) && modalBody) {
-        modalBody.scrollTop = 0;
-      } else {
-        this._element.scrollTop = 0;
-      }
-
-      if (transition) {
-        Util.reflow(this._element);
-      }
-
-      $__default['default'](this._element).addClass(CLASS_NAME_SHOW$3);
-
-      if (this._config.focus) {
-        this._enforceFocus();
-      }
-
-      var shownEvent = $__default['default'].Event(EVENT_SHOWN$2, {
-        relatedTarget: relatedTarget
-      });
-
-      var transitionComplete = function transitionComplete() {
-        if (_this4._config.focus) {
-          _this4._element.focus();
-        }
-
-        _this4._isTransitioning = false;
-        $__default['default'](_this4._element).trigger(shownEvent);
-      };
-
-      if (transition) {
-        var transitionDuration = Util.getTransitionDurationFromElement(this._dialog);
-        $__default['default'](this._dialog).one(Util.TRANSITION_END, transitionComplete).emulateTransitionEnd(transitionDuration);
-      } else {
-        transitionComplete();
-      }
-    };
-
-    _proto._enforceFocus = function _enforceFocus() {
-      var _this5 = this;
-
-      $__default['default'](document).off(EVENT_FOCUSIN) // Guard against infinite focus loop
-      .on(EVENT_FOCUSIN, function (event) {
-        if (document !== event.target && _this5._element !== event.target && $__default['default'](_this5._element).has(event.target).length === 0) {
-          _this5._element.focus();
-        }
-      });
-    };
-
-    _proto._setEscapeEvent = function _setEscapeEvent() {
-      var _this6 = this;
-
-      if (this._isShown) {
-        $__default['default'](this._element).on(EVENT_KEYDOWN_DISMISS, function (event) {
-          if (_this6._config.keyboard && event.which === ESCAPE_KEYCODE$1) {
-            event.preventDefault();
-
-            _this6.hide();
-          } else if (!_this6._config.keyboard && event.which === ESCAPE_KEYCODE$1) {
-            _this6._triggerBackdropTransition();
-          }
-        });
-      } else if (!this._isShown) {
-        $__default['default'](this._element).off(EVENT_KEYDOWN_DISMISS);
-      }
-    };
-
-    _proto._setResizeEvent = function _setResizeEvent() {
-      var _this7 = this;
-
-      if (this._isShown) {
-        $__default['default'](window).on(EVENT_RESIZE, function (event) {
-          return _this7.handleUpdate(event);
-        });
-      } else {
-        $__default['default'](window).off(EVENT_RESIZE);
-      }
-    };
-
-    _proto._hideModal = function _hideModal() {
-      var _this8 = this;
-
-      this._element.style.display = 'none';
-
-      this._element.setAttribute('aria-hidden', true);
-
-      this._element.removeAttribute('aria-modal');
-
-      this._element.removeAttribute('role');
-
-      this._isTransitioning = false;
-
-      this._showBackdrop(function () {
-        $__default['default'](document.body).removeClass(CLASS_NAME_OPEN);
-
-        _this8._resetAdjustments();
-
-        _this8._resetScrollbar();
-
-        $__default['default'](_this8._element).trigger(EVENT_HIDDEN$2);
-      });
-    };
-
-    _proto._removeBackdrop = function _removeBackdrop() {
-      if (this._backdrop) {
-        $__default['default'](this._backdrop).remove();
-        this._backdrop = null;
-      }
-    };
-
-    _proto._showBackdrop = function _showBackdrop(callback) {
-      var _this9 = this;
-
-      var animate = $__default['default'](this._element).hasClass(CLASS_NAME_FADE$1) ? CLASS_NAME_FADE$1 : '';
-
-      if (this._isShown && this._config.backdrop) {
-        this._backdrop = document.createElement('div');
-        this._backdrop.className = CLASS_NAME_BACKDROP;
-
-        if (animate) {
-          this._backdrop.classList.add(animate);
-        }
-
-        $__default['default'](this._backdrop).appendTo(document.body);
-        $__default['default'](this._element).on(EVENT_CLICK_DISMISS, function (event) {
-          if (_this9._ignoreBackdropClick) {
-            _this9._ignoreBackdropClick = false;
-            return;
-          }
-
-          if (event.target !== event.currentTarget) {
-            return;
-          }
-
-          if (_this9._config.backdrop === 'static') {
-            _this9._triggerBackdropTransition();
           } else {
-            _this9.hide();
+            // a little bit of line specific stuff that
+            // perhaps shouldn't be here, but lacking
+            // better means...
+            if (insertSteps && k > 0 && points[k - ps] != null && points[k - ps] != points[k] && points[k - ps + 1] != points[k + 1]) {
+              // copy the point to make room for a middle point
+              for (m = 0; m < ps; ++m) {
+                points[k + ps + m] = points[k + m];
+              } // middle point has same y
+
+
+              points[k + 1] = points[k - ps + 1]; // we've added a point, better reflect that
+
+              k += ps;
+            }
           }
+        }
+      } // give the hooks a chance to run
+
+
+      for (i = 0; i < series.length; ++i) {
+        s = series[i];
+        executeHooks(hooks.processDatapoints, [s, s.datapoints]);
+      } // second pass: find datamax/datamin for auto-scaling
+
+
+      for (i = 0; i < series.length; ++i) {
+        s = series[i];
+        points = s.datapoints.points, ps = s.datapoints.pointsize;
+        var xmin = topSentry,
+            ymin = topSentry,
+            xmax = bottomSentry,
+            ymax = bottomSentry;
+
+        for (j = 0; j < points.length; j += ps) {
+          if (points[j] == null) continue;
+
+          for (m = 0; m < ps; ++m) {
+            val = points[j + m];
+            f = format[m];
+            if (!f || val == fakeInfinity || val == -fakeInfinity) continue;
+
+            if (f.x) {
+              if (val < xmin) xmin = val;
+              if (val > xmax) xmax = val;
+            }
+
+            if (f.y) {
+              if (val < ymin) ymin = val;
+              if (val > ymax) ymax = val;
+            }
+          }
+        }
+
+        if (s.bars.show) {
+          // make sure we got room for the bar on the dancing floor
+          var delta = s.bars.align == "left" ? 0 : -s.bars.barWidth / 2;
+
+          if (s.bars.horizontal) {
+            ymin += delta;
+            ymax += delta + s.bars.barWidth;
+          } else {
+            xmin += delta;
+            xmax += delta + s.bars.barWidth;
+          }
+        }
+
+        updateAxis(s.xaxis, xmin, xmax);
+        updateAxis(s.yaxis, ymin, ymax);
+      }
+
+      $.each(allAxes(), function (_, axis) {
+        if (axis.datamin == topSentry) axis.datamin = null;
+        if (axis.datamax == bottomSentry) axis.datamax = null;
+      });
+    }
+
+    function makeCanvas(skipPositioning, cls) {
+      var c = document.createElement('canvas');
+      c.className = cls;
+      c.width = canvasWidth;
+      c.height = canvasHeight;
+      if (!skipPositioning) $(c).css({
+        position: 'absolute',
+        left: 0,
+        top: 0
+      });
+      $(c).appendTo(placeholder);
+      if (!c.getContext) // excanvas hack
+        c = window.G_vmlCanvasManager.initElement(c); // used for resetting in case we get replotted
+
+      c.getContext("2d").save();
+      return c;
+    }
+
+    function getCanvasDimensions() {
+      canvasWidth = placeholder.width();
+      canvasHeight = placeholder.height();
+      if (canvasWidth <= 0 || canvasHeight <= 0) throw "Invalid dimensions for plot, width = " + canvasWidth + ", height = " + canvasHeight;
+    }
+
+    function resizeCanvas(c) {
+      // resizing should reset the state (excanvas seems to be
+      // buggy though)
+      if (c.width != canvasWidth) c.width = canvasWidth;
+      if (c.height != canvasHeight) c.height = canvasHeight; // so try to get back to the initial state (even if it's
+      // gone now, this should be safe according to the spec)
+
+      var cctx = c.getContext("2d");
+      cctx.restore(); // and save again
+
+      cctx.save();
+    }
+
+    function setupCanvases() {
+      var reused,
+          existingCanvas = placeholder.children("canvas.base"),
+          existingOverlay = placeholder.children("canvas.overlay");
+
+      if (existingCanvas.length == 0 || existingOverlay == 0) {
+        // init everything
+        placeholder.html(""); // make sure placeholder is clear
+
+        placeholder.css({
+          padding: 0
+        }); // padding messes up the positioning
+
+        if (placeholder.css("position") == 'static') placeholder.css("position", "relative"); // for positioning labels and overlay
+
+        getCanvasDimensions();
+        canvas = makeCanvas(true, "base");
+        overlay = makeCanvas(false, "overlay"); // overlay canvas for interactive features
+
+        reused = false;
+      } else {
+        // reuse existing elements
+        canvas = existingCanvas.get(0);
+        overlay = existingOverlay.get(0);
+        reused = true;
+      }
+
+      ctx = canvas.getContext("2d");
+      octx = overlay.getContext("2d"); // we include the canvas in the event holder too, because IE 7
+      // sometimes has trouble with the stacking order
+
+      eventHolder = $([overlay, canvas]);
+
+      if (reused) {
+        // run shutdown in the old plot object
+        placeholder.data("plot").shutdown(); // reset reused canvases
+
+        plot.resize(); // make sure overlay pixels are cleared (canvas is cleared when we redraw)
+
+        octx.clearRect(0, 0, canvasWidth, canvasHeight); // then whack any remaining obvious garbage left
+
+        eventHolder.unbind();
+        placeholder.children().not([canvas, overlay]).remove();
+      } // save in case we get replotted
+
+
+      placeholder.data("plot", plot);
+    }
+
+    function bindEvents() {
+      // bind events
+      if (options.grid.hoverable) {
+        eventHolder.mousemove(onMouseMove);
+        eventHolder.mouseleave(onMouseLeave);
+      }
+
+      if (options.grid.clickable) eventHolder.click(onClick);
+      executeHooks(hooks.bindEvents, [eventHolder]);
+    }
+
+    function shutdown() {
+      if (redrawTimeout) clearTimeout(redrawTimeout);
+      eventHolder.unbind("mousemove", onMouseMove);
+      eventHolder.unbind("mouseleave", onMouseLeave);
+      eventHolder.unbind("click", onClick);
+      executeHooks(hooks.shutdown, [eventHolder]);
+    }
+
+    function setTransformationHelpers(axis) {
+      // set helper functions on the axis, assumes plot area
+      // has been computed already
+      function identity(x) {
+        return x;
+      }
+
+      var s,
+          m,
+          t = axis.options.transform || identity,
+          it = axis.options.inverseTransform; // precompute how much the axis is scaling a point
+      // in canvas space
+
+      if (axis.direction == "x") {
+        s = axis.scale = plotWidth / Math.abs(t(axis.max) - t(axis.min));
+        m = Math.min(t(axis.max), t(axis.min));
+      } else {
+        s = axis.scale = plotHeight / Math.abs(t(axis.max) - t(axis.min));
+        s = -s;
+        m = Math.max(t(axis.max), t(axis.min));
+      } // data point to canvas coordinate
+
+
+      if (t == identity) // slight optimization
+        axis.p2c = function (p) {
+          return (p - m) * s;
+        };else axis.p2c = function (p) {
+        return (t(p) - m) * s;
+      }; // canvas coordinate to data point
+
+      if (!it) axis.c2p = function (c) {
+        return m + c / s;
+      };else axis.c2p = function (c) {
+        return it(m + c / s);
+      };
+    }
+
+    function measureTickLabels(axis) {
+      var opts = axis.options,
+          i,
+          ticks = axis.ticks || [],
+          labels = [],
+          l,
+          w = opts.labelWidth,
+          h = opts.labelHeight,
+          dummyDiv;
+
+      function makeDummyDiv(labels, width) {
+        return $('<div style="position:absolute;top:-10000px;' + width + 'font-size:smaller">' + '<div class="' + axis.direction + 'Axis ' + axis.direction + axis.n + 'Axis">' + labels.join("") + '</div></div>').appendTo(placeholder);
+      }
+
+      if (axis.direction == "x") {
+        // to avoid measuring the widths of the labels (it's slow), we
+        // construct fixed-size boxes and put the labels inside
+        // them, we don't need the exact figures and the
+        // fixed-size box content is easy to center
+        if (w == null) w = Math.floor(canvasWidth / (ticks.length > 0 ? ticks.length : 1)); // measure x label heights
+
+        if (h == null) {
+          labels = [];
+
+          for (i = 0; i < ticks.length; ++i) {
+            l = ticks[i].label;
+            if (l) labels.push('<div class="tickLabel" style="float:left;width:' + w + 'px">' + l + '</div>');
+          }
+
+          if (labels.length > 0) {
+            // stick them all in the same div and measure
+            // collective height
+            labels.push('<div style="clear:left"></div>');
+            dummyDiv = makeDummyDiv(labels, "width:10000px;");
+            h = dummyDiv.height();
+            dummyDiv.remove();
+          }
+        }
+      } else if (w == null || h == null) {
+        // calculate y label dimensions
+        for (i = 0; i < ticks.length; ++i) {
+          l = ticks[i].label;
+          if (l) labels.push('<div class="tickLabel">' + l + '</div>');
+        }
+
+        if (labels.length > 0) {
+          dummyDiv = makeDummyDiv(labels, "");
+          if (w == null) w = dummyDiv.children().width();
+          if (h == null) h = dummyDiv.find("div.tickLabel").height();
+          dummyDiv.remove();
+        }
+      }
+
+      if (w == null) w = 0;
+      if (h == null) h = 0;
+      axis.labelWidth = w;
+      axis.labelHeight = h;
+    }
+
+    function allocateAxisBoxFirstPhase(axis) {
+      // find the bounding box of the axis by looking at label
+      // widths/heights and ticks, make room by diminishing the
+      // plotOffset
+      var lw = axis.labelWidth,
+          lh = axis.labelHeight,
+          pos = axis.options.position,
+          tickLength = axis.options.tickLength,
+          axismargin = options.grid.axisMargin,
+          padding = options.grid.labelMargin,
+          all = axis.direction == "x" ? xaxes : yaxes,
+          index; // determine axis margin
+
+      var samePosition = $.grep(all, function (a) {
+        return a && a.options.position == pos && a.reserveSpace;
+      });
+      if ($.inArray(axis, samePosition) == samePosition.length - 1) axismargin = 0; // outermost
+      // determine tick length - if we're innermost, we can use "full"
+
+      if (tickLength == null) tickLength = "full";
+      var sameDirection = $.grep(all, function (a) {
+        return a && a.reserveSpace;
+      });
+      var innermost = $.inArray(axis, sameDirection) == 0;
+      if (!innermost && tickLength == "full") tickLength = 5;
+      if (!isNaN(+tickLength)) padding += +tickLength; // compute box
+
+      if (axis.direction == "x") {
+        lh += padding;
+
+        if (pos == "bottom") {
+          plotOffset.bottom += lh + axismargin;
+          axis.box = {
+            top: canvasHeight - plotOffset.bottom,
+            height: lh
+          };
+        } else {
+          axis.box = {
+            top: plotOffset.top + axismargin,
+            height: lh
+          };
+          plotOffset.top += lh + axismargin;
+        }
+      } else {
+        lw += padding;
+
+        if (pos == "left") {
+          axis.box = {
+            left: plotOffset.left + axismargin,
+            width: lw
+          };
+          plotOffset.left += lw + axismargin;
+        } else {
+          plotOffset.right += lw + axismargin;
+          axis.box = {
+            left: canvasWidth - plotOffset.right,
+            width: lw
+          };
+        }
+      } // save for future reference
+
+
+      axis.position = pos;
+      axis.tickLength = tickLength;
+      axis.box.padding = padding;
+      axis.innermost = innermost;
+    }
+
+    function allocateAxisBoxSecondPhase(axis) {
+      // set remaining bounding box coordinates
+      if (axis.direction == "x") {
+        axis.box.left = plotOffset.left;
+        axis.box.width = plotWidth;
+      } else {
+        axis.box.top = plotOffset.top;
+        axis.box.height = plotHeight;
+      }
+    }
+
+    function setupGrid() {
+      var i,
+          axes = allAxes(); // first calculate the plot and axis box dimensions
+
+      $.each(axes, function (_, axis) {
+        axis.show = axis.options.show;
+        if (axis.show == null) axis.show = axis.used; // by default an axis is visible if it's got data
+
+        axis.reserveSpace = axis.show || axis.options.reserveSpace;
+        setRange(axis);
+      });
+      allocatedAxes = $.grep(axes, function (axis) {
+        return axis.reserveSpace;
+      });
+      plotOffset.left = plotOffset.right = plotOffset.top = plotOffset.bottom = 0;
+
+      if (options.grid.show) {
+        $.each(allocatedAxes, function (_, axis) {
+          // make the ticks
+          setupTickGeneration(axis);
+          setTicks(axis);
+          snapRangeToTicks(axis, axis.ticks); // find labelWidth/Height for axis
+
+          measureTickLabels(axis);
+        }); // with all dimensions in house, we can compute the
+        // axis boxes, start from the outside (reverse order)
+
+        for (i = allocatedAxes.length - 1; i >= 0; --i) {
+          allocateAxisBoxFirstPhase(allocatedAxes[i]);
+        } // make sure we've got enough space for things that
+        // might stick out
+
+
+        var minMargin = options.grid.minBorderMargin;
+
+        if (minMargin == null) {
+          minMargin = 0;
+
+          for (i = 0; i < series.length; ++i) {
+            minMargin = Math.max(minMargin, series[i].points.radius + series[i].points.lineWidth / 2);
+          }
+        }
+
+        for (var a in plotOffset) {
+          plotOffset[a] += options.grid.borderWidth;
+          plotOffset[a] = Math.max(minMargin, plotOffset[a]);
+        }
+      }
+
+      plotWidth = canvasWidth - plotOffset.left - plotOffset.right;
+      plotHeight = canvasHeight - plotOffset.bottom - plotOffset.top; // now we got the proper plotWidth/Height, we can compute the scaling
+
+      $.each(axes, function (_, axis) {
+        setTransformationHelpers(axis);
+      });
+
+      if (options.grid.show) {
+        $.each(allocatedAxes, function (_, axis) {
+          allocateAxisBoxSecondPhase(axis);
         });
+        insertAxisLabels();
+      }
 
-        if (animate) {
-          Util.reflow(this._backdrop);
-        }
+      insertLegend();
+    }
 
-        $__default['default'](this._backdrop).addClass(CLASS_NAME_SHOW$3);
+    function setRange(axis) {
+      var opts = axis.options,
+          min = +(opts.min != null ? opts.min : axis.datamin),
+          max = +(opts.max != null ? opts.max : axis.datamax),
+          delta = max - min;
 
-        if (!callback) {
-          return;
-        }
+      if (delta == 0.0) {
+        // degenerate case
+        var widen = max == 0 ? 1 : 0.01;
+        if (opts.min == null) min -= widen; // always widen max if we couldn't widen min to ensure we
+        // don't fall into min == max which doesn't work
 
-        if (!animate) {
-          callback();
-          return;
-        }
+        if (opts.max == null || opts.min != null) max += widen;
+      } else {
+        // consider autoscaling
+        var margin = opts.autoscaleMargin;
 
-        var backdropTransitionDuration = Util.getTransitionDurationFromElement(this._backdrop);
-        $__default['default'](this._backdrop).one(Util.TRANSITION_END, callback).emulateTransitionEnd(backdropTransitionDuration);
-      } else if (!this._isShown && this._backdrop) {
-        $__default['default'](this._backdrop).removeClass(CLASS_NAME_SHOW$3);
+        if (margin != null) {
+          if (opts.min == null) {
+            min -= delta * margin; // make sure we don't go below zero if all values
+            // are positive
 
-        var callbackRemove = function callbackRemove() {
-          _this9._removeBackdrop();
-
-          if (callback) {
-            callback();
+            if (min < 0 && axis.datamin != null && axis.datamin >= 0) min = 0;
           }
+
+          if (opts.max == null) {
+            max += delta * margin;
+            if (max > 0 && axis.datamax != null && axis.datamax <= 0) max = 0;
+          }
+        }
+      }
+
+      axis.min = min;
+      axis.max = max;
+    }
+
+    function setupTickGeneration(axis) {
+      var opts = axis.options; // estimate number of ticks
+
+      var noTicks;
+      if (typeof opts.ticks == "number" && opts.ticks > 0) noTicks = opts.ticks;else // heuristic based on the model a*sqrt(x) fitted to
+        // some data points that seemed reasonable
+        noTicks = 0.3 * Math.sqrt(axis.direction == "x" ? canvasWidth : canvasHeight);
+      var delta = (axis.max - axis.min) / noTicks,
+          size,
+          generator,
+          unit,
+          formatter,
+          i,
+          magn,
+          norm;
+
+      if (opts.mode == "time") {
+        // pretty handling of time
+        // map of app. size of time units in milliseconds
+        var timeUnitSize = {
+          "second": 1000,
+          "minute": 60 * 1000,
+          "hour": 60 * 60 * 1000,
+          "day": 24 * 60 * 60 * 1000,
+          "month": 30 * 24 * 60 * 60 * 1000,
+          "year": 365.2425 * 24 * 60 * 60 * 1000
+        }; // the allowed tick sizes, after 1 year we use
+        // an integer algorithm
+
+        var spec = [[1, "second"], [2, "second"], [5, "second"], [10, "second"], [30, "second"], [1, "minute"], [2, "minute"], [5, "minute"], [10, "minute"], [30, "minute"], [1, "hour"], [2, "hour"], [4, "hour"], [8, "hour"], [12, "hour"], [1, "day"], [2, "day"], [3, "day"], [0.25, "month"], [0.5, "month"], [1, "month"], [2, "month"], [3, "month"], [6, "month"], [1, "year"]];
+        var minSize = 0;
+
+        if (opts.minTickSize != null) {
+          if (typeof opts.tickSize == "number") minSize = opts.tickSize;else minSize = opts.minTickSize[0] * timeUnitSize[opts.minTickSize[1]];
+        }
+
+        for (var i = 0; i < spec.length - 1; ++i) {
+          if (delta < (spec[i][0] * timeUnitSize[spec[i][1]] + spec[i + 1][0] * timeUnitSize[spec[i + 1][1]]) / 2 && spec[i][0] * timeUnitSize[spec[i][1]] >= minSize) break;
+        }
+
+        size = spec[i][0];
+        unit = spec[i][1]; // special-case the possibility of several years
+
+        if (unit == "year") {
+          magn = Math.pow(10, Math.floor(Math.log(delta / timeUnitSize.year) / Math.LN10));
+          norm = delta / timeUnitSize.year / magn;
+          if (norm < 1.5) size = 1;else if (norm < 3) size = 2;else if (norm < 7.5) size = 5;else size = 10;
+          size *= magn;
+        }
+
+        axis.tickSize = opts.tickSize || [size, unit];
+
+        generator = function generator(axis) {
+          var ticks = [],
+              tickSize = axis.tickSize[0],
+              unit = axis.tickSize[1],
+              d = new Date(axis.min);
+          var step = tickSize * timeUnitSize[unit];
+          if (unit == "second") d.setUTCSeconds(floorInBase(d.getUTCSeconds(), tickSize));
+          if (unit == "minute") d.setUTCMinutes(floorInBase(d.getUTCMinutes(), tickSize));
+          if (unit == "hour") d.setUTCHours(floorInBase(d.getUTCHours(), tickSize));
+          if (unit == "month") d.setUTCMonth(floorInBase(d.getUTCMonth(), tickSize));
+          if (unit == "year") d.setUTCFullYear(floorInBase(d.getUTCFullYear(), tickSize)); // reset smaller components
+
+          d.setUTCMilliseconds(0);
+          if (step >= timeUnitSize.minute) d.setUTCSeconds(0);
+          if (step >= timeUnitSize.hour) d.setUTCMinutes(0);
+          if (step >= timeUnitSize.day) d.setUTCHours(0);
+          if (step >= timeUnitSize.day * 4) d.setUTCDate(1);
+          if (step >= timeUnitSize.year) d.setUTCMonth(0);
+          var carry = 0,
+              v = Number.NaN,
+              prev;
+
+          do {
+            prev = v;
+            v = d.getTime();
+            ticks.push(v);
+
+            if (unit == "month") {
+              if (tickSize < 1) {
+                // a bit complicated - we'll divide the month
+                // up but we need to take care of fractions
+                // so we don't end up in the middle of a day
+                d.setUTCDate(1);
+                var start = d.getTime();
+                d.setUTCMonth(d.getUTCMonth() + 1);
+                var end = d.getTime();
+                d.setTime(v + carry * timeUnitSize.hour + (end - start) * tickSize);
+                carry = d.getUTCHours();
+                d.setUTCHours(0);
+              } else d.setUTCMonth(d.getUTCMonth() + tickSize);
+            } else if (unit == "year") {
+              d.setUTCFullYear(d.getUTCFullYear() + tickSize);
+            } else d.setTime(v + step);
+          } while (v < axis.max && v != prev);
+
+          return ticks;
         };
 
-        if ($__default['default'](this._element).hasClass(CLASS_NAME_FADE$1)) {
-          var _backdropTransitionDuration = Util.getTransitionDurationFromElement(this._backdrop);
+        formatter = function formatter(v, axis) {
+          var d = new Date(v); // first check global format
 
-          $__default['default'](this._backdrop).one(Util.TRANSITION_END, callbackRemove).emulateTransitionEnd(_backdropTransitionDuration);
-        } else {
-          callbackRemove();
-        }
-      } else if (callback) {
-        callback();
-      }
-    } // ----------------------------------------------------------------------
-    // the following methods are used to handle overflowing modals
-    // todo (fat): these should probably be refactored out of modal.js
-    // ----------------------------------------------------------------------
-    ;
+          if (opts.timeformat != null) return $.plot.formatDate(d, opts.timeformat, opts.monthNames);
+          var t = axis.tickSize[0] * timeUnitSize[axis.tickSize[1]];
+          var span = axis.max - axis.min;
+          var suffix = opts.twelveHourClock ? " %p" : "";
+          if (t < timeUnitSize.minute) fmt = "%h:%M:%S" + suffix;else if (t < timeUnitSize.day) {
+            if (span < 2 * timeUnitSize.day) fmt = "%h:%M" + suffix;else fmt = "%b %d %h:%M" + suffix;
+          } else if (t < timeUnitSize.month) fmt = "%b %d";else if (t < timeUnitSize.year) {
+            if (span < timeUnitSize.year) fmt = "%b";else fmt = "%b %y";
+          } else fmt = "%y";
+          return $.plot.formatDate(d, fmt, opts.monthNames);
+        };
+      } else {
+        // pretty rounding of base-10 numbers
+        var maxDec = opts.tickDecimals;
+        var dec = -Math.floor(Math.log(delta) / Math.LN10);
+        if (maxDec != null && dec > maxDec) dec = maxDec;
+        magn = Math.pow(10, -dec);
+        norm = delta / magn; // norm is between 1.0 and 10.0
 
-    _proto._adjustDialog = function _adjustDialog() {
-      var isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight;
+        if (norm < 1.5) size = 1;else if (norm < 3) {
+          size = 2; // special case for 2.5, requires an extra decimal
 
-      if (!this._isBodyOverflowing && isModalOverflowing) {
-        this._element.style.paddingLeft = this._scrollbarWidth + "px";
-      }
+          if (norm > 2.25 && (maxDec == null || dec + 1 <= maxDec)) {
+            size = 2.5;
+            ++dec;
+          }
+        } else if (norm < 7.5) size = 5;else size = 10;
+        size *= magn;
+        if (opts.minTickSize != null && size < opts.minTickSize) size = opts.minTickSize;
+        axis.tickDecimals = Math.max(0, maxDec != null ? maxDec : dec);
+        axis.tickSize = opts.tickSize || size;
 
-      if (this._isBodyOverflowing && !isModalOverflowing) {
-        this._element.style.paddingRight = this._scrollbarWidth + "px";
-      }
-    };
+        generator = function generator(axis) {
+          var ticks = []; // spew out all possible ticks
 
-    _proto._resetAdjustments = function _resetAdjustments() {
-      this._element.style.paddingLeft = '';
-      this._element.style.paddingRight = '';
-    };
+          var start = floorInBase(axis.min, axis.tickSize),
+              i = 0,
+              v = Number.NaN,
+              prev;
 
-    _proto._checkScrollbar = function _checkScrollbar() {
-      var rect = document.body.getBoundingClientRect();
-      this._isBodyOverflowing = Math.round(rect.left + rect.right) < window.innerWidth;
-      this._scrollbarWidth = this._getScrollbarWidth();
-    };
+          do {
+            prev = v;
+            v = start + i * axis.tickSize;
+            ticks.push(v);
+            ++i;
+          } while (v < axis.max && v != prev);
 
-    _proto._setScrollbar = function _setScrollbar() {
-      var _this10 = this;
+          return ticks;
+        };
 
-      if (this._isBodyOverflowing) {
-        // Note: DOMNode.style.paddingRight returns the actual value or '' if not set
-        //   while $(DOMNode).css('padding-right') returns the calculated value or 0 if not set
-        var fixedContent = [].slice.call(document.querySelectorAll(SELECTOR_FIXED_CONTENT));
-        var stickyContent = [].slice.call(document.querySelectorAll(SELECTOR_STICKY_CONTENT)); // Adjust fixed content padding
-
-        $__default['default'](fixedContent).each(function (index, element) {
-          var actualPadding = element.style.paddingRight;
-          var calculatedPadding = $__default['default'](element).css('padding-right');
-          $__default['default'](element).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + _this10._scrollbarWidth + "px");
-        }); // Adjust sticky content margin
-
-        $__default['default'](stickyContent).each(function (index, element) {
-          var actualMargin = element.style.marginRight;
-          var calculatedMargin = $__default['default'](element).css('margin-right');
-          $__default['default'](element).data('margin-right', actualMargin).css('margin-right', parseFloat(calculatedMargin) - _this10._scrollbarWidth + "px");
-        }); // Adjust body padding
-
-        var actualPadding = document.body.style.paddingRight;
-        var calculatedPadding = $__default['default'](document.body).css('padding-right');
-        $__default['default'](document.body).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + this._scrollbarWidth + "px");
+        formatter = function formatter(v, axis) {
+          return v.toFixed(axis.tickDecimals);
+        };
       }
 
-      $__default['default'](document.body).addClass(CLASS_NAME_OPEN);
-    };
+      if (opts.alignTicksWithAxis != null) {
+        var otherAxis = (axis.direction == "x" ? xaxes : yaxes)[opts.alignTicksWithAxis - 1];
 
-    _proto._resetScrollbar = function _resetScrollbar() {
-      // Restore fixed content padding
-      var fixedContent = [].slice.call(document.querySelectorAll(SELECTOR_FIXED_CONTENT));
-      $__default['default'](fixedContent).each(function (index, element) {
-        var padding = $__default['default'](element).data('padding-right');
-        $__default['default'](element).removeData('padding-right');
-        element.style.paddingRight = padding ? padding : '';
-      }); // Restore sticky content
+        if (otherAxis && otherAxis.used && otherAxis != axis) {
+          // consider snapping min/max to outermost nice ticks
+          var niceTicks = generator(axis);
 
-      var elements = [].slice.call(document.querySelectorAll("" + SELECTOR_STICKY_CONTENT));
-      $__default['default'](elements).each(function (index, element) {
-        var margin = $__default['default'](element).data('margin-right');
-
-        if (typeof margin !== 'undefined') {
-          $__default['default'](element).css('margin-right', margin).removeData('margin-right');
-        }
-      }); // Restore body padding
-
-      var padding = $__default['default'](document.body).data('padding-right');
-      $__default['default'](document.body).removeData('padding-right');
-      document.body.style.paddingRight = padding ? padding : '';
-    };
-
-    _proto._getScrollbarWidth = function _getScrollbarWidth() {
-      // thx d.walsh
-      var scrollDiv = document.createElement('div');
-      scrollDiv.className = CLASS_NAME_SCROLLBAR_MEASURER;
-      document.body.appendChild(scrollDiv);
-      var scrollbarWidth = scrollDiv.getBoundingClientRect().width - scrollDiv.clientWidth;
-      document.body.removeChild(scrollDiv);
-      return scrollbarWidth;
-    } // Static
-    ;
-
-    Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
-      return this.each(function () {
-        var data = $__default['default'](this).data(DATA_KEY$5);
-
-        var _config = _extends({}, Default$3, $__default['default'](this).data(), typeof config === 'object' && config ? config : {});
-
-        if (!data) {
-          data = new Modal(this, _config);
-          $__default['default'](this).data(DATA_KEY$5, data);
-        }
-
-        if (typeof config === 'string') {
-          if (typeof data[config] === 'undefined') {
-            throw new TypeError("No method named \"" + config + "\"");
+          if (niceTicks.length > 0) {
+            if (opts.min == null) axis.min = Math.min(axis.min, niceTicks[0]);
+            if (opts.max == null && niceTicks.length > 1) axis.max = Math.max(axis.max, niceTicks[niceTicks.length - 1]);
           }
 
-          data[config](relatedTarget);
-        } else if (_config.show) {
-          data.show(relatedTarget);
+          generator = function generator(axis) {
+            // copy ticks, scaled to this axis
+            var ticks = [],
+                v,
+                i;
+
+            for (i = 0; i < otherAxis.ticks.length; ++i) {
+              v = (otherAxis.ticks[i].v - otherAxis.min) / (otherAxis.max - otherAxis.min);
+              v = axis.min + v * (axis.max - axis.min);
+              ticks.push(v);
+            }
+
+            return ticks;
+          }; // we might need an extra decimal since forced
+          // ticks don't necessarily fit naturally
+
+
+          if (axis.mode != "time" && opts.tickDecimals == null) {
+            var extraDec = Math.max(0, -Math.floor(Math.log(delta) / Math.LN10) + 1),
+                ts = generator(axis); // only proceed if the tick interval rounded
+            // with an extra decimal doesn't give us a
+            // zero at end
+
+            if (!(ts.length > 1 && /\..*0$/.test((ts[1] - ts[0]).toFixed(extraDec)))) axis.tickDecimals = extraDec;
+          }
         }
-      });
-    };
-
-    _createClass(Modal, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$5;
       }
-    }, {
-      key: "Default",
-      get: function get() {
-        return Default$3;
-      }
-    }]);
 
-    return Modal;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'](document).on(EVENT_CLICK_DATA_API$5, SELECTOR_DATA_TOGGLE$3, function (event) {
-    var _this11 = this;
-
-    var target;
-    var selector = Util.getSelectorFromElement(this);
-
-    if (selector) {
-      target = document.querySelector(selector);
+      axis.tickGenerator = generator;
+      if ($.isFunction(opts.tickFormatter)) axis.tickFormatter = function (v, axis) {
+        return "" + opts.tickFormatter(v, axis);
+      };else axis.tickFormatter = formatter;
     }
 
-    var config = $__default['default'](target).data(DATA_KEY$5) ? 'toggle' : _extends({}, $__default['default'](target).data(), $__default['default'](this).data());
+    function setTicks(axis) {
+      var oticks = axis.options.ticks,
+          ticks = [];
+      if (oticks == null || typeof oticks == "number" && oticks > 0) ticks = axis.tickGenerator(axis);else if (oticks) {
+        if ($.isFunction(oticks)) // generate the ticks
+          ticks = oticks({
+            min: axis.min,
+            max: axis.max
+          });else ticks = oticks;
+      } // clean up/labelify the supplied ticks, copy them over
 
-    if (this.tagName === 'A' || this.tagName === 'AREA') {
-      event.preventDefault();
+      var i, v;
+      axis.ticks = [];
+
+      for (i = 0; i < ticks.length; ++i) {
+        var label = null;
+        var t = ticks[i];
+
+        if (_typeof(t) == "object") {
+          v = +t[0];
+          if (t.length > 1) label = t[1];
+        } else v = +t;
+
+        if (label == null) label = axis.tickFormatter(v, axis);
+        if (!isNaN(v)) axis.ticks.push({
+          v: v,
+          label: label
+        });
+      }
     }
 
-    var $target = $__default['default'](target).one(EVENT_SHOW$2, function (showEvent) {
-      if (showEvent.isDefaultPrevented()) {
-        // Only register focus restorer if modal will actually get shown
-        return;
+    function snapRangeToTicks(axis, ticks) {
+      if (axis.options.autoscaleMargin && ticks.length > 0) {
+        // snap to ticks
+        if (axis.options.min == null) axis.min = Math.min(axis.min, ticks[0].v);
+        if (axis.options.max == null && ticks.length > 1) axis.max = Math.max(axis.max, ticks[ticks.length - 1].v);
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      var grid = options.grid; // draw background, if any
+
+      if (grid.show && grid.backgroundColor) drawBackground();
+      if (grid.show && !grid.aboveData) drawGrid();
+
+      for (var i = 0; i < series.length; ++i) {
+        executeHooks(hooks.drawSeries, [ctx, series[i]]);
+        drawSeries(series[i]);
       }
 
-      $target.one(EVENT_HIDDEN$2, function () {
-        if ($__default['default'](_this11).is(':visible')) {
-          _this11.focus();
+      executeHooks(hooks.draw, [ctx]);
+      if (grid.show && grid.aboveData) drawGrid();
+    }
+
+    function extractRange(ranges, coord) {
+      var axis,
+          from,
+          to,
+          key,
+          axes = allAxes();
+
+      for (i = 0; i < axes.length; ++i) {
+        axis = axes[i];
+
+        if (axis.direction == coord) {
+          key = coord + axis.n + "axis";
+          if (!ranges[key] && axis.n == 1) key = coord + "axis"; // support x1axis as xaxis
+
+          if (ranges[key]) {
+            from = ranges[key].from;
+            to = ranges[key].to;
+            break;
+          }
         }
+      } // backwards-compat stuff - to be removed in future
+
+
+      if (!ranges[key]) {
+        axis = coord == "x" ? xaxes[0] : yaxes[0];
+        from = ranges[coord + "1"];
+        to = ranges[coord + "2"];
+      } // auto-reverse as an added bonus
+
+
+      if (from != null && to != null && from > to) {
+        var tmp = from;
+        from = to;
+        to = tmp;
+      }
+
+      return {
+        from: from,
+        to: to,
+        axis: axis
+      };
+    }
+
+    function drawBackground() {
+      ctx.save();
+      ctx.translate(plotOffset.left, plotOffset.top);
+      ctx.fillStyle = getColorOrGradient(options.grid.backgroundColor, plotHeight, 0, "rgba(255, 255, 255, 0)");
+      ctx.fillRect(0, 0, plotWidth, plotHeight);
+      ctx.restore();
+    }
+
+    function drawGrid() {
+      var i;
+      ctx.save();
+      ctx.translate(plotOffset.left, plotOffset.top); // draw markings
+
+      var markings = options.grid.markings;
+
+      if (markings) {
+        if ($.isFunction(markings)) {
+          var axes = plot.getAxes(); // xmin etc. is backwards compatibility, to be
+          // removed in the future
+
+          axes.xmin = axes.xaxis.min;
+          axes.xmax = axes.xaxis.max;
+          axes.ymin = axes.yaxis.min;
+          axes.ymax = axes.yaxis.max;
+          markings = markings(axes);
+        }
+
+        for (i = 0; i < markings.length; ++i) {
+          var m = markings[i],
+              xrange = extractRange(m, "x"),
+              yrange = extractRange(m, "y"); // fill in missing
+
+          if (xrange.from == null) xrange.from = xrange.axis.min;
+          if (xrange.to == null) xrange.to = xrange.axis.max;
+          if (yrange.from == null) yrange.from = yrange.axis.min;
+          if (yrange.to == null) yrange.to = yrange.axis.max; // clip
+
+          if (xrange.to < xrange.axis.min || xrange.from > xrange.axis.max || yrange.to < yrange.axis.min || yrange.from > yrange.axis.max) continue;
+          xrange.from = Math.max(xrange.from, xrange.axis.min);
+          xrange.to = Math.min(xrange.to, xrange.axis.max);
+          yrange.from = Math.max(yrange.from, yrange.axis.min);
+          yrange.to = Math.min(yrange.to, yrange.axis.max);
+          if (xrange.from == xrange.to && yrange.from == yrange.to) continue; // then draw
+
+          xrange.from = xrange.axis.p2c(xrange.from);
+          xrange.to = xrange.axis.p2c(xrange.to);
+          yrange.from = yrange.axis.p2c(yrange.from);
+          yrange.to = yrange.axis.p2c(yrange.to);
+
+          if (xrange.from == xrange.to || yrange.from == yrange.to) {
+            // draw line
+            ctx.beginPath();
+            ctx.strokeStyle = m.color || options.grid.markingsColor;
+            ctx.lineWidth = m.lineWidth || options.grid.markingsLineWidth;
+            ctx.moveTo(xrange.from, yrange.from);
+            ctx.lineTo(xrange.to, yrange.to);
+            ctx.stroke();
+          } else {
+            // fill area
+            ctx.fillStyle = m.color || options.grid.markingsColor;
+            ctx.fillRect(xrange.from, yrange.to, xrange.to - xrange.from, yrange.from - yrange.to);
+          }
+        }
+      } // draw the ticks
+
+
+      var axes = allAxes(),
+          bw = options.grid.borderWidth;
+
+      for (var j = 0; j < axes.length; ++j) {
+        var axis = axes[j],
+            box = axis.box,
+            t = axis.tickLength,
+            x,
+            y,
+            xoff,
+            yoff;
+        if (!axis.show || axis.ticks.length == 0) continue;
+        ctx.strokeStyle = axis.options.tickColor || $.color.parse(axis.options.color).scale('a', 0.22).toString();
+        ctx.lineWidth = 1; // find the edges
+
+        if (axis.direction == "x") {
+          x = 0;
+          if (t == "full") y = axis.position == "top" ? 0 : plotHeight;else y = box.top - plotOffset.top + (axis.position == "top" ? box.height : 0);
+        } else {
+          y = 0;
+          if (t == "full") x = axis.position == "left" ? 0 : plotWidth;else x = box.left - plotOffset.left + (axis.position == "left" ? box.width : 0);
+        } // draw tick bar
+
+
+        if (!axis.innermost) {
+          ctx.beginPath();
+          xoff = yoff = 0;
+          if (axis.direction == "x") xoff = plotWidth;else yoff = plotHeight;
+
+          if (ctx.lineWidth == 1) {
+            x = Math.floor(x) + 0.5;
+            y = Math.floor(y) + 0.5;
+          }
+
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + xoff, y + yoff);
+          ctx.stroke();
+        } // draw ticks
+
+
+        ctx.beginPath();
+
+        for (i = 0; i < axis.ticks.length; ++i) {
+          var v = axis.ticks[i].v;
+          xoff = yoff = 0;
+          if (v < axis.min || v > axis.max // skip those lying on the axes if we got a border
+          || t == "full" && bw > 0 && (v == axis.min || v == axis.max)) continue;
+
+          if (axis.direction == "x") {
+            x = axis.p2c(v);
+            yoff = t == "full" ? -plotHeight : t;
+            if (axis.position == "top") yoff = -yoff;
+          } else {
+            y = axis.p2c(v);
+            xoff = t == "full" ? -plotWidth : t;
+            if (axis.position == "left") xoff = -xoff;
+          }
+
+          if (ctx.lineWidth == 1) {
+            if (axis.direction == "x") x = Math.floor(x) + 0.5;else y = Math.floor(y) + 0.5;
+          }
+
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + xoff, y + yoff);
+        }
+
+        ctx.stroke();
+      } // draw border
+
+
+      if (bw) {
+        ctx.lineWidth = bw;
+        ctx.strokeStyle = options.grid.borderColor;
+        ctx.strokeRect(-bw / 2, -bw / 2, plotWidth + bw, plotHeight + bw);
+      }
+
+      ctx.restore();
+    }
+
+    function insertAxisLabels() {
+      placeholder.find(".tickLabels").remove();
+      var html = ['<div class="tickLabels" style="font-size:smaller">'];
+      var axes = allAxes();
+
+      for (var j = 0; j < axes.length; ++j) {
+        var axis = axes[j],
+            box = axis.box;
+        if (!axis.show) continue; //debug: html.push('<div style="position:absolute;opacity:0.10;background-color:red;left:' + box.left + 'px;top:' + box.top + 'px;width:' + box.width +  'px;height:' + box.height + 'px"></div>')
+
+        html.push('<div class="' + axis.direction + 'Axis ' + axis.direction + axis.n + 'Axis" style="color:' + axis.options.color + '">');
+
+        for (var i = 0; i < axis.ticks.length; ++i) {
+          var tick = axis.ticks[i];
+          if (!tick.label || tick.v < axis.min || tick.v > axis.max) continue;
+          var pos = {},
+              align;
+
+          if (axis.direction == "x") {
+            align = "center";
+            pos.left = Math.round(plotOffset.left + axis.p2c(tick.v) - axis.labelWidth / 2);
+            if (axis.position == "bottom") pos.top = box.top + box.padding;else pos.bottom = canvasHeight - (box.top + box.height - box.padding);
+          } else {
+            pos.top = Math.round(plotOffset.top + axis.p2c(tick.v) - axis.labelHeight / 2);
+
+            if (axis.position == "left") {
+              pos.right = canvasWidth - (box.left + box.width - box.padding);
+              align = "right";
+            } else {
+              pos.left = box.left + box.padding;
+              align = "left";
+            }
+          }
+
+          pos.width = axis.labelWidth;
+          var style = ["position:absolute", "text-align:" + align];
+
+          for (var a in pos) {
+            style.push(a + ":" + pos[a] + "px");
+          }
+
+          html.push('<div class="tickLabel" style="' + style.join(';') + '">' + tick.label + '</div>');
+        }
+
+        html.push('</div>');
+      }
+
+      html.push('</div>');
+      placeholder.append(html.join(""));
+    }
+
+    function drawSeries(series) {
+      if (series.lines.show) drawSeriesLines(series);
+      if (series.bars.show) drawSeriesBars(series);
+      if (series.points.show) drawSeriesPoints(series);
+    }
+
+    function drawSeriesLines(series) {
+      function plotLine(datapoints, xoffset, yoffset, axisx, axisy) {
+        var points = datapoints.points,
+            ps = datapoints.pointsize,
+            prevx = null,
+            prevy = null;
+        ctx.beginPath();
+
+        for (var i = ps; i < points.length; i += ps) {
+          var x1 = points[i - ps],
+              y1 = points[i - ps + 1],
+              x2 = points[i],
+              y2 = points[i + 1];
+          if (x1 == null || x2 == null) continue; // clip with ymin
+
+          if (y1 <= y2 && y1 < axisy.min) {
+            if (y2 < axisy.min) continue; // line segment is outside
+            // compute new intersection point
+
+            x1 = (axisy.min - y1) / (y2 - y1) * (x2 - x1) + x1;
+            y1 = axisy.min;
+          } else if (y2 <= y1 && y2 < axisy.min) {
+            if (y1 < axisy.min) continue;
+            x2 = (axisy.min - y1) / (y2 - y1) * (x2 - x1) + x1;
+            y2 = axisy.min;
+          } // clip with ymax
+
+
+          if (y1 >= y2 && y1 > axisy.max) {
+            if (y2 > axisy.max) continue;
+            x1 = (axisy.max - y1) / (y2 - y1) * (x2 - x1) + x1;
+            y1 = axisy.max;
+          } else if (y2 >= y1 && y2 > axisy.max) {
+            if (y1 > axisy.max) continue;
+            x2 = (axisy.max - y1) / (y2 - y1) * (x2 - x1) + x1;
+            y2 = axisy.max;
+          } // clip with xmin
+
+
+          if (x1 <= x2 && x1 < axisx.min) {
+            if (x2 < axisx.min) continue;
+            y1 = (axisx.min - x1) / (x2 - x1) * (y2 - y1) + y1;
+            x1 = axisx.min;
+          } else if (x2 <= x1 && x2 < axisx.min) {
+            if (x1 < axisx.min) continue;
+            y2 = (axisx.min - x1) / (x2 - x1) * (y2 - y1) + y1;
+            x2 = axisx.min;
+          } // clip with xmax
+
+
+          if (x1 >= x2 && x1 > axisx.max) {
+            if (x2 > axisx.max) continue;
+            y1 = (axisx.max - x1) / (x2 - x1) * (y2 - y1) + y1;
+            x1 = axisx.max;
+          } else if (x2 >= x1 && x2 > axisx.max) {
+            if (x1 > axisx.max) continue;
+            y2 = (axisx.max - x1) / (x2 - x1) * (y2 - y1) + y1;
+            x2 = axisx.max;
+          }
+
+          if (x1 != prevx || y1 != prevy) ctx.moveTo(axisx.p2c(x1) + xoffset, axisy.p2c(y1) + yoffset);
+          prevx = x2;
+          prevy = y2;
+          ctx.lineTo(axisx.p2c(x2) + xoffset, axisy.p2c(y2) + yoffset);
+        }
+
+        ctx.stroke();
+      }
+
+      function plotLineArea(datapoints, axisx, axisy) {
+        var points = datapoints.points,
+            ps = datapoints.pointsize,
+            bottom = Math.min(Math.max(0, axisy.min), axisy.max),
+            i = 0,
+            top,
+            areaOpen = false,
+            ypos = 1,
+            segmentStart = 0,
+            segmentEnd = 0; // we process each segment in two turns, first forward
+        // direction to sketch out top, then once we hit the
+        // end we go backwards to sketch the bottom
+
+        while (true) {
+          if (ps > 0 && i > points.length + ps) break;
+          i += ps; // ps is negative if going backwards
+
+          var x1 = points[i - ps],
+              y1 = points[i - ps + ypos],
+              x2 = points[i],
+              y2 = points[i + ypos];
+
+          if (areaOpen) {
+            if (ps > 0 && x1 != null && x2 == null) {
+              // at turning point
+              segmentEnd = i;
+              ps = -ps;
+              ypos = 2;
+              continue;
+            }
+
+            if (ps < 0 && i == segmentStart + ps) {
+              // done with the reverse sweep
+              ctx.fill();
+              areaOpen = false;
+              ps = -ps;
+              ypos = 1;
+              i = segmentStart = segmentEnd + ps;
+              continue;
+            }
+          }
+
+          if (x1 == null || x2 == null) continue; // clip x values
+          // clip with xmin
+
+          if (x1 <= x2 && x1 < axisx.min) {
+            if (x2 < axisx.min) continue;
+            y1 = (axisx.min - x1) / (x2 - x1) * (y2 - y1) + y1;
+            x1 = axisx.min;
+          } else if (x2 <= x1 && x2 < axisx.min) {
+            if (x1 < axisx.min) continue;
+            y2 = (axisx.min - x1) / (x2 - x1) * (y2 - y1) + y1;
+            x2 = axisx.min;
+          } // clip with xmax
+
+
+          if (x1 >= x2 && x1 > axisx.max) {
+            if (x2 > axisx.max) continue;
+            y1 = (axisx.max - x1) / (x2 - x1) * (y2 - y1) + y1;
+            x1 = axisx.max;
+          } else if (x2 >= x1 && x2 > axisx.max) {
+            if (x1 > axisx.max) continue;
+            y2 = (axisx.max - x1) / (x2 - x1) * (y2 - y1) + y1;
+            x2 = axisx.max;
+          }
+
+          if (!areaOpen) {
+            // open area
+            ctx.beginPath();
+            ctx.moveTo(axisx.p2c(x1), axisy.p2c(bottom));
+            areaOpen = true;
+          } // now first check the case where both is outside
+
+
+          if (y1 >= axisy.max && y2 >= axisy.max) {
+            ctx.lineTo(axisx.p2c(x1), axisy.p2c(axisy.max));
+            ctx.lineTo(axisx.p2c(x2), axisy.p2c(axisy.max));
+            continue;
+          } else if (y1 <= axisy.min && y2 <= axisy.min) {
+            ctx.lineTo(axisx.p2c(x1), axisy.p2c(axisy.min));
+            ctx.lineTo(axisx.p2c(x2), axisy.p2c(axisy.min));
+            continue;
+          } // else it's a bit more complicated, there might
+          // be a flat maxed out rectangle first, then a
+          // triangular cutout or reverse; to find these
+          // keep track of the current x values
+
+
+          var x1old = x1,
+              x2old = x2; // clip the y values, without shortcutting, we
+          // go through all cases in turn
+          // clip with ymin
+
+          if (y1 <= y2 && y1 < axisy.min && y2 >= axisy.min) {
+            x1 = (axisy.min - y1) / (y2 - y1) * (x2 - x1) + x1;
+            y1 = axisy.min;
+          } else if (y2 <= y1 && y2 < axisy.min && y1 >= axisy.min) {
+            x2 = (axisy.min - y1) / (y2 - y1) * (x2 - x1) + x1;
+            y2 = axisy.min;
+          } // clip with ymax
+
+
+          if (y1 >= y2 && y1 > axisy.max && y2 <= axisy.max) {
+            x1 = (axisy.max - y1) / (y2 - y1) * (x2 - x1) + x1;
+            y1 = axisy.max;
+          } else if (y2 >= y1 && y2 > axisy.max && y1 <= axisy.max) {
+            x2 = (axisy.max - y1) / (y2 - y1) * (x2 - x1) + x1;
+            y2 = axisy.max;
+          } // if the x value was changed we got a rectangle
+          // to fill
+
+
+          if (x1 != x1old) {
+            ctx.lineTo(axisx.p2c(x1old), axisy.p2c(y1)); // it goes to (x1, y1), but we fill that below
+          } // fill triangular section, this sometimes result
+          // in redundant points if (x1, y1) hasn't changed
+          // from previous line to, but we just ignore that
+
+
+          ctx.lineTo(axisx.p2c(x1), axisy.p2c(y1));
+          ctx.lineTo(axisx.p2c(x2), axisy.p2c(y2)); // fill the other rectangle if it's there
+
+          if (x2 != x2old) {
+            ctx.lineTo(axisx.p2c(x2), axisy.p2c(y2));
+            ctx.lineTo(axisx.p2c(x2old), axisy.p2c(y2));
+          }
+        }
+      }
+
+      ctx.save();
+      ctx.translate(plotOffset.left, plotOffset.top);
+      ctx.lineJoin = "round";
+      var lw = series.lines.lineWidth,
+          sw = series.shadowSize; // FIXME: consider another form of shadow when filling is turned on
+
+      if (lw > 0 && sw > 0) {
+        // draw shadow as a thick and thin line with transparency
+        ctx.lineWidth = sw;
+        ctx.strokeStyle = "rgba(0,0,0,0.1)"; // position shadow at angle from the mid of line
+
+        var angle = Math.PI / 18;
+        plotLine(series.datapoints, Math.sin(angle) * (lw / 2 + sw / 2), Math.cos(angle) * (lw / 2 + sw / 2), series.xaxis, series.yaxis);
+        ctx.lineWidth = sw / 2;
+        plotLine(series.datapoints, Math.sin(angle) * (lw / 2 + sw / 4), Math.cos(angle) * (lw / 2 + sw / 4), series.xaxis, series.yaxis);
+      }
+
+      ctx.lineWidth = lw;
+      ctx.strokeStyle = series.color;
+      var fillStyle = getFillStyle(series.lines, series.color, 0, plotHeight);
+
+      if (fillStyle) {
+        ctx.fillStyle = fillStyle;
+        plotLineArea(series.datapoints, series.xaxis, series.yaxis);
+      }
+
+      if (lw > 0) plotLine(series.datapoints, 0, 0, series.xaxis, series.yaxis);
+      ctx.restore();
+    }
+
+    function drawSeriesPoints(series) {
+      function plotPoints(datapoints, radius, fillStyle, offset, shadow, axisx, axisy, symbol) {
+        var points = datapoints.points,
+            ps = datapoints.pointsize;
+
+        for (var i = 0; i < points.length; i += ps) {
+          var x = points[i],
+              y = points[i + 1];
+          if (x == null || x < axisx.min || x > axisx.max || y < axisy.min || y > axisy.max) continue;
+          ctx.beginPath();
+          x = axisx.p2c(x);
+          y = axisy.p2c(y) + offset;
+          if (symbol == "circle") ctx.arc(x, y, radius, 0, shadow ? Math.PI : Math.PI * 2, false);else symbol(ctx, x, y, radius, shadow);
+          ctx.closePath();
+
+          if (fillStyle) {
+            ctx.fillStyle = fillStyle;
+            ctx.fill();
+          }
+
+          ctx.stroke();
+        }
+      }
+
+      ctx.save();
+      ctx.translate(plotOffset.left, plotOffset.top);
+      var lw = series.points.lineWidth,
+          sw = series.shadowSize,
+          radius = series.points.radius,
+          symbol = series.points.symbol;
+
+      if (lw > 0 && sw > 0) {
+        // draw shadow in two steps
+        var w = sw / 2;
+        ctx.lineWidth = w;
+        ctx.strokeStyle = "rgba(0,0,0,0.1)";
+        plotPoints(series.datapoints, radius, null, w + w / 2, true, series.xaxis, series.yaxis, symbol);
+        ctx.strokeStyle = "rgba(0,0,0,0.2)";
+        plotPoints(series.datapoints, radius, null, w / 2, true, series.xaxis, series.yaxis, symbol);
+      }
+
+      ctx.lineWidth = lw;
+      ctx.strokeStyle = series.color;
+      plotPoints(series.datapoints, radius, getFillStyle(series.points, series.color), 0, false, series.xaxis, series.yaxis, symbol);
+      ctx.restore();
+    }
+
+    function drawBar(x, y, b, barLeft, barRight, offset, fillStyleCallback, axisx, axisy, c, horizontal, lineWidth) {
+      var left, right, bottom, top, drawLeft, drawRight, drawTop, drawBottom, tmp; // in horizontal mode, we start the bar from the left
+      // instead of from the bottom so it appears to be
+      // horizontal rather than vertical
+
+      if (horizontal) {
+        drawBottom = drawRight = drawTop = true;
+        drawLeft = false;
+        left = b;
+        right = x;
+        top = y + barLeft;
+        bottom = y + barRight; // account for negative bars
+
+        if (right < left) {
+          tmp = right;
+          right = left;
+          left = tmp;
+          drawLeft = true;
+          drawRight = false;
+        }
+      } else {
+        drawLeft = drawRight = drawTop = true;
+        drawBottom = false;
+        left = x + barLeft;
+        right = x + barRight;
+        bottom = b;
+        top = y; // account for negative bars
+
+        if (top < bottom) {
+          tmp = top;
+          top = bottom;
+          bottom = tmp;
+          drawBottom = true;
+          drawTop = false;
+        }
+      } // clip
+
+
+      if (right < axisx.min || left > axisx.max || top < axisy.min || bottom > axisy.max) return;
+
+      if (left < axisx.min) {
+        left = axisx.min;
+        drawLeft = false;
+      }
+
+      if (right > axisx.max) {
+        right = axisx.max;
+        drawRight = false;
+      }
+
+      if (bottom < axisy.min) {
+        bottom = axisy.min;
+        drawBottom = false;
+      }
+
+      if (top > axisy.max) {
+        top = axisy.max;
+        drawTop = false;
+      }
+
+      left = axisx.p2c(left);
+      bottom = axisy.p2c(bottom);
+      right = axisx.p2c(right);
+      top = axisy.p2c(top); // fill the bar
+
+      if (fillStyleCallback) {
+        c.beginPath();
+        c.moveTo(left, bottom);
+        c.lineTo(left, top);
+        c.lineTo(right, top);
+        c.lineTo(right, bottom);
+        c.fillStyle = fillStyleCallback(bottom, top);
+        c.fill();
+      } // draw outline
+
+
+      if (lineWidth > 0 && (drawLeft || drawRight || drawTop || drawBottom)) {
+        c.beginPath(); // FIXME: inline moveTo is buggy with excanvas
+
+        c.moveTo(left, bottom + offset);
+        if (drawLeft) c.lineTo(left, top + offset);else c.moveTo(left, top + offset);
+        if (drawTop) c.lineTo(right, top + offset);else c.moveTo(right, top + offset);
+        if (drawRight) c.lineTo(right, bottom + offset);else c.moveTo(right, bottom + offset);
+        if (drawBottom) c.lineTo(left, bottom + offset);else c.moveTo(left, bottom + offset);
+        c.stroke();
+      }
+    }
+
+    function drawSeriesBars(series) {
+      function plotBars(datapoints, barLeft, barRight, offset, fillStyleCallback, axisx, axisy) {
+        var points = datapoints.points,
+            ps = datapoints.pointsize;
+
+        for (var i = 0; i < points.length; i += ps) {
+          if (points[i] == null) continue;
+          drawBar(points[i], points[i + 1], points[i + 2], barLeft, barRight, offset, fillStyleCallback, axisx, axisy, ctx, series.bars.horizontal, series.bars.lineWidth);
+        }
+      }
+
+      ctx.save();
+      ctx.translate(plotOffset.left, plotOffset.top); // FIXME: figure out a way to add shadows (for instance along the right edge)
+
+      ctx.lineWidth = series.bars.lineWidth;
+      ctx.strokeStyle = series.color;
+      var barLeft = series.bars.align == "left" ? 0 : -series.bars.barWidth / 2;
+      var fillStyleCallback = series.bars.fill ? function (bottom, top) {
+        return getFillStyle(series.bars, series.color, bottom, top);
+      } : null;
+      plotBars(series.datapoints, barLeft, barLeft + series.bars.barWidth, 0, fillStyleCallback, series.xaxis, series.yaxis);
+      ctx.restore();
+    }
+
+    function getFillStyle(filloptions, seriesColor, bottom, top) {
+      var fill = filloptions.fill;
+      if (!fill) return null;
+      if (filloptions.fillColor) return getColorOrGradient(filloptions.fillColor, bottom, top, seriesColor);
+      var c = $.color.parse(seriesColor);
+      c.a = typeof fill == "number" ? fill : 0.4;
+      c.normalize();
+      return c.toString();
+    }
+
+    function insertLegend() {
+      placeholder.find(".legend").remove();
+      if (!options.legend.show) return;
+      var fragments = [],
+          rowStarted = false,
+          lf = options.legend.labelFormatter,
+          s,
+          label;
+
+      for (var i = 0; i < series.length; ++i) {
+        s = series[i];
+        label = s.label;
+        if (!label) continue;
+
+        if (i % options.legend.noColumns == 0) {
+          if (rowStarted) fragments.push('</tr>');
+          fragments.push('<tr>');
+          rowStarted = true;
+        }
+
+        if (lf) label = lf(label, s);
+        fragments.push('<td class="legendColorBox"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:4px;height:0;border:5px solid ' + s.color + ';overflow:hidden"></div></div></td>' + '<td class="legendLabel">' + label + '</td>');
+      }
+
+      if (rowStarted) fragments.push('</tr>');
+      if (fragments.length == 0) return;
+      var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
+      if (options.legend.container != null) $(options.legend.container).html(table);else {
+        var pos = "",
+            p = options.legend.position,
+            m = options.legend.margin;
+        if (m[0] == null) m = [m, m];
+        if (p.charAt(0) == "n") pos += 'top:' + (m[1] + plotOffset.top) + 'px;';else if (p.charAt(0) == "s") pos += 'bottom:' + (m[1] + plotOffset.bottom) + 'px;';
+        if (p.charAt(1) == "e") pos += 'right:' + (m[0] + plotOffset.right) + 'px;';else if (p.charAt(1) == "w") pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
+        var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos + ';') + '</div>').appendTo(placeholder);
+
+        if (options.legend.backgroundOpacity != 0.0) {
+          // put in the transparent background
+          // separately to avoid blended labels and
+          // label boxes
+          var c = options.legend.backgroundColor;
+
+          if (c == null) {
+            c = options.grid.backgroundColor;
+            if (c && typeof c == "string") c = $.color.parse(c);else c = $.color.extract(legend, 'background-color');
+            c.a = 1;
+            c = c.toString();
+          }
+
+          var div = legend.children();
+          $('<div style="position:absolute;width:' + div.width() + 'px;height:' + div.height() + 'px;' + pos + 'background-color:' + c + ';"> </div>').prependTo(legend).css('opacity', options.legend.backgroundOpacity);
+        }
+      }
+    } // interactive features
+
+
+    var highlights = [],
+        redrawTimeout = null; // returns the data item the mouse is over, or null if none is found
+
+    function findNearbyItem(mouseX, mouseY, seriesFilter) {
+      var maxDistance = options.grid.mouseActiveRadius,
+          smallestDistance = maxDistance * maxDistance + 1,
+          item = null,
+          foundPoint = false,
+          i,
+          j;
+
+      for (i = series.length - 1; i >= 0; --i) {
+        if (!seriesFilter(series[i])) continue;
+        var s = series[i],
+            axisx = s.xaxis,
+            axisy = s.yaxis,
+            points = s.datapoints.points,
+            ps = s.datapoints.pointsize,
+            mx = axisx.c2p(mouseX),
+            // precompute some stuff to make the loop faster
+        my = axisy.c2p(mouseY),
+            maxx = maxDistance / axisx.scale,
+            maxy = maxDistance / axisy.scale; // with inverse transforms, we can't use the maxx/maxy
+        // optimization, sadly
+
+        if (axisx.options.inverseTransform) maxx = Number.MAX_VALUE;
+        if (axisy.options.inverseTransform) maxy = Number.MAX_VALUE;
+
+        if (s.lines.show || s.points.show) {
+          for (j = 0; j < points.length; j += ps) {
+            var x = points[j],
+                y = points[j + 1];
+            if (x == null) continue; // For points and lines, the cursor must be within a
+            // certain distance to the data point
+
+            if (x - mx > maxx || x - mx < -maxx || y - my > maxy || y - my < -maxy) continue; // We have to calculate distances in pixels, not in
+            // data units, because the scales of the axes may be different
+
+            var dx = Math.abs(axisx.p2c(x) - mouseX),
+                dy = Math.abs(axisy.p2c(y) - mouseY),
+                dist = dx * dx + dy * dy; // we save the sqrt
+            // use <= to ensure last point takes precedence
+            // (last generally means on top of)
+
+            if (dist < smallestDistance) {
+              smallestDistance = dist;
+              item = [i, j / ps];
+            }
+          }
+        }
+
+        if (s.bars.show && !item) {
+          // no other point can be nearby
+          var barLeft = s.bars.align == "left" ? 0 : -s.bars.barWidth / 2,
+              barRight = barLeft + s.bars.barWidth;
+
+          for (j = 0; j < points.length; j += ps) {
+            var x = points[j],
+                y = points[j + 1],
+                b = points[j + 2];
+            if (x == null) continue; // for a bar graph, the cursor must be inside the bar
+
+            if (series[i].bars.horizontal ? mx <= Math.max(b, x) && mx >= Math.min(b, x) && my >= y + barLeft && my <= y + barRight : mx >= x + barLeft && mx <= x + barRight && my >= Math.min(b, y) && my <= Math.max(b, y)) item = [i, j / ps];
+          }
+        }
+      }
+
+      if (item) {
+        i = item[0];
+        j = item[1];
+        ps = series[i].datapoints.pointsize;
+        return {
+          datapoint: series[i].datapoints.points.slice(j * ps, (j + 1) * ps),
+          dataIndex: j,
+          series: series[i],
+          seriesIndex: i
+        };
+      }
+
+      return null;
+    }
+
+    function onMouseMove(e) {
+      if (options.grid.hoverable) triggerClickHoverEvent("plothover", e, function (s) {
+        return s["hoverable"] != false;
       });
-    });
-
-    Modal._jQueryInterface.call($__default['default'](target), config, this);
-  });
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $__default['default'].fn[NAME$5] = Modal._jQueryInterface;
-  $__default['default'].fn[NAME$5].Constructor = Modal;
-
-  $__default['default'].fn[NAME$5].noConflict = function () {
-    $__default['default'].fn[NAME$5] = JQUERY_NO_CONFLICT$5;
-    return Modal._jQueryInterface;
-  };
-
-  /**
-   * --------------------------------------------------------------------------
-   * Bootstrap (v4.6.0): tools/sanitizer.js
-   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
-   * --------------------------------------------------------------------------
-   */
-  var uriAttrs = ['background', 'cite', 'href', 'itemtype', 'longdesc', 'poster', 'src', 'xlink:href'];
-  var ARIA_ATTRIBUTE_PATTERN = /^aria-[\w-]*$/i;
-  var DefaultWhitelist = {
-    // Global attributes allowed on any supplied element below.
-    '*': ['class', 'dir', 'id', 'lang', 'role', ARIA_ATTRIBUTE_PATTERN],
-    a: ['target', 'href', 'title', 'rel'],
-    area: [],
-    b: [],
-    br: [],
-    col: [],
-    code: [],
-    div: [],
-    em: [],
-    hr: [],
-    h1: [],
-    h2: [],
-    h3: [],
-    h4: [],
-    h5: [],
-    h6: [],
-    i: [],
-    img: ['src', 'srcset', 'alt', 'title', 'width', 'height'],
-    li: [],
-    ol: [],
-    p: [],
-    pre: [],
-    s: [],
-    small: [],
-    span: [],
-    sub: [],
-    sup: [],
-    strong: [],
-    u: [],
-    ul: []
-  };
-  /**
-   * A pattern that recognizes a commonly useful subset of URLs that are safe.
-   *
-   * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
-   */
-
-  var SAFE_URL_PATTERN = /^(?:(?:https?|mailto|ftp|tel|file):|[^#&/:?]*(?:[#/?]|$))/gi;
-  /**
-   * A pattern that matches safe data URLs. Only matches image, video and audio types.
-   *
-   * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
-   */
-
-  var DATA_URL_PATTERN = /^data:(?:image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp)|video\/(?:mpeg|mp4|ogg|webm)|audio\/(?:mp3|oga|ogg|opus));base64,[\d+/a-z]+=*$/i;
-
-  function allowedAttribute(attr, allowedAttributeList) {
-    var attrName = attr.nodeName.toLowerCase();
-
-    if (allowedAttributeList.indexOf(attrName) !== -1) {
-      if (uriAttrs.indexOf(attrName) !== -1) {
-        return Boolean(attr.nodeValue.match(SAFE_URL_PATTERN) || attr.nodeValue.match(DATA_URL_PATTERN));
-      }
-
-      return true;
     }
 
-    var regExp = allowedAttributeList.filter(function (attrRegex) {
-      return attrRegex instanceof RegExp;
-    }); // Check if a regular expression validates the attribute.
+    function onMouseLeave(e) {
+      if (options.grid.hoverable) triggerClickHoverEvent("plothover", e, function (s) {
+        return false;
+      });
+    }
 
-    for (var i = 0, len = regExp.length; i < len; i++) {
-      if (attrName.match(regExp[i])) {
-        return true;
+    function onClick(e) {
+      triggerClickHoverEvent("plotclick", e, function (s) {
+        return s["clickable"] != false;
+      });
+    } // trigger click or hover event (they send the same parameters
+    // so we share their code)
+
+
+    function triggerClickHoverEvent(eventname, event, seriesFilter) {
+      var offset = eventHolder.offset(),
+          canvasX = event.pageX - offset.left - plotOffset.left,
+          canvasY = event.pageY - offset.top - plotOffset.top,
+          pos = canvasToAxisCoords({
+        left: canvasX,
+        top: canvasY
+      });
+      pos.pageX = event.pageX;
+      pos.pageY = event.pageY;
+      var item = findNearbyItem(canvasX, canvasY, seriesFilter);
+
+      if (item) {
+        // fill in mouse pos for any listeners out there
+        item.pageX = parseInt(item.series.xaxis.p2c(item.datapoint[0]) + offset.left + plotOffset.left);
+        item.pageY = parseInt(item.series.yaxis.p2c(item.datapoint[1]) + offset.top + plotOffset.top);
+      }
+
+      if (options.grid.autoHighlight) {
+        // clear auto-highlights
+        for (var i = 0; i < highlights.length; ++i) {
+          var h = highlights[i];
+          if (h.auto == eventname && !(item && h.series == item.series && h.point[0] == item.datapoint[0] && h.point[1] == item.datapoint[1])) unhighlight(h.series, h.point);
+        }
+
+        if (item) highlight(item.series, item.datapoint, eventname);
+      }
+
+      placeholder.trigger(eventname, [pos, item]);
+    }
+
+    function triggerRedrawOverlay() {
+      if (!redrawTimeout) redrawTimeout = setTimeout(drawOverlay, 30);
+    }
+
+    function drawOverlay() {
+      redrawTimeout = null; // draw highlights
+
+      octx.save();
+      octx.clearRect(0, 0, canvasWidth, canvasHeight);
+      octx.translate(plotOffset.left, plotOffset.top);
+      var i, hi;
+
+      for (i = 0; i < highlights.length; ++i) {
+        hi = highlights[i];
+        if (hi.series.bars.show) drawBarHighlight(hi.series, hi.point);else drawPointHighlight(hi.series, hi.point);
+      }
+
+      octx.restore();
+      executeHooks(hooks.drawOverlay, [octx]);
+    }
+
+    function highlight(s, point, auto) {
+      if (typeof s == "number") s = series[s];
+
+      if (typeof point == "number") {
+        var ps = s.datapoints.pointsize;
+        point = s.datapoints.points.slice(ps * point, ps * (point + 1));
+      }
+
+      var i = indexOfHighlight(s, point);
+
+      if (i == -1) {
+        highlights.push({
+          series: s,
+          point: point,
+          auto: auto
+        });
+        triggerRedrawOverlay();
+      } else if (!auto) highlights[i].auto = false;
+    }
+
+    function unhighlight(s, point) {
+      if (s == null && point == null) {
+        highlights = [];
+        triggerRedrawOverlay();
+      }
+
+      if (typeof s == "number") s = series[s];
+      if (typeof point == "number") point = s.data[point];
+      var i = indexOfHighlight(s, point);
+
+      if (i != -1) {
+        highlights.splice(i, 1);
+        triggerRedrawOverlay();
       }
     }
 
-    return false;
+    function indexOfHighlight(s, p) {
+      for (var i = 0; i < highlights.length; ++i) {
+        var h = highlights[i];
+        if (h.series == s && h.point[0] == p[0] && h.point[1] == p[1]) return i;
+      }
+
+      return -1;
+    }
+
+    function drawPointHighlight(series, point) {
+      var x = point[0],
+          y = point[1],
+          axisx = series.xaxis,
+          axisy = series.yaxis;
+      if (x < axisx.min || x > axisx.max || y < axisy.min || y > axisy.max) return;
+      var pointRadius = series.points.radius + series.points.lineWidth / 2;
+      octx.lineWidth = pointRadius;
+      octx.strokeStyle = $.color.parse(series.color).scale('a', 0.5).toString();
+      var radius = 1.5 * pointRadius,
+          x = axisx.p2c(x),
+          y = axisy.p2c(y);
+      octx.beginPath();
+      if (series.points.symbol == "circle") octx.arc(x, y, radius, 0, 2 * Math.PI, false);else series.points.symbol(octx, x, y, radius, false);
+      octx.closePath();
+      octx.stroke();
+    }
+
+    function drawBarHighlight(series, point) {
+      octx.lineWidth = series.bars.lineWidth;
+      octx.strokeStyle = $.color.parse(series.color).scale('a', 0.5).toString();
+      var fillStyle = $.color.parse(series.color).scale('a', 0.5).toString();
+      var barLeft = series.bars.align == "left" ? 0 : -series.bars.barWidth / 2;
+      drawBar(point[0], point[1], point[2] || 0, barLeft, barLeft + series.bars.barWidth, 0, function () {
+        return fillStyle;
+      }, series.xaxis, series.yaxis, octx, series.bars.horizontal, series.bars.lineWidth);
+    }
+
+    function getColorOrGradient(spec, bottom, top, defaultColor) {
+      if (typeof spec == "string") return spec;else {
+        // assume this is a gradient spec; IE currently only
+        // supports a simple vertical gradient properly, so that's
+        // what we support too
+        var gradient = ctx.createLinearGradient(0, top, 0, bottom);
+
+        for (var i = 0, l = spec.colors.length; i < l; ++i) {
+          var c = spec.colors[i];
+
+          if (typeof c != "string") {
+            var co = $.color.parse(defaultColor);
+            if (c.brightness != null) co = co.scale('rgb', c.brightness);
+            if (c.opacity != null) co.a *= c.opacity;
+            c = co.toString();
+          }
+
+          gradient.addColorStop(i / (l - 1), c);
+        }
+
+        return gradient;
+      }
+    }
   }
 
-  function sanitizeHtml(unsafeHtml, whiteList, sanitizeFn) {
-    if (unsafeHtml.length === 0) {
-      return unsafeHtml;
-    }
+  $.plot = function (placeholder, data, options) {
+    //var t0 = new Date();
+    var plot = new Plot($(placeholder), data, options, $.plot.plugins); //(window.console ? console.log : alert)("time used (msecs): " + ((new Date()).getTime() - t0.getTime()));
 
-    if (sanitizeFn && typeof sanitizeFn === 'function') {
-      return sanitizeFn(unsafeHtml);
-    }
+    return plot;
+  };
 
-    var domParser = new window.DOMParser();
-    var createdDocument = domParser.parseFromString(unsafeHtml, 'text/html');
-    var whitelistKeys = Object.keys(whiteList);
-    var elements = [].slice.call(createdDocument.body.querySelectorAll('*'));
+  $.plot.version = "0.7";
+  $.plot.plugins = []; // returns a string with the date d formatted according to fmt
 
-    var _loop = function _loop(i, len) {
-      var el = elements[i];
-      var elName = el.nodeName.toLowerCase();
-
-      if (whitelistKeys.indexOf(el.nodeName.toLowerCase()) === -1) {
-        el.parentNode.removeChild(el);
-        return "continue";
-      }
-
-      var attributeList = [].slice.call(el.attributes);
-      var whitelistedAttributes = [].concat(whiteList['*'] || [], whiteList[elName] || []);
-      attributeList.forEach(function (attr) {
-        if (!allowedAttribute(attr, whitelistedAttributes)) {
-          el.removeAttribute(attr.nodeName);
-        }
-      });
+  $.plot.formatDate = function (d, fmt, monthNames) {
+    var leftPad = function leftPad(n) {
+      n = "" + n;
+      return n.length == 1 ? "0" + n : n;
     };
 
-    for (var i = 0, len = elements.length; i < len; i++) {
-      var _ret = _loop(i);
+    var r = [];
+    var escape = false,
+        padNext = false;
+    var hours = d.getUTCHours();
+    var isAM = hours < 12;
+    if (monthNames == null) monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-      if (_ret === "continue") continue;
+    if (fmt.search(/%p|%P/) != -1) {
+      if (hours > 12) {
+        hours = hours - 12;
+      } else if (hours == 0) {
+        hours = 12;
+      }
     }
 
-    return createdDocument.body.innerHTML;
+    for (var i = 0; i < fmt.length; ++i) {
+      var c = fmt.charAt(i);
+
+      if (escape) {
+        switch (c) {
+          case 'h':
+            c = "" + hours;
+            break;
+
+          case 'H':
+            c = leftPad(hours);
+            break;
+
+          case 'M':
+            c = leftPad(d.getUTCMinutes());
+            break;
+
+          case 'S':
+            c = leftPad(d.getUTCSeconds());
+            break;
+
+          case 'd':
+            c = "" + d.getUTCDate();
+            break;
+
+          case 'm':
+            c = "" + (d.getUTCMonth() + 1);
+            break;
+
+          case 'y':
+            c = "" + d.getUTCFullYear();
+            break;
+
+          case 'b':
+            c = "" + monthNames[d.getUTCMonth()];
+            break;
+
+          case 'p':
+            c = isAM ? "" + "am" : "" + "pm";
+            break;
+
+          case 'P':
+            c = isAM ? "" + "AM" : "" + "PM";
+            break;
+
+          case '0':
+            c = "";
+            padNext = true;
+            break;
+        }
+
+        if (c && padNext) {
+          c = leftPad(c);
+          padNext = false;
+        }
+
+        r.push(c);
+        if (!padNext) escape = false;
+      } else {
+        if (c == "%") escape = true;else r.push(c);
+      }
+    }
+
+    return r.join("");
+  }; // round to nearby lower multiple of base
+
+
+  function floorInBase(n, base) {
+    return base * Math.floor(n / base);
   }
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$6 = 'tooltip';
-  var VERSION$6 = '4.6.0';
-  var DATA_KEY$6 = 'bs.tooltip';
-  var EVENT_KEY$6 = "." + DATA_KEY$6;
-  var JQUERY_NO_CONFLICT$6 = $__default['default'].fn[NAME$6];
-  var CLASS_PREFIX = 'bs-tooltip';
-  var BSCLS_PREFIX_REGEX = new RegExp("(^|\\s)" + CLASS_PREFIX + "\\S+", 'g');
-  var DISALLOWED_ATTRIBUTES = ['sanitize', 'whiteList', 'sanitizeFn'];
-  var DefaultType$4 = {
-    animation: 'boolean',
-    template: 'string',
-    title: '(string|element|function)',
-    trigger: 'string',
-    delay: '(number|object)',
-    html: 'boolean',
-    selector: '(string|boolean)',
-    placement: '(string|function)',
-    offset: '(number|string|function)',
-    container: '(string|element|boolean)',
-    fallbackPlacement: '(string|array)',
-    boundary: '(string|element)',
-    customClass: '(string|function)',
-    sanitize: 'boolean',
-    sanitizeFn: '(null|function)',
-    whiteList: 'object',
-    popperConfig: '(null|object)'
-  };
-  var AttachmentMap = {
-    AUTO: 'auto',
-    TOP: 'top',
-    RIGHT: 'right',
-    BOTTOM: 'bottom',
-    LEFT: 'left'
-  };
-  var Default$4 = {
-    animation: true,
-    template: '<div class="tooltip" role="tooltip">' + '<div class="arrow"></div>' + '<div class="tooltip-inner"></div></div>',
-    trigger: 'hover focus',
-    title: '',
-    delay: 0,
-    html: false,
-    selector: false,
-    placement: 'top',
-    offset: 0,
-    container: false,
-    fallbackPlacement: 'flip',
-    boundary: 'scrollParent',
-    customClass: '',
-    sanitize: true,
-    sanitizeFn: null,
-    whiteList: DefaultWhitelist,
-    popperConfig: null
-  };
-  var HOVER_STATE_SHOW = 'show';
-  var HOVER_STATE_OUT = 'out';
-  var Event = {
-    HIDE: "hide" + EVENT_KEY$6,
-    HIDDEN: "hidden" + EVENT_KEY$6,
-    SHOW: "show" + EVENT_KEY$6,
-    SHOWN: "shown" + EVENT_KEY$6,
-    INSERTED: "inserted" + EVENT_KEY$6,
-    CLICK: "click" + EVENT_KEY$6,
-    FOCUSIN: "focusin" + EVENT_KEY$6,
-    FOCUSOUT: "focusout" + EVENT_KEY$6,
-    MOUSEENTER: "mouseenter" + EVENT_KEY$6,
-    MOUSELEAVE: "mouseleave" + EVENT_KEY$6
-  };
-  var CLASS_NAME_FADE$2 = 'fade';
-  var CLASS_NAME_SHOW$4 = 'show';
-  var SELECTOR_TOOLTIP_INNER = '.tooltip-inner';
-  var SELECTOR_ARROW = '.arrow';
-  var TRIGGER_HOVER = 'hover';
-  var TRIGGER_FOCUS = 'focus';
-  var TRIGGER_CLICK = 'click';
-  var TRIGGER_MANUAL = 'manual';
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Tooltip = /*#__PURE__*/function () {
-    function Tooltip(element, config) {
-      if (typeof Popper__default['default'] === 'undefined') {
-        throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)');
-      } // private
-
-
-      this._isEnabled = true;
-      this._timeout = 0;
-      this._hoverState = '';
-      this._activeTrigger = {};
-      this._popper = null; // Protected
-
-      this.element = element;
-      this.config = this._getConfig(config);
-      this.tip = null;
-
-      this._setListeners();
-    } // Getters
-
-
-    var _proto = Tooltip.prototype;
-
-    // Public
-    _proto.enable = function enable() {
-      this._isEnabled = true;
-    };
-
-    _proto.disable = function disable() {
-      this._isEnabled = false;
-    };
-
-    _proto.toggleEnabled = function toggleEnabled() {
-      this._isEnabled = !this._isEnabled;
-    };
-
-    _proto.toggle = function toggle(event) {
-      if (!this._isEnabled) {
-        return;
-      }
-
-      if (event) {
-        var dataKey = this.constructor.DATA_KEY;
-        var context = $__default['default'](event.currentTarget).data(dataKey);
-
-        if (!context) {
-          context = new this.constructor(event.currentTarget, this._getDelegateConfig());
-          $__default['default'](event.currentTarget).data(dataKey, context);
-        }
-
-        context._activeTrigger.click = !context._activeTrigger.click;
-
-        if (context._isWithActiveTrigger()) {
-          context._enter(null, context);
-        } else {
-          context._leave(null, context);
-        }
-      } else {
-        if ($__default['default'](this.getTipElement()).hasClass(CLASS_NAME_SHOW$4)) {
-          this._leave(null, this);
-
-          return;
-        }
-
-        this._enter(null, this);
-      }
-    };
-
-    _proto.dispose = function dispose() {
-      clearTimeout(this._timeout);
-      $__default['default'].removeData(this.element, this.constructor.DATA_KEY);
-      $__default['default'](this.element).off(this.constructor.EVENT_KEY);
-      $__default['default'](this.element).closest('.modal').off('hide.bs.modal', this._hideModalHandler);
-
-      if (this.tip) {
-        $__default['default'](this.tip).remove();
-      }
-
-      this._isEnabled = null;
-      this._timeout = null;
-      this._hoverState = null;
-      this._activeTrigger = null;
-
-      if (this._popper) {
-        this._popper.destroy();
-      }
-
-      this._popper = null;
-      this.element = null;
-      this.config = null;
-      this.tip = null;
-    };
-
-    _proto.show = function show() {
-      var _this = this;
-
-      if ($__default['default'](this.element).css('display') === 'none') {
-        throw new Error('Please use show on visible elements');
-      }
-
-      var showEvent = $__default['default'].Event(this.constructor.Event.SHOW);
-
-      if (this.isWithContent() && this._isEnabled) {
-        $__default['default'](this.element).trigger(showEvent);
-        var shadowRoot = Util.findShadowRoot(this.element);
-        var isInTheDom = $__default['default'].contains(shadowRoot !== null ? shadowRoot : this.element.ownerDocument.documentElement, this.element);
-
-        if (showEvent.isDefaultPrevented() || !isInTheDom) {
-          return;
-        }
-
-        var tip = this.getTipElement();
-        var tipId = Util.getUID(this.constructor.NAME);
-        tip.setAttribute('id', tipId);
-        this.element.setAttribute('aria-describedby', tipId);
-        this.setContent();
-
-        if (this.config.animation) {
-          $__default['default'](tip).addClass(CLASS_NAME_FADE$2);
-        }
-
-        var placement = typeof this.config.placement === 'function' ? this.config.placement.call(this, tip, this.element) : this.config.placement;
-
-        var attachment = this._getAttachment(placement);
-
-        this.addAttachmentClass(attachment);
-
-        var container = this._getContainer();
-
-        $__default['default'](tip).data(this.constructor.DATA_KEY, this);
-
-        if (!$__default['default'].contains(this.element.ownerDocument.documentElement, this.tip)) {
-          $__default['default'](tip).appendTo(container);
-        }
-
-        $__default['default'](this.element).trigger(this.constructor.Event.INSERTED);
-        this._popper = new Popper__default['default'](this.element, tip, this._getPopperConfig(attachment));
-        $__default['default'](tip).addClass(CLASS_NAME_SHOW$4);
-        $__default['default'](tip).addClass(this.config.customClass); // If this is a touch-enabled device we add extra
-        // empty mouseover listeners to the body's immediate children;
-        // only needed because of broken event delegation on iOS
-        // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
-
-        if ('ontouchstart' in document.documentElement) {
-          $__default['default'](document.body).children().on('mouseover', null, $__default['default'].noop);
-        }
-
-        var complete = function complete() {
-          if (_this.config.animation) {
-            _this._fixTransition();
-          }
-
-          var prevHoverState = _this._hoverState;
-          _this._hoverState = null;
-          $__default['default'](_this.element).trigger(_this.constructor.Event.SHOWN);
-
-          if (prevHoverState === HOVER_STATE_OUT) {
-            _this._leave(null, _this);
-          }
-        };
-
-        if ($__default['default'](this.tip).hasClass(CLASS_NAME_FADE$2)) {
-          var transitionDuration = Util.getTransitionDurationFromElement(this.tip);
-          $__default['default'](this.tip).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-        } else {
-          complete();
-        }
-      }
-    };
-
-    _proto.hide = function hide(callback) {
-      var _this2 = this;
-
-      var tip = this.getTipElement();
-      var hideEvent = $__default['default'].Event(this.constructor.Event.HIDE);
-
-      var complete = function complete() {
-        if (_this2._hoverState !== HOVER_STATE_SHOW && tip.parentNode) {
-          tip.parentNode.removeChild(tip);
-        }
-
-        _this2._cleanTipClass();
-
-        _this2.element.removeAttribute('aria-describedby');
-
-        $__default['default'](_this2.element).trigger(_this2.constructor.Event.HIDDEN);
-
-        if (_this2._popper !== null) {
-          _this2._popper.destroy();
-        }
-
-        if (callback) {
-          callback();
-        }
-      };
-
-      $__default['default'](this.element).trigger(hideEvent);
-
-      if (hideEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      $__default['default'](tip).removeClass(CLASS_NAME_SHOW$4); // If this is a touch-enabled device we remove the extra
-      // empty mouseover listeners we added for iOS support
-
-      if ('ontouchstart' in document.documentElement) {
-        $__default['default'](document.body).children().off('mouseover', null, $__default['default'].noop);
-      }
-
-      this._activeTrigger[TRIGGER_CLICK] = false;
-      this._activeTrigger[TRIGGER_FOCUS] = false;
-      this._activeTrigger[TRIGGER_HOVER] = false;
-
-      if ($__default['default'](this.tip).hasClass(CLASS_NAME_FADE$2)) {
-        var transitionDuration = Util.getTransitionDurationFromElement(tip);
-        $__default['default'](tip).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-      } else {
-        complete();
-      }
-
-      this._hoverState = '';
-    };
-
-    _proto.update = function update() {
-      if (this._popper !== null) {
-        this._popper.scheduleUpdate();
-      }
-    } // Protected
-    ;
-
-    _proto.isWithContent = function isWithContent() {
-      return Boolean(this.getTitle());
-    };
-
-    _proto.addAttachmentClass = function addAttachmentClass(attachment) {
-      $__default['default'](this.getTipElement()).addClass(CLASS_PREFIX + "-" + attachment);
-    };
-
-    _proto.getTipElement = function getTipElement() {
-      this.tip = this.tip || $__default['default'](this.config.template)[0];
-      return this.tip;
-    };
-
-    _proto.setContent = function setContent() {
-      var tip = this.getTipElement();
-      this.setElementContent($__default['default'](tip.querySelectorAll(SELECTOR_TOOLTIP_INNER)), this.getTitle());
-      $__default['default'](tip).removeClass(CLASS_NAME_FADE$2 + " " + CLASS_NAME_SHOW$4);
-    };
-
-    _proto.setElementContent = function setElementContent($element, content) {
-      if (typeof content === 'object' && (content.nodeType || content.jquery)) {
-        // Content is a DOM node or a jQuery
-        if (this.config.html) {
-          if (!$__default['default'](content).parent().is($element)) {
-            $element.empty().append(content);
-          }
-        } else {
-          $element.text($__default['default'](content).text());
-        }
-
-        return;
-      }
-
-      if (this.config.html) {
-        if (this.config.sanitize) {
-          content = sanitizeHtml(content, this.config.whiteList, this.config.sanitizeFn);
-        }
-
-        $element.html(content);
-      } else {
-        $element.text(content);
-      }
-    };
-
-    _proto.getTitle = function getTitle() {
-      var title = this.element.getAttribute('data-original-title');
-
-      if (!title) {
-        title = typeof this.config.title === 'function' ? this.config.title.call(this.element) : this.config.title;
-      }
-
-      return title;
-    } // Private
-    ;
-
-    _proto._getPopperConfig = function _getPopperConfig(attachment) {
-      var _this3 = this;
-
-      var defaultBsConfig = {
-        placement: attachment,
-        modifiers: {
-          offset: this._getOffset(),
-          flip: {
-            behavior: this.config.fallbackPlacement
-          },
-          arrow: {
-            element: SELECTOR_ARROW
-          },
-          preventOverflow: {
-            boundariesElement: this.config.boundary
-          }
-        },
-        onCreate: function onCreate(data) {
-          if (data.originalPlacement !== data.placement) {
-            _this3._handlePopperPlacementChange(data);
-          }
-        },
-        onUpdate: function onUpdate(data) {
-          return _this3._handlePopperPlacementChange(data);
-        }
-      };
-      return _extends({}, defaultBsConfig, this.config.popperConfig);
-    };
-
-    _proto._getOffset = function _getOffset() {
-      var _this4 = this;
-
-      var offset = {};
-
-      if (typeof this.config.offset === 'function') {
-        offset.fn = function (data) {
-          data.offsets = _extends({}, data.offsets, _this4.config.offset(data.offsets, _this4.element) || {});
-          return data;
-        };
-      } else {
-        offset.offset = this.config.offset;
-      }
-
-      return offset;
-    };
-
-    _proto._getContainer = function _getContainer() {
-      if (this.config.container === false) {
-        return document.body;
-      }
-
-      if (Util.isElement(this.config.container)) {
-        return $__default['default'](this.config.container);
-      }
-
-      return $__default['default'](document).find(this.config.container);
-    };
-
-    _proto._getAttachment = function _getAttachment(placement) {
-      return AttachmentMap[placement.toUpperCase()];
-    };
-
-    _proto._setListeners = function _setListeners() {
-      var _this5 = this;
-
-      var triggers = this.config.trigger.split(' ');
-      triggers.forEach(function (trigger) {
-        if (trigger === 'click') {
-          $__default['default'](_this5.element).on(_this5.constructor.Event.CLICK, _this5.config.selector, function (event) {
-            return _this5.toggle(event);
-          });
-        } else if (trigger !== TRIGGER_MANUAL) {
-          var eventIn = trigger === TRIGGER_HOVER ? _this5.constructor.Event.MOUSEENTER : _this5.constructor.Event.FOCUSIN;
-          var eventOut = trigger === TRIGGER_HOVER ? _this5.constructor.Event.MOUSELEAVE : _this5.constructor.Event.FOCUSOUT;
-          $__default['default'](_this5.element).on(eventIn, _this5.config.selector, function (event) {
-            return _this5._enter(event);
-          }).on(eventOut, _this5.config.selector, function (event) {
-            return _this5._leave(event);
-          });
-        }
-      });
-
-      this._hideModalHandler = function () {
-        if (_this5.element) {
-          _this5.hide();
-        }
-      };
-
-      $__default['default'](this.element).closest('.modal').on('hide.bs.modal', this._hideModalHandler);
-
-      if (this.config.selector) {
-        this.config = _extends({}, this.config, {
-          trigger: 'manual',
-          selector: ''
-        });
-      } else {
-        this._fixTitle();
-      }
-    };
-
-    _proto._fixTitle = function _fixTitle() {
-      var titleType = typeof this.element.getAttribute('data-original-title');
-
-      if (this.element.getAttribute('title') || titleType !== 'string') {
-        this.element.setAttribute('data-original-title', this.element.getAttribute('title') || '');
-        this.element.setAttribute('title', '');
-      }
-    };
-
-    _proto._enter = function _enter(event, context) {
-      var dataKey = this.constructor.DATA_KEY;
-      context = context || $__default['default'](event.currentTarget).data(dataKey);
-
-      if (!context) {
-        context = new this.constructor(event.currentTarget, this._getDelegateConfig());
-        $__default['default'](event.currentTarget).data(dataKey, context);
-      }
-
-      if (event) {
-        context._activeTrigger[event.type === 'focusin' ? TRIGGER_FOCUS : TRIGGER_HOVER] = true;
-      }
-
-      if ($__default['default'](context.getTipElement()).hasClass(CLASS_NAME_SHOW$4) || context._hoverState === HOVER_STATE_SHOW) {
-        context._hoverState = HOVER_STATE_SHOW;
-        return;
-      }
-
-      clearTimeout(context._timeout);
-      context._hoverState = HOVER_STATE_SHOW;
-
-      if (!context.config.delay || !context.config.delay.show) {
-        context.show();
-        return;
-      }
-
-      context._timeout = setTimeout(function () {
-        if (context._hoverState === HOVER_STATE_SHOW) {
-          context.show();
-        }
-      }, context.config.delay.show);
-    };
-
-    _proto._leave = function _leave(event, context) {
-      var dataKey = this.constructor.DATA_KEY;
-      context = context || $__default['default'](event.currentTarget).data(dataKey);
-
-      if (!context) {
-        context = new this.constructor(event.currentTarget, this._getDelegateConfig());
-        $__default['default'](event.currentTarget).data(dataKey, context);
-      }
-
-      if (event) {
-        context._activeTrigger[event.type === 'focusout' ? TRIGGER_FOCUS : TRIGGER_HOVER] = false;
-      }
-
-      if (context._isWithActiveTrigger()) {
-        return;
-      }
-
-      clearTimeout(context._timeout);
-      context._hoverState = HOVER_STATE_OUT;
-
-      if (!context.config.delay || !context.config.delay.hide) {
-        context.hide();
-        return;
-      }
-
-      context._timeout = setTimeout(function () {
-        if (context._hoverState === HOVER_STATE_OUT) {
-          context.hide();
-        }
-      }, context.config.delay.hide);
-    };
-
-    _proto._isWithActiveTrigger = function _isWithActiveTrigger() {
-      for (var trigger in this._activeTrigger) {
-        if (this._activeTrigger[trigger]) {
-          return true;
-        }
-      }
-
-      return false;
-    };
-
-    _proto._getConfig = function _getConfig(config) {
-      var dataAttributes = $__default['default'](this.element).data();
-      Object.keys(dataAttributes).forEach(function (dataAttr) {
-        if (DISALLOWED_ATTRIBUTES.indexOf(dataAttr) !== -1) {
-          delete dataAttributes[dataAttr];
-        }
-      });
-      config = _extends({}, this.constructor.Default, dataAttributes, typeof config === 'object' && config ? config : {});
-
-      if (typeof config.delay === 'number') {
-        config.delay = {
-          show: config.delay,
-          hide: config.delay
-        };
-      }
-
-      if (typeof config.title === 'number') {
-        config.title = config.title.toString();
-      }
-
-      if (typeof config.content === 'number') {
-        config.content = config.content.toString();
-      }
-
-      Util.typeCheckConfig(NAME$6, config, this.constructor.DefaultType);
-
-      if (config.sanitize) {
-        config.template = sanitizeHtml(config.template, config.whiteList, config.sanitizeFn);
-      }
-
-      return config;
-    };
-
-    _proto._getDelegateConfig = function _getDelegateConfig() {
-      var config = {};
-
-      if (this.config) {
-        for (var key in this.config) {
-          if (this.constructor.Default[key] !== this.config[key]) {
-            config[key] = this.config[key];
-          }
-        }
-      }
-
-      return config;
-    };
-
-    _proto._cleanTipClass = function _cleanTipClass() {
-      var $tip = $__default['default'](this.getTipElement());
-      var tabClass = $tip.attr('class').match(BSCLS_PREFIX_REGEX);
-
-      if (tabClass !== null && tabClass.length) {
-        $tip.removeClass(tabClass.join(''));
-      }
-    };
-
-    _proto._handlePopperPlacementChange = function _handlePopperPlacementChange(popperData) {
-      this.tip = popperData.instance.popper;
-
-      this._cleanTipClass();
-
-      this.addAttachmentClass(this._getAttachment(popperData.placement));
-    };
-
-    _proto._fixTransition = function _fixTransition() {
-      var tip = this.getTipElement();
-      var initConfigAnimation = this.config.animation;
-
-      if (tip.getAttribute('x-placement') !== null) {
-        return;
-      }
-
-      $__default['default'](tip).removeClass(CLASS_NAME_FADE$2);
-      this.config.animation = false;
-      this.hide();
-      this.show();
-      this.config.animation = initConfigAnimation;
-    } // Static
-    ;
-
-    Tooltip._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var $element = $__default['default'](this);
-        var data = $element.data(DATA_KEY$6);
-
-        var _config = typeof config === 'object' && config;
-
-        if (!data && /dispose|hide/.test(config)) {
-          return;
-        }
-
-        if (!data) {
-          data = new Tooltip(this, _config);
-          $element.data(DATA_KEY$6, data);
-        }
-
-        if (typeof config === 'string') {
-          if (typeof data[config] === 'undefined') {
-            throw new TypeError("No method named \"" + config + "\"");
-          }
-
-          data[config]();
-        }
-      });
-    };
-
-    _createClass(Tooltip, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$6;
-      }
-    }, {
-      key: "Default",
-      get: function get() {
-        return Default$4;
-      }
-    }, {
-      key: "NAME",
-      get: function get() {
-        return NAME$6;
-      }
-    }, {
-      key: "DATA_KEY",
-      get: function get() {
-        return DATA_KEY$6;
-      }
-    }, {
-      key: "Event",
-      get: function get() {
-        return Event;
-      }
-    }, {
-      key: "EVENT_KEY",
-      get: function get() {
-        return EVENT_KEY$6;
-      }
-    }, {
-      key: "DefaultType",
-      get: function get() {
-        return DefaultType$4;
-      }
-    }]);
-
-    return Tooltip;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'].fn[NAME$6] = Tooltip._jQueryInterface;
-  $__default['default'].fn[NAME$6].Constructor = Tooltip;
-
-  $__default['default'].fn[NAME$6].noConflict = function () {
-    $__default['default'].fn[NAME$6] = JQUERY_NO_CONFLICT$6;
-    return Tooltip._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$7 = 'popover';
-  var VERSION$7 = '4.6.0';
-  var DATA_KEY$7 = 'bs.popover';
-  var EVENT_KEY$7 = "." + DATA_KEY$7;
-  var JQUERY_NO_CONFLICT$7 = $__default['default'].fn[NAME$7];
-  var CLASS_PREFIX$1 = 'bs-popover';
-  var BSCLS_PREFIX_REGEX$1 = new RegExp("(^|\\s)" + CLASS_PREFIX$1 + "\\S+", 'g');
-
-  var Default$5 = _extends({}, Tooltip.Default, {
-    placement: 'right',
-    trigger: 'click',
-    content: '',
-    template: '<div class="popover" role="tooltip">' + '<div class="arrow"></div>' + '<h3 class="popover-header"></h3>' + '<div class="popover-body"></div></div>'
-  });
-
-  var DefaultType$5 = _extends({}, Tooltip.DefaultType, {
-    content: '(string|element|function)'
-  });
-
-  var CLASS_NAME_FADE$3 = 'fade';
-  var CLASS_NAME_SHOW$5 = 'show';
-  var SELECTOR_TITLE = '.popover-header';
-  var SELECTOR_CONTENT = '.popover-body';
-  var Event$1 = {
-    HIDE: "hide" + EVENT_KEY$7,
-    HIDDEN: "hidden" + EVENT_KEY$7,
-    SHOW: "show" + EVENT_KEY$7,
-    SHOWN: "shown" + EVENT_KEY$7,
-    INSERTED: "inserted" + EVENT_KEY$7,
-    CLICK: "click" + EVENT_KEY$7,
-    FOCUSIN: "focusin" + EVENT_KEY$7,
-    FOCUSOUT: "focusout" + EVENT_KEY$7,
-    MOUSEENTER: "mouseenter" + EVENT_KEY$7,
-    MOUSELEAVE: "mouseleave" + EVENT_KEY$7
-  };
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Popover = /*#__PURE__*/function (_Tooltip) {
-    _inheritsLoose(Popover, _Tooltip);
-
-    function Popover() {
-      return _Tooltip.apply(this, arguments) || this;
-    }
-
-    var _proto = Popover.prototype;
-
-    // Overrides
-    _proto.isWithContent = function isWithContent() {
-      return this.getTitle() || this._getContent();
-    };
-
-    _proto.addAttachmentClass = function addAttachmentClass(attachment) {
-      $__default['default'](this.getTipElement()).addClass(CLASS_PREFIX$1 + "-" + attachment);
-    };
-
-    _proto.getTipElement = function getTipElement() {
-      this.tip = this.tip || $__default['default'](this.config.template)[0];
-      return this.tip;
-    };
-
-    _proto.setContent = function setContent() {
-      var $tip = $__default['default'](this.getTipElement()); // We use append for html objects to maintain js events
-
-      this.setElementContent($tip.find(SELECTOR_TITLE), this.getTitle());
-
-      var content = this._getContent();
-
-      if (typeof content === 'function') {
-        content = content.call(this.element);
-      }
-
-      this.setElementContent($tip.find(SELECTOR_CONTENT), content);
-      $tip.removeClass(CLASS_NAME_FADE$3 + " " + CLASS_NAME_SHOW$5);
-    } // Private
-    ;
-
-    _proto._getContent = function _getContent() {
-      return this.element.getAttribute('data-content') || this.config.content;
-    };
-
-    _proto._cleanTipClass = function _cleanTipClass() {
-      var $tip = $__default['default'](this.getTipElement());
-      var tabClass = $tip.attr('class').match(BSCLS_PREFIX_REGEX$1);
-
-      if (tabClass !== null && tabClass.length > 0) {
-        $tip.removeClass(tabClass.join(''));
-      }
-    } // Static
-    ;
-
-    Popover._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var data = $__default['default'](this).data(DATA_KEY$7);
-
-        var _config = typeof config === 'object' ? config : null;
-
-        if (!data && /dispose|hide/.test(config)) {
-          return;
-        }
-
-        if (!data) {
-          data = new Popover(this, _config);
-          $__default['default'](this).data(DATA_KEY$7, data);
-        }
-
-        if (typeof config === 'string') {
-          if (typeof data[config] === 'undefined') {
-            throw new TypeError("No method named \"" + config + "\"");
-          }
-
-          data[config]();
-        }
-      });
-    };
-
-    _createClass(Popover, null, [{
-      key: "VERSION",
-      // Getters
-      get: function get() {
-        return VERSION$7;
-      }
-    }, {
-      key: "Default",
-      get: function get() {
-        return Default$5;
-      }
-    }, {
-      key: "NAME",
-      get: function get() {
-        return NAME$7;
-      }
-    }, {
-      key: "DATA_KEY",
-      get: function get() {
-        return DATA_KEY$7;
-      }
-    }, {
-      key: "Event",
-      get: function get() {
-        return Event$1;
-      }
-    }, {
-      key: "EVENT_KEY",
-      get: function get() {
-        return EVENT_KEY$7;
-      }
-    }, {
-      key: "DefaultType",
-      get: function get() {
-        return DefaultType$5;
-      }
-    }]);
-
-    return Popover;
-  }(Tooltip);
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'].fn[NAME$7] = Popover._jQueryInterface;
-  $__default['default'].fn[NAME$7].Constructor = Popover;
-
-  $__default['default'].fn[NAME$7].noConflict = function () {
-    $__default['default'].fn[NAME$7] = JQUERY_NO_CONFLICT$7;
-    return Popover._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$8 = 'scrollspy';
-  var VERSION$8 = '4.6.0';
-  var DATA_KEY$8 = 'bs.scrollspy';
-  var EVENT_KEY$8 = "." + DATA_KEY$8;
-  var DATA_API_KEY$6 = '.data-api';
-  var JQUERY_NO_CONFLICT$8 = $__default['default'].fn[NAME$8];
-  var Default$6 = {
-    offset: 10,
-    method: 'auto',
-    target: ''
-  };
-  var DefaultType$6 = {
-    offset: 'number',
-    method: 'string',
-    target: '(string|element)'
-  };
-  var EVENT_ACTIVATE = "activate" + EVENT_KEY$8;
-  var EVENT_SCROLL = "scroll" + EVENT_KEY$8;
-  var EVENT_LOAD_DATA_API$2 = "load" + EVENT_KEY$8 + DATA_API_KEY$6;
-  var CLASS_NAME_DROPDOWN_ITEM = 'dropdown-item';
-  var CLASS_NAME_ACTIVE$2 = 'active';
-  var SELECTOR_DATA_SPY = '[data-spy="scroll"]';
-  var SELECTOR_NAV_LIST_GROUP = '.nav, .list-group';
-  var SELECTOR_NAV_LINKS = '.nav-link';
-  var SELECTOR_NAV_ITEMS = '.nav-item';
-  var SELECTOR_LIST_ITEMS = '.list-group-item';
-  var SELECTOR_DROPDOWN = '.dropdown';
-  var SELECTOR_DROPDOWN_ITEMS = '.dropdown-item';
-  var SELECTOR_DROPDOWN_TOGGLE = '.dropdown-toggle';
-  var METHOD_OFFSET = 'offset';
-  var METHOD_POSITION = 'position';
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var ScrollSpy = /*#__PURE__*/function () {
-    function ScrollSpy(element, config) {
-      var _this = this;
-
-      this._element = element;
-      this._scrollElement = element.tagName === 'BODY' ? window : element;
-      this._config = this._getConfig(config);
-      this._selector = this._config.target + " " + SELECTOR_NAV_LINKS + "," + (this._config.target + " " + SELECTOR_LIST_ITEMS + ",") + (this._config.target + " " + SELECTOR_DROPDOWN_ITEMS);
-      this._offsets = [];
-      this._targets = [];
-      this._activeTarget = null;
-      this._scrollHeight = 0;
-      $__default['default'](this._scrollElement).on(EVENT_SCROLL, function (event) {
-        return _this._process(event);
-      });
-      this.refresh();
-
-      this._process();
-    } // Getters
-
-
-    var _proto = ScrollSpy.prototype;
-
-    // Public
-    _proto.refresh = function refresh() {
-      var _this2 = this;
-
-      var autoMethod = this._scrollElement === this._scrollElement.window ? METHOD_OFFSET : METHOD_POSITION;
-      var offsetMethod = this._config.method === 'auto' ? autoMethod : this._config.method;
-      var offsetBase = offsetMethod === METHOD_POSITION ? this._getScrollTop() : 0;
-      this._offsets = [];
-      this._targets = [];
-      this._scrollHeight = this._getScrollHeight();
-      var targets = [].slice.call(document.querySelectorAll(this._selector));
-      targets.map(function (element) {
-        var target;
-        var targetSelector = Util.getSelectorFromElement(element);
-
-        if (targetSelector) {
-          target = document.querySelector(targetSelector);
-        }
-
-        if (target) {
-          var targetBCR = target.getBoundingClientRect();
-
-          if (targetBCR.width || targetBCR.height) {
-            // TODO (fat): remove sketch reliance on jQuery position/offset
-            return [$__default['default'](target)[offsetMethod]().top + offsetBase, targetSelector];
-          }
-        }
-
-        return null;
-      }).filter(function (item) {
-        return item;
-      }).sort(function (a, b) {
-        return a[0] - b[0];
-      }).forEach(function (item) {
-        _this2._offsets.push(item[0]);
-
-        _this2._targets.push(item[1]);
-      });
-    };
-
-    _proto.dispose = function dispose() {
-      $__default['default'].removeData(this._element, DATA_KEY$8);
-      $__default['default'](this._scrollElement).off(EVENT_KEY$8);
-      this._element = null;
-      this._scrollElement = null;
-      this._config = null;
-      this._selector = null;
-      this._offsets = null;
-      this._targets = null;
-      this._activeTarget = null;
-      this._scrollHeight = null;
-    } // Private
-    ;
-
-    _proto._getConfig = function _getConfig(config) {
-      config = _extends({}, Default$6, typeof config === 'object' && config ? config : {});
-
-      if (typeof config.target !== 'string' && Util.isElement(config.target)) {
-        var id = $__default['default'](config.target).attr('id');
-
-        if (!id) {
-          id = Util.getUID(NAME$8);
-          $__default['default'](config.target).attr('id', id);
-        }
-
-        config.target = "#" + id;
-      }
-
-      Util.typeCheckConfig(NAME$8, config, DefaultType$6);
-      return config;
-    };
-
-    _proto._getScrollTop = function _getScrollTop() {
-      return this._scrollElement === window ? this._scrollElement.pageYOffset : this._scrollElement.scrollTop;
-    };
-
-    _proto._getScrollHeight = function _getScrollHeight() {
-      return this._scrollElement.scrollHeight || Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    };
-
-    _proto._getOffsetHeight = function _getOffsetHeight() {
-      return this._scrollElement === window ? window.innerHeight : this._scrollElement.getBoundingClientRect().height;
-    };
-
-    _proto._process = function _process() {
-      var scrollTop = this._getScrollTop() + this._config.offset;
-
-      var scrollHeight = this._getScrollHeight();
-
-      var maxScroll = this._config.offset + scrollHeight - this._getOffsetHeight();
-
-      if (this._scrollHeight !== scrollHeight) {
-        this.refresh();
-      }
-
-      if (scrollTop >= maxScroll) {
-        var target = this._targets[this._targets.length - 1];
-
-        if (this._activeTarget !== target) {
-          this._activate(target);
-        }
-
-        return;
-      }
-
-      if (this._activeTarget && scrollTop < this._offsets[0] && this._offsets[0] > 0) {
-        this._activeTarget = null;
-
-        this._clear();
-
-        return;
-      }
-
-      for (var i = this._offsets.length; i--;) {
-        var isActiveTarget = this._activeTarget !== this._targets[i] && scrollTop >= this._offsets[i] && (typeof this._offsets[i + 1] === 'undefined' || scrollTop < this._offsets[i + 1]);
-
-        if (isActiveTarget) {
-          this._activate(this._targets[i]);
-        }
-      }
-    };
-
-    _proto._activate = function _activate(target) {
-      this._activeTarget = target;
-
-      this._clear();
-
-      var queries = this._selector.split(',').map(function (selector) {
-        return selector + "[data-target=\"" + target + "\"]," + selector + "[href=\"" + target + "\"]";
-      });
-
-      var $link = $__default['default']([].slice.call(document.querySelectorAll(queries.join(','))));
-
-      if ($link.hasClass(CLASS_NAME_DROPDOWN_ITEM)) {
-        $link.closest(SELECTOR_DROPDOWN).find(SELECTOR_DROPDOWN_TOGGLE).addClass(CLASS_NAME_ACTIVE$2);
-        $link.addClass(CLASS_NAME_ACTIVE$2);
-      } else {
-        // Set triggered link as active
-        $link.addClass(CLASS_NAME_ACTIVE$2); // Set triggered links parents as active
-        // With both <ul> and <nav> markup a parent is the previous sibling of any nav ancestor
-
-        $link.parents(SELECTOR_NAV_LIST_GROUP).prev(SELECTOR_NAV_LINKS + ", " + SELECTOR_LIST_ITEMS).addClass(CLASS_NAME_ACTIVE$2); // Handle special case when .nav-link is inside .nav-item
-
-        $link.parents(SELECTOR_NAV_LIST_GROUP).prev(SELECTOR_NAV_ITEMS).children(SELECTOR_NAV_LINKS).addClass(CLASS_NAME_ACTIVE$2);
-      }
-
-      $__default['default'](this._scrollElement).trigger(EVENT_ACTIVATE, {
-        relatedTarget: target
-      });
-    };
-
-    _proto._clear = function _clear() {
-      [].slice.call(document.querySelectorAll(this._selector)).filter(function (node) {
-        return node.classList.contains(CLASS_NAME_ACTIVE$2);
-      }).forEach(function (node) {
-        return node.classList.remove(CLASS_NAME_ACTIVE$2);
-      });
-    } // Static
-    ;
-
-    ScrollSpy._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var data = $__default['default'](this).data(DATA_KEY$8);
-
-        var _config = typeof config === 'object' && config;
-
-        if (!data) {
-          data = new ScrollSpy(this, _config);
-          $__default['default'](this).data(DATA_KEY$8, data);
-        }
-
-        if (typeof config === 'string') {
-          if (typeof data[config] === 'undefined') {
-            throw new TypeError("No method named \"" + config + "\"");
-          }
-
-          data[config]();
-        }
-      });
-    };
-
-    _createClass(ScrollSpy, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$8;
-      }
-    }, {
-      key: "Default",
-      get: function get() {
-        return Default$6;
-      }
-    }]);
-
-    return ScrollSpy;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'](window).on(EVENT_LOAD_DATA_API$2, function () {
-    var scrollSpys = [].slice.call(document.querySelectorAll(SELECTOR_DATA_SPY));
-    var scrollSpysLength = scrollSpys.length;
-
-    for (var i = scrollSpysLength; i--;) {
-      var $spy = $__default['default'](scrollSpys[i]);
-
-      ScrollSpy._jQueryInterface.call($spy, $spy.data());
-    }
-  });
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $__default['default'].fn[NAME$8] = ScrollSpy._jQueryInterface;
-  $__default['default'].fn[NAME$8].Constructor = ScrollSpy;
-
-  $__default['default'].fn[NAME$8].noConflict = function () {
-    $__default['default'].fn[NAME$8] = JQUERY_NO_CONFLICT$8;
-    return ScrollSpy._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$9 = 'tab';
-  var VERSION$9 = '4.6.0';
-  var DATA_KEY$9 = 'bs.tab';
-  var EVENT_KEY$9 = "." + DATA_KEY$9;
-  var DATA_API_KEY$7 = '.data-api';
-  var JQUERY_NO_CONFLICT$9 = $__default['default'].fn[NAME$9];
-  var EVENT_HIDE$3 = "hide" + EVENT_KEY$9;
-  var EVENT_HIDDEN$3 = "hidden" + EVENT_KEY$9;
-  var EVENT_SHOW$3 = "show" + EVENT_KEY$9;
-  var EVENT_SHOWN$3 = "shown" + EVENT_KEY$9;
-  var EVENT_CLICK_DATA_API$6 = "click" + EVENT_KEY$9 + DATA_API_KEY$7;
-  var CLASS_NAME_DROPDOWN_MENU = 'dropdown-menu';
-  var CLASS_NAME_ACTIVE$3 = 'active';
-  var CLASS_NAME_DISABLED$1 = 'disabled';
-  var CLASS_NAME_FADE$4 = 'fade';
-  var CLASS_NAME_SHOW$6 = 'show';
-  var SELECTOR_DROPDOWN$1 = '.dropdown';
-  var SELECTOR_NAV_LIST_GROUP$1 = '.nav, .list-group';
-  var SELECTOR_ACTIVE$2 = '.active';
-  var SELECTOR_ACTIVE_UL = '> li > .active';
-  var SELECTOR_DATA_TOGGLE$4 = '[data-toggle="tab"], [data-toggle="pill"], [data-toggle="list"]';
-  var SELECTOR_DROPDOWN_TOGGLE$1 = '.dropdown-toggle';
-  var SELECTOR_DROPDOWN_ACTIVE_CHILD = '> .dropdown-menu .active';
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Tab = /*#__PURE__*/function () {
-    function Tab(element) {
-      this._element = element;
-    } // Getters
-
-
-    var _proto = Tab.prototype;
-
-    // Public
-    _proto.show = function show() {
-      var _this = this;
-
-      if (this._element.parentNode && this._element.parentNode.nodeType === Node.ELEMENT_NODE && $__default['default'](this._element).hasClass(CLASS_NAME_ACTIVE$3) || $__default['default'](this._element).hasClass(CLASS_NAME_DISABLED$1)) {
-        return;
-      }
-
-      var target;
-      var previous;
-      var listElement = $__default['default'](this._element).closest(SELECTOR_NAV_LIST_GROUP$1)[0];
-      var selector = Util.getSelectorFromElement(this._element);
-
-      if (listElement) {
-        var itemSelector = listElement.nodeName === 'UL' || listElement.nodeName === 'OL' ? SELECTOR_ACTIVE_UL : SELECTOR_ACTIVE$2;
-        previous = $__default['default'].makeArray($__default['default'](listElement).find(itemSelector));
-        previous = previous[previous.length - 1];
-      }
-
-      var hideEvent = $__default['default'].Event(EVENT_HIDE$3, {
-        relatedTarget: this._element
-      });
-      var showEvent = $__default['default'].Event(EVENT_SHOW$3, {
-        relatedTarget: previous
-      });
-
-      if (previous) {
-        $__default['default'](previous).trigger(hideEvent);
-      }
-
-      $__default['default'](this._element).trigger(showEvent);
-
-      if (showEvent.isDefaultPrevented() || hideEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      if (selector) {
-        target = document.querySelector(selector);
-      }
-
-      this._activate(this._element, listElement);
-
-      var complete = function complete() {
-        var hiddenEvent = $__default['default'].Event(EVENT_HIDDEN$3, {
-          relatedTarget: _this._element
-        });
-        var shownEvent = $__default['default'].Event(EVENT_SHOWN$3, {
-          relatedTarget: previous
-        });
-        $__default['default'](previous).trigger(hiddenEvent);
-        $__default['default'](_this._element).trigger(shownEvent);
-      };
-
-      if (target) {
-        this._activate(target, target.parentNode, complete);
-      } else {
-        complete();
-      }
-    };
-
-    _proto.dispose = function dispose() {
-      $__default['default'].removeData(this._element, DATA_KEY$9);
-      this._element = null;
-    } // Private
-    ;
-
-    _proto._activate = function _activate(element, container, callback) {
-      var _this2 = this;
-
-      var activeElements = container && (container.nodeName === 'UL' || container.nodeName === 'OL') ? $__default['default'](container).find(SELECTOR_ACTIVE_UL) : $__default['default'](container).children(SELECTOR_ACTIVE$2);
-      var active = activeElements[0];
-      var isTransitioning = callback && active && $__default['default'](active).hasClass(CLASS_NAME_FADE$4);
-
-      var complete = function complete() {
-        return _this2._transitionComplete(element, active, callback);
-      };
-
-      if (active && isTransitioning) {
-        var transitionDuration = Util.getTransitionDurationFromElement(active);
-        $__default['default'](active).removeClass(CLASS_NAME_SHOW$6).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-      } else {
-        complete();
-      }
-    };
-
-    _proto._transitionComplete = function _transitionComplete(element, active, callback) {
-      if (active) {
-        $__default['default'](active).removeClass(CLASS_NAME_ACTIVE$3);
-        var dropdownChild = $__default['default'](active.parentNode).find(SELECTOR_DROPDOWN_ACTIVE_CHILD)[0];
-
-        if (dropdownChild) {
-          $__default['default'](dropdownChild).removeClass(CLASS_NAME_ACTIVE$3);
-        }
-
-        if (active.getAttribute('role') === 'tab') {
-          active.setAttribute('aria-selected', false);
-        }
-      }
-
-      $__default['default'](element).addClass(CLASS_NAME_ACTIVE$3);
-
-      if (element.getAttribute('role') === 'tab') {
-        element.setAttribute('aria-selected', true);
-      }
-
-      Util.reflow(element);
-
-      if (element.classList.contains(CLASS_NAME_FADE$4)) {
-        element.classList.add(CLASS_NAME_SHOW$6);
-      }
-
-      if (element.parentNode && $__default['default'](element.parentNode).hasClass(CLASS_NAME_DROPDOWN_MENU)) {
-        var dropdownElement = $__default['default'](element).closest(SELECTOR_DROPDOWN$1)[0];
-
-        if (dropdownElement) {
-          var dropdownToggleList = [].slice.call(dropdownElement.querySelectorAll(SELECTOR_DROPDOWN_TOGGLE$1));
-          $__default['default'](dropdownToggleList).addClass(CLASS_NAME_ACTIVE$3);
-        }
-
-        element.setAttribute('aria-expanded', true);
-      }
-
-      if (callback) {
-        callback();
-      }
-    } // Static
-    ;
-
-    Tab._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var $this = $__default['default'](this);
-        var data = $this.data(DATA_KEY$9);
-
-        if (!data) {
-          data = new Tab(this);
-          $this.data(DATA_KEY$9, data);
-        }
-
-        if (typeof config === 'string') {
-          if (typeof data[config] === 'undefined') {
-            throw new TypeError("No method named \"" + config + "\"");
-          }
-
-          data[config]();
-        }
-      });
-    };
-
-    _createClass(Tab, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$9;
-      }
-    }]);
-
-    return Tab;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * Data Api implementation
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'](document).on(EVENT_CLICK_DATA_API$6, SELECTOR_DATA_TOGGLE$4, function (event) {
-    event.preventDefault();
-
-    Tab._jQueryInterface.call($__default['default'](this), 'show');
-  });
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-  $__default['default'].fn[NAME$9] = Tab._jQueryInterface;
-  $__default['default'].fn[NAME$9].Constructor = Tab;
-
-  $__default['default'].fn[NAME$9].noConflict = function () {
-    $__default['default'].fn[NAME$9] = JQUERY_NO_CONFLICT$9;
-    return Tab._jQueryInterface;
-  };
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-
-  var NAME$a = 'toast';
-  var VERSION$a = '4.6.0';
-  var DATA_KEY$a = 'bs.toast';
-  var EVENT_KEY$a = "." + DATA_KEY$a;
-  var JQUERY_NO_CONFLICT$a = $__default['default'].fn[NAME$a];
-  var EVENT_CLICK_DISMISS$1 = "click.dismiss" + EVENT_KEY$a;
-  var EVENT_HIDE$4 = "hide" + EVENT_KEY$a;
-  var EVENT_HIDDEN$4 = "hidden" + EVENT_KEY$a;
-  var EVENT_SHOW$4 = "show" + EVENT_KEY$a;
-  var EVENT_SHOWN$4 = "shown" + EVENT_KEY$a;
-  var CLASS_NAME_FADE$5 = 'fade';
-  var CLASS_NAME_HIDE = 'hide';
-  var CLASS_NAME_SHOW$7 = 'show';
-  var CLASS_NAME_SHOWING = 'showing';
-  var DefaultType$7 = {
-    animation: 'boolean',
-    autohide: 'boolean',
-    delay: 'number'
-  };
-  var Default$7 = {
-    animation: true,
-    autohide: true,
-    delay: 500
-  };
-  var SELECTOR_DATA_DISMISS$1 = '[data-dismiss="toast"]';
-  /**
-   * ------------------------------------------------------------------------
-   * Class Definition
-   * ------------------------------------------------------------------------
-   */
-
-  var Toast = /*#__PURE__*/function () {
-    function Toast(element, config) {
-      this._element = element;
-      this._config = this._getConfig(config);
-      this._timeout = null;
-
-      this._setListeners();
-    } // Getters
-
-
-    var _proto = Toast.prototype;
-
-    // Public
-    _proto.show = function show() {
-      var _this = this;
-
-      var showEvent = $__default['default'].Event(EVENT_SHOW$4);
-      $__default['default'](this._element).trigger(showEvent);
-
-      if (showEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      this._clearTimeout();
-
-      if (this._config.animation) {
-        this._element.classList.add(CLASS_NAME_FADE$5);
-      }
-
-      var complete = function complete() {
-        _this._element.classList.remove(CLASS_NAME_SHOWING);
-
-        _this._element.classList.add(CLASS_NAME_SHOW$7);
-
-        $__default['default'](_this._element).trigger(EVENT_SHOWN$4);
-
-        if (_this._config.autohide) {
-          _this._timeout = setTimeout(function () {
-            _this.hide();
-          }, _this._config.delay);
-        }
-      };
-
-      this._element.classList.remove(CLASS_NAME_HIDE);
-
-      Util.reflow(this._element);
-
-      this._element.classList.add(CLASS_NAME_SHOWING);
-
-      if (this._config.animation) {
-        var transitionDuration = Util.getTransitionDurationFromElement(this._element);
-        $__default['default'](this._element).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-      } else {
-        complete();
-      }
-    };
-
-    _proto.hide = function hide() {
-      if (!this._element.classList.contains(CLASS_NAME_SHOW$7)) {
-        return;
-      }
-
-      var hideEvent = $__default['default'].Event(EVENT_HIDE$4);
-      $__default['default'](this._element).trigger(hideEvent);
-
-      if (hideEvent.isDefaultPrevented()) {
-        return;
-      }
-
-      this._close();
-    };
-
-    _proto.dispose = function dispose() {
-      this._clearTimeout();
-
-      if (this._element.classList.contains(CLASS_NAME_SHOW$7)) {
-        this._element.classList.remove(CLASS_NAME_SHOW$7);
-      }
-
-      $__default['default'](this._element).off(EVENT_CLICK_DISMISS$1);
-      $__default['default'].removeData(this._element, DATA_KEY$a);
-      this._element = null;
-      this._config = null;
-    } // Private
-    ;
-
-    _proto._getConfig = function _getConfig(config) {
-      config = _extends({}, Default$7, $__default['default'](this._element).data(), typeof config === 'object' && config ? config : {});
-      Util.typeCheckConfig(NAME$a, config, this.constructor.DefaultType);
-      return config;
-    };
-
-    _proto._setListeners = function _setListeners() {
-      var _this2 = this;
-
-      $__default['default'](this._element).on(EVENT_CLICK_DISMISS$1, SELECTOR_DATA_DISMISS$1, function () {
-        return _this2.hide();
-      });
-    };
-
-    _proto._close = function _close() {
-      var _this3 = this;
-
-      var complete = function complete() {
-        _this3._element.classList.add(CLASS_NAME_HIDE);
-
-        $__default['default'](_this3._element).trigger(EVENT_HIDDEN$4);
-      };
-
-      this._element.classList.remove(CLASS_NAME_SHOW$7);
-
-      if (this._config.animation) {
-        var transitionDuration = Util.getTransitionDurationFromElement(this._element);
-        $__default['default'](this._element).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-      } else {
-        complete();
-      }
-    };
-
-    _proto._clearTimeout = function _clearTimeout() {
-      clearTimeout(this._timeout);
-      this._timeout = null;
-    } // Static
-    ;
-
-    Toast._jQueryInterface = function _jQueryInterface(config) {
-      return this.each(function () {
-        var $element = $__default['default'](this);
-        var data = $element.data(DATA_KEY$a);
-
-        var _config = typeof config === 'object' && config;
-
-        if (!data) {
-          data = new Toast(this, _config);
-          $element.data(DATA_KEY$a, data);
-        }
-
-        if (typeof config === 'string') {
-          if (typeof data[config] === 'undefined') {
-            throw new TypeError("No method named \"" + config + "\"");
-          }
-
-          data[config](this);
-        }
-      });
-    };
-
-    _createClass(Toast, null, [{
-      key: "VERSION",
-      get: function get() {
-        return VERSION$a;
-      }
-    }, {
-      key: "DefaultType",
-      get: function get() {
-        return DefaultType$7;
-      }
-    }, {
-      key: "Default",
-      get: function get() {
-        return Default$7;
-      }
-    }]);
-
-    return Toast;
-  }();
-  /**
-   * ------------------------------------------------------------------------
-   * jQuery
-   * ------------------------------------------------------------------------
-   */
-
-
-  $__default['default'].fn[NAME$a] = Toast._jQueryInterface;
-  $__default['default'].fn[NAME$a].Constructor = Toast;
-
-  $__default['default'].fn[NAME$a].noConflict = function () {
-    $__default['default'].fn[NAME$a] = JQUERY_NO_CONFLICT$a;
-    return Toast._jQueryInterface;
-  };
-
-  exports.Alert = Alert;
-  exports.Button = Button;
-  exports.Carousel = Carousel;
-  exports.Collapse = Collapse;
-  exports.Dropdown = Dropdown;
-  exports.Modal = Modal;
-  exports.Popover = Popover;
-  exports.Scrollspy = ScrollSpy;
-  exports.Tab = Tab;
-  exports.Toast = Toast;
-  exports.Tooltip = Tooltip;
-  exports.Util = Util;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
-//# sourceMappingURL=bootstrap.js.map
-
+})(jQuery);
 
 /***/ }),
 
@@ -32028,3184 +31009,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! DataTables 1
 
 	return $.fn.dataTable;
 }));
-
-
-/***/ }),
-
-/***/ "./node_modules/jquery.flot/jquery.flot.js":
-/*!*************************************************!*\
-  !*** ./node_modules/jquery.flot/jquery.flot.js ***!
-  \*************************************************/
-/***/ (() => {
-
-/* Javascript plotting library for jQuery, version 0.8.3.
-
-Copyright (c) 2007-2014 IOLA and Ole Laursen.
-Licensed under the MIT license.
-
-*/
-
-// first an inline dependency, jquery.colorhelpers.js, we inline it here
-// for convenience
-
-/* Plugin for jQuery for working with colors.
- *
- * Version 1.1.
- *
- * Inspiration from jQuery color animation plugin by John Resig.
- *
- * Released under the MIT license by Ole Laursen, October 2009.
- *
- * Examples:
- *
- *   $.color.parse("#fff").scale('rgb', 0.25).add('a', -0.5).toString()
- *   var c = $.color.extract($("#mydiv"), 'background-color');
- *   console.log(c.r, c.g, c.b, c.a);
- *   $.color.make(100, 50, 25, 0.4).toString() // returns "rgba(100,50,25,0.4)"
- *
- * Note that .scale() and .add() return the same modified object
- * instead of making a new one.
- *
- * V. 1.1: Fix error handling so e.g. parsing an empty string does
- * produce a color rather than just crashing.
- */
-(function($){$.color={};$.color.make=function(r,g,b,a){var o={};o.r=r||0;o.g=g||0;o.b=b||0;o.a=a!=null?a:1;o.add=function(c,d){for(var i=0;i<c.length;++i)o[c.charAt(i)]+=d;return o.normalize()};o.scale=function(c,f){for(var i=0;i<c.length;++i)o[c.charAt(i)]*=f;return o.normalize()};o.toString=function(){if(o.a>=1){return"rgb("+[o.r,o.g,o.b].join(",")+")"}else{return"rgba("+[o.r,o.g,o.b,o.a].join(",")+")"}};o.normalize=function(){function clamp(min,value,max){return value<min?min:value>max?max:value}o.r=clamp(0,parseInt(o.r),255);o.g=clamp(0,parseInt(o.g),255);o.b=clamp(0,parseInt(o.b),255);o.a=clamp(0,o.a,1);return o};o.clone=function(){return $.color.make(o.r,o.b,o.g,o.a)};return o.normalize()};$.color.extract=function(elem,css){var c;do{c=elem.css(css).toLowerCase();if(c!=""&&c!="transparent")break;elem=elem.parent()}while(elem.length&&!$.nodeName(elem.get(0),"body"));if(c=="rgba(0, 0, 0, 0)")c="transparent";return $.color.parse(c)};$.color.parse=function(str){var res,m=$.color.make;if(res=/rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(str))return m(parseInt(res[1],10),parseInt(res[2],10),parseInt(res[3],10));if(res=/rgba\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(str))return m(parseInt(res[1],10),parseInt(res[2],10),parseInt(res[3],10),parseFloat(res[4]));if(res=/rgb\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*\)/.exec(str))return m(parseFloat(res[1])*2.55,parseFloat(res[2])*2.55,parseFloat(res[3])*2.55);if(res=/rgba\(\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\%\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(str))return m(parseFloat(res[1])*2.55,parseFloat(res[2])*2.55,parseFloat(res[3])*2.55,parseFloat(res[4]));if(res=/#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(str))return m(parseInt(res[1],16),parseInt(res[2],16),parseInt(res[3],16));if(res=/#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/.exec(str))return m(parseInt(res[1]+res[1],16),parseInt(res[2]+res[2],16),parseInt(res[3]+res[3],16));var name=$.trim(str).toLowerCase();if(name=="transparent")return m(255,255,255,0);else{res=lookupColors[name]||[0,0,0];return m(res[0],res[1],res[2])}};var lookupColors={aqua:[0,255,255],azure:[240,255,255],beige:[245,245,220],black:[0,0,0],blue:[0,0,255],brown:[165,42,42],cyan:[0,255,255],darkblue:[0,0,139],darkcyan:[0,139,139],darkgrey:[169,169,169],darkgreen:[0,100,0],darkkhaki:[189,183,107],darkmagenta:[139,0,139],darkolivegreen:[85,107,47],darkorange:[255,140,0],darkorchid:[153,50,204],darkred:[139,0,0],darksalmon:[233,150,122],darkviolet:[148,0,211],fuchsia:[255,0,255],gold:[255,215,0],green:[0,128,0],indigo:[75,0,130],khaki:[240,230,140],lightblue:[173,216,230],lightcyan:[224,255,255],lightgreen:[144,238,144],lightgrey:[211,211,211],lightpink:[255,182,193],lightyellow:[255,255,224],lime:[0,255,0],magenta:[255,0,255],maroon:[128,0,0],navy:[0,0,128],olive:[128,128,0],orange:[255,165,0],pink:[255,192,203],purple:[128,0,128],violet:[128,0,128],red:[255,0,0],silver:[192,192,192],white:[255,255,255],yellow:[255,255,0]}})(jQuery);
-
-// the actual Flot code
-(function($) {
-
-	// Cache the prototype hasOwnProperty for faster access
-
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-    // A shim to provide 'detach' to jQuery versions prior to 1.4.  Using a DOM
-    // operation produces the same effect as detach, i.e. removing the element
-    // without touching its jQuery data.
-
-    // Do not merge this into Flot 0.9, since it requires jQuery 1.4.4+.
-
-    if (!$.fn.detach) {
-        $.fn.detach = function() {
-            return this.each(function() {
-                if (this.parentNode) {
-                    this.parentNode.removeChild( this );
-                }
-            });
-        };
-    }
-
-	///////////////////////////////////////////////////////////////////////////
-	// The Canvas object is a wrapper around an HTML5 <canvas> tag.
-	//
-	// @constructor
-	// @param {string} cls List of classes to apply to the canvas.
-	// @param {element} container Element onto which to append the canvas.
-	//
-	// Requiring a container is a little iffy, but unfortunately canvas
-	// operations don't work unless the canvas is attached to the DOM.
-
-	function Canvas(cls, container) {
-
-		var element = container.children("." + cls)[0];
-
-		if (element == null) {
-
-			element = document.createElement("canvas");
-			element.className = cls;
-
-			$(element).css({ direction: "ltr", position: "absolute", left: 0, top: 0 })
-				.appendTo(container);
-
-			// If HTML5 Canvas isn't available, fall back to [Ex|Flash]canvas
-
-			if (!element.getContext) {
-				if (window.G_vmlCanvasManager) {
-					element = window.G_vmlCanvasManager.initElement(element);
-				} else {
-					throw new Error("Canvas is not available. If you're using IE with a fall-back such as Excanvas, then there's either a mistake in your conditional include, or the page has no DOCTYPE and is rendering in Quirks Mode.");
-				}
-			}
-		}
-
-		this.element = element;
-
-		var context = this.context = element.getContext("2d");
-
-		// Determine the screen's ratio of physical to device-independent
-		// pixels.  This is the ratio between the canvas width that the browser
-		// advertises and the number of pixels actually present in that space.
-
-		// The iPhone 4, for example, has a device-independent width of 320px,
-		// but its screen is actually 640px wide.  It therefore has a pixel
-		// ratio of 2, while most normal devices have a ratio of 1.
-
-		var devicePixelRatio = window.devicePixelRatio || 1,
-			backingStoreRatio =
-				context.webkitBackingStorePixelRatio ||
-				context.mozBackingStorePixelRatio ||
-				context.msBackingStorePixelRatio ||
-				context.oBackingStorePixelRatio ||
-				context.backingStorePixelRatio || 1;
-
-		this.pixelRatio = devicePixelRatio / backingStoreRatio;
-
-		// Size the canvas to match the internal dimensions of its container
-
-		this.resize(container.width(), container.height());
-
-		// Collection of HTML div layers for text overlaid onto the canvas
-
-		this.textContainer = null;
-		this.text = {};
-
-		// Cache of text fragments and metrics, so we can avoid expensively
-		// re-calculating them when the plot is re-rendered in a loop.
-
-		this._textCache = {};
-	}
-
-	// Resizes the canvas to the given dimensions.
-	//
-	// @param {number} width New width of the canvas, in pixels.
-	// @param {number} width New height of the canvas, in pixels.
-
-	Canvas.prototype.resize = function(width, height) {
-
-		if (width <= 0 || height <= 0) {
-			throw new Error("Invalid dimensions for plot, width = " + width + ", height = " + height);
-		}
-
-		var element = this.element,
-			context = this.context,
-			pixelRatio = this.pixelRatio;
-
-		// Resize the canvas, increasing its density based on the display's
-		// pixel ratio; basically giving it more pixels without increasing the
-		// size of its element, to take advantage of the fact that retina
-		// displays have that many more pixels in the same advertised space.
-
-		// Resizing should reset the state (excanvas seems to be buggy though)
-
-		if (this.width != width) {
-			element.width = width * pixelRatio;
-			element.style.width = width + "px";
-			this.width = width;
-		}
-
-		if (this.height != height) {
-			element.height = height * pixelRatio;
-			element.style.height = height + "px";
-			this.height = height;
-		}
-
-		// Save the context, so we can reset in case we get replotted.  The
-		// restore ensure that we're really back at the initial state, and
-		// should be safe even if we haven't saved the initial state yet.
-
-		context.restore();
-		context.save();
-
-		// Scale the coordinate space to match the display density; so even though we
-		// may have twice as many pixels, we still want lines and other drawing to
-		// appear at the same size; the extra pixels will just make them crisper.
-
-		context.scale(pixelRatio, pixelRatio);
-	};
-
-	// Clears the entire canvas area, not including any overlaid HTML text
-
-	Canvas.prototype.clear = function() {
-		this.context.clearRect(0, 0, this.width, this.height);
-	};
-
-	// Finishes rendering the canvas, including managing the text overlay.
-
-	Canvas.prototype.render = function() {
-
-		var cache = this._textCache;
-
-		// For each text layer, add elements marked as active that haven't
-		// already been rendered, and remove those that are no longer active.
-
-		for (var layerKey in cache) {
-			if (hasOwnProperty.call(cache, layerKey)) {
-
-				var layer = this.getTextLayer(layerKey),
-					layerCache = cache[layerKey];
-
-				layer.hide();
-
-				for (var styleKey in layerCache) {
-					if (hasOwnProperty.call(layerCache, styleKey)) {
-						var styleCache = layerCache[styleKey];
-						for (var key in styleCache) {
-							if (hasOwnProperty.call(styleCache, key)) {
-
-								var positions = styleCache[key].positions;
-
-								for (var i = 0, position; position = positions[i]; i++) {
-									if (position.active) {
-										if (!position.rendered) {
-											layer.append(position.element);
-											position.rendered = true;
-										}
-									} else {
-										positions.splice(i--, 1);
-										if (position.rendered) {
-											position.element.detach();
-										}
-									}
-								}
-
-								if (positions.length == 0) {
-									delete styleCache[key];
-								}
-							}
-						}
-					}
-				}
-
-				layer.show();
-			}
-		}
-	};
-
-	// Creates (if necessary) and returns the text overlay container.
-	//
-	// @param {string} classes String of space-separated CSS classes used to
-	//     uniquely identify the text layer.
-	// @return {object} The jQuery-wrapped text-layer div.
-
-	Canvas.prototype.getTextLayer = function(classes) {
-
-		var layer = this.text[classes];
-
-		// Create the text layer if it doesn't exist
-
-		if (layer == null) {
-
-			// Create the text layer container, if it doesn't exist
-
-			if (this.textContainer == null) {
-				this.textContainer = $("<div class='flot-text'></div>")
-					.css({
-						position: "absolute",
-						top: 0,
-						left: 0,
-						bottom: 0,
-						right: 0,
-						'font-size': "smaller",
-						color: "#545454"
-					})
-					.insertAfter(this.element);
-			}
-
-			layer = this.text[classes] = $("<div></div>")
-				.addClass(classes)
-				.css({
-					position: "absolute",
-					top: 0,
-					left: 0,
-					bottom: 0,
-					right: 0
-				})
-				.appendTo(this.textContainer);
-		}
-
-		return layer;
-	};
-
-	// Creates (if necessary) and returns a text info object.
-	//
-	// The object looks like this:
-	//
-	// {
-	//     width: Width of the text's wrapper div.
-	//     height: Height of the text's wrapper div.
-	//     element: The jQuery-wrapped HTML div containing the text.
-	//     positions: Array of positions at which this text is drawn.
-	// }
-	//
-	// The positions array contains objects that look like this:
-	//
-	// {
-	//     active: Flag indicating whether the text should be visible.
-	//     rendered: Flag indicating whether the text is currently visible.
-	//     element: The jQuery-wrapped HTML div containing the text.
-	//     x: X coordinate at which to draw the text.
-	//     y: Y coordinate at which to draw the text.
-	// }
-	//
-	// Each position after the first receives a clone of the original element.
-	//
-	// The idea is that that the width, height, and general 'identity' of the
-	// text is constant no matter where it is placed; the placements are a
-	// secondary property.
-	//
-	// Canvas maintains a cache of recently-used text info objects; getTextInfo
-	// either returns the cached element or creates a new entry.
-	//
-	// @param {string} layer A string of space-separated CSS classes uniquely
-	//     identifying the layer containing this text.
-	// @param {string} text Text string to retrieve info for.
-	// @param {(string|object)=} font Either a string of space-separated CSS
-	//     classes or a font-spec object, defining the text's font and style.
-	// @param {number=} angle Angle at which to rotate the text, in degrees.
-	//     Angle is currently unused, it will be implemented in the future.
-	// @param {number=} width Maximum width of the text before it wraps.
-	// @return {object} a text info object.
-
-	Canvas.prototype.getTextInfo = function(layer, text, font, angle, width) {
-
-		var textStyle, layerCache, styleCache, info;
-
-		// Cast the value to a string, in case we were given a number or such
-
-		text = "" + text;
-
-		// If the font is a font-spec object, generate a CSS font definition
-
-		if (typeof font === "object") {
-			textStyle = font.style + " " + font.variant + " " + font.weight + " " + font.size + "px/" + font.lineHeight + "px " + font.family;
-		} else {
-			textStyle = font;
-		}
-
-		// Retrieve (or create) the cache for the text's layer and styles
-
-		layerCache = this._textCache[layer];
-
-		if (layerCache == null) {
-			layerCache = this._textCache[layer] = {};
-		}
-
-		styleCache = layerCache[textStyle];
-
-		if (styleCache == null) {
-			styleCache = layerCache[textStyle] = {};
-		}
-
-		info = styleCache[text];
-
-		// If we can't find a matching element in our cache, create a new one
-
-		if (info == null) {
-
-			var element = $("<div></div>").html(text)
-				.css({
-					position: "absolute",
-					'max-width': width,
-					top: -9999
-				})
-				.appendTo(this.getTextLayer(layer));
-
-			if (typeof font === "object") {
-				element.css({
-					font: textStyle,
-					color: font.color
-				});
-			} else if (typeof font === "string") {
-				element.addClass(font);
-			}
-
-			info = styleCache[text] = {
-				width: element.outerWidth(true),
-				height: element.outerHeight(true),
-				element: element,
-				positions: []
-			};
-
-			element.detach();
-		}
-
-		return info;
-	};
-
-	// Adds a text string to the canvas text overlay.
-	//
-	// The text isn't drawn immediately; it is marked as rendering, which will
-	// result in its addition to the canvas on the next render pass.
-	//
-	// @param {string} layer A string of space-separated CSS classes uniquely
-	//     identifying the layer containing this text.
-	// @param {number} x X coordinate at which to draw the text.
-	// @param {number} y Y coordinate at which to draw the text.
-	// @param {string} text Text string to draw.
-	// @param {(string|object)=} font Either a string of space-separated CSS
-	//     classes or a font-spec object, defining the text's font and style.
-	// @param {number=} angle Angle at which to rotate the text, in degrees.
-	//     Angle is currently unused, it will be implemented in the future.
-	// @param {number=} width Maximum width of the text before it wraps.
-	// @param {string=} halign Horizontal alignment of the text; either "left",
-	//     "center" or "right".
-	// @param {string=} valign Vertical alignment of the text; either "top",
-	//     "middle" or "bottom".
-
-	Canvas.prototype.addText = function(layer, x, y, text, font, angle, width, halign, valign) {
-
-		var info = this.getTextInfo(layer, text, font, angle, width),
-			positions = info.positions;
-
-		// Tweak the div's position to match the text's alignment
-
-		if (halign == "center") {
-			x -= info.width / 2;
-		} else if (halign == "right") {
-			x -= info.width;
-		}
-
-		if (valign == "middle") {
-			y -= info.height / 2;
-		} else if (valign == "bottom") {
-			y -= info.height;
-		}
-
-		// Determine whether this text already exists at this position.
-		// If so, mark it for inclusion in the next render pass.
-
-		for (var i = 0, position; position = positions[i]; i++) {
-			if (position.x == x && position.y == y) {
-				position.active = true;
-				return;
-			}
-		}
-
-		// If the text doesn't exist at this position, create a new entry
-
-		// For the very first position we'll re-use the original element,
-		// while for subsequent ones we'll clone it.
-
-		position = {
-			active: true,
-			rendered: false,
-			element: positions.length ? info.element.clone() : info.element,
-			x: x,
-			y: y
-		};
-
-		positions.push(position);
-
-		// Move the element to its final position within the container
-
-		position.element.css({
-			top: Math.round(y),
-			left: Math.round(x),
-			'text-align': halign	// In case the text wraps
-		});
-	};
-
-	// Removes one or more text strings from the canvas text overlay.
-	//
-	// If no parameters are given, all text within the layer is removed.
-	//
-	// Note that the text is not immediately removed; it is simply marked as
-	// inactive, which will result in its removal on the next render pass.
-	// This avoids the performance penalty for 'clear and redraw' behavior,
-	// where we potentially get rid of all text on a layer, but will likely
-	// add back most or all of it later, as when redrawing axes, for example.
-	//
-	// @param {string} layer A string of space-separated CSS classes uniquely
-	//     identifying the layer containing this text.
-	// @param {number=} x X coordinate of the text.
-	// @param {number=} y Y coordinate of the text.
-	// @param {string=} text Text string to remove.
-	// @param {(string|object)=} font Either a string of space-separated CSS
-	//     classes or a font-spec object, defining the text's font and style.
-	// @param {number=} angle Angle at which the text is rotated, in degrees.
-	//     Angle is currently unused, it will be implemented in the future.
-
-	Canvas.prototype.removeText = function(layer, x, y, text, font, angle) {
-		if (text == null) {
-			var layerCache = this._textCache[layer];
-			if (layerCache != null) {
-				for (var styleKey in layerCache) {
-					if (hasOwnProperty.call(layerCache, styleKey)) {
-						var styleCache = layerCache[styleKey];
-						for (var key in styleCache) {
-							if (hasOwnProperty.call(styleCache, key)) {
-								var positions = styleCache[key].positions;
-								for (var i = 0, position; position = positions[i]; i++) {
-									position.active = false;
-								}
-							}
-						}
-					}
-				}
-			}
-		} else {
-			var positions = this.getTextInfo(layer, text, font, angle).positions;
-			for (var i = 0, position; position = positions[i]; i++) {
-				if (position.x == x && position.y == y) {
-					position.active = false;
-				}
-			}
-		}
-	};
-
-	///////////////////////////////////////////////////////////////////////////
-	// The top-level container for the entire plot.
-
-    function Plot(placeholder, data_, options_, plugins) {
-        // data is on the form:
-        //   [ series1, series2 ... ]
-        // where series is either just the data as [ [x1, y1], [x2, y2], ... ]
-        // or { data: [ [x1, y1], [x2, y2], ... ], label: "some label", ... }
-
-        var series = [],
-            options = {
-                // the color theme used for graphs
-                colors: ["#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"],
-                legend: {
-                    show: true,
-                    noColumns: 1, // number of colums in legend table
-                    labelFormatter: null, // fn: string -> string
-                    labelBoxBorderColor: "#ccc", // border color for the little label boxes
-                    container: null, // container (as jQuery object) to put legend in, null means default on top of graph
-                    position: "ne", // position of default legend container within plot
-                    margin: 5, // distance from grid edge to default legend container within plot
-                    backgroundColor: null, // null means auto-detect
-                    backgroundOpacity: 0.85, // set to 0 to avoid background
-                    sorted: null    // default to no legend sorting
-                },
-                xaxis: {
-                    show: null, // null = auto-detect, true = always, false = never
-                    position: "bottom", // or "top"
-                    mode: null, // null or "time"
-                    font: null, // null (derived from CSS in placeholder) or object like { size: 11, lineHeight: 13, style: "italic", weight: "bold", family: "sans-serif", variant: "small-caps" }
-                    color: null, // base color, labels, ticks
-                    tickColor: null, // possibly different color of ticks, e.g. "rgba(0,0,0,0.15)"
-                    transform: null, // null or f: number -> number to transform axis
-                    inverseTransform: null, // if transform is set, this should be the inverse function
-                    min: null, // min. value to show, null means set automatically
-                    max: null, // max. value to show, null means set automatically
-                    autoscaleMargin: null, // margin in % to add if auto-setting min/max
-                    ticks: null, // either [1, 3] or [[1, "a"], 3] or (fn: axis info -> ticks) or app. number of ticks for auto-ticks
-                    tickFormatter: null, // fn: number -> string
-                    labelWidth: null, // size of tick labels in pixels
-                    labelHeight: null,
-                    reserveSpace: null, // whether to reserve space even if axis isn't shown
-                    tickLength: null, // size in pixels of ticks, or "full" for whole line
-                    alignTicksWithAxis: null, // axis number or null for no sync
-                    tickDecimals: null, // no. of decimals, null means auto
-                    tickSize: null, // number or [number, "unit"]
-                    minTickSize: null // number or [number, "unit"]
-                },
-                yaxis: {
-                    autoscaleMargin: 0.02,
-                    position: "left" // or "right"
-                },
-                xaxes: [],
-                yaxes: [],
-                series: {
-                    points: {
-                        show: false,
-                        radius: 3,
-                        lineWidth: 2, // in pixels
-                        fill: true,
-                        fillColor: "#ffffff",
-                        symbol: "circle" // or callback
-                    },
-                    lines: {
-                        // we don't put in show: false so we can see
-                        // whether lines were actively disabled
-                        lineWidth: 2, // in pixels
-                        fill: false,
-                        fillColor: null,
-                        steps: false
-                        // Omit 'zero', so we can later default its value to
-                        // match that of the 'fill' option.
-                    },
-                    bars: {
-                        show: false,
-                        lineWidth: 2, // in pixels
-                        barWidth: 1, // in units of the x axis
-                        fill: true,
-                        fillColor: null,
-                        align: "left", // "left", "right", or "center"
-                        horizontal: false,
-                        zero: true
-                    },
-                    shadowSize: 3,
-                    highlightColor: null
-                },
-                grid: {
-                    show: true,
-                    aboveData: false,
-                    color: "#545454", // primary color used for outline and labels
-                    backgroundColor: null, // null for transparent, else color
-                    borderColor: null, // set if different from the grid color
-                    tickColor: null, // color for the ticks, e.g. "rgba(0,0,0,0.15)"
-                    margin: 0, // distance from the canvas edge to the grid
-                    labelMargin: 5, // in pixels
-                    axisMargin: 8, // in pixels
-                    borderWidth: 2, // in pixels
-                    minBorderMargin: null, // in pixels, null means taken from points radius
-                    markings: null, // array of ranges or fn: axes -> array of ranges
-                    markingsColor: "#f4f4f4",
-                    markingsLineWidth: 2,
-                    // interactive stuff
-                    clickable: false,
-                    hoverable: false,
-                    autoHighlight: true, // highlight in case mouse is near
-                    mouseActiveRadius: 10 // how far the mouse can be away to activate an item
-                },
-                interaction: {
-                    redrawOverlayInterval: 1000/60 // time between updates, -1 means in same flow
-                },
-                hooks: {}
-            },
-        surface = null,     // the canvas for the plot itself
-        overlay = null,     // canvas for interactive stuff on top of plot
-        eventHolder = null, // jQuery object that events should be bound to
-        ctx = null, octx = null,
-        xaxes = [], yaxes = [],
-        plotOffset = { left: 0, right: 0, top: 0, bottom: 0},
-        plotWidth = 0, plotHeight = 0,
-        hooks = {
-            processOptions: [],
-            processRawData: [],
-            processDatapoints: [],
-            processOffset: [],
-            drawBackground: [],
-            drawSeries: [],
-            draw: [],
-            bindEvents: [],
-            drawOverlay: [],
-            shutdown: []
-        },
-        plot = this;
-
-        // public functions
-        plot.setData = setData;
-        plot.setupGrid = setupGrid;
-        plot.draw = draw;
-        plot.getPlaceholder = function() { return placeholder; };
-        plot.getCanvas = function() { return surface.element; };
-        plot.getPlotOffset = function() { return plotOffset; };
-        plot.width = function () { return plotWidth; };
-        plot.height = function () { return plotHeight; };
-        plot.offset = function () {
-            var o = eventHolder.offset();
-            o.left += plotOffset.left;
-            o.top += plotOffset.top;
-            return o;
-        };
-        plot.getData = function () { return series; };
-        plot.getAxes = function () {
-            var res = {}, i;
-            $.each(xaxes.concat(yaxes), function (_, axis) {
-                if (axis)
-                    res[axis.direction + (axis.n != 1 ? axis.n : "") + "axis"] = axis;
-            });
-            return res;
-        };
-        plot.getXAxes = function () { return xaxes; };
-        plot.getYAxes = function () { return yaxes; };
-        plot.c2p = canvasToAxisCoords;
-        plot.p2c = axisToCanvasCoords;
-        plot.getOptions = function () { return options; };
-        plot.highlight = highlight;
-        plot.unhighlight = unhighlight;
-        plot.triggerRedrawOverlay = triggerRedrawOverlay;
-        plot.pointOffset = function(point) {
-            return {
-                left: parseInt(xaxes[axisNumber(point, "x") - 1].p2c(+point.x) + plotOffset.left, 10),
-                top: parseInt(yaxes[axisNumber(point, "y") - 1].p2c(+point.y) + plotOffset.top, 10)
-            };
-        };
-        plot.shutdown = shutdown;
-        plot.destroy = function () {
-            shutdown();
-            placeholder.removeData("plot").empty();
-
-            series = [];
-            options = null;
-            surface = null;
-            overlay = null;
-            eventHolder = null;
-            ctx = null;
-            octx = null;
-            xaxes = [];
-            yaxes = [];
-            hooks = null;
-            highlights = [];
-            plot = null;
-        };
-        plot.resize = function () {
-        	var width = placeholder.width(),
-        		height = placeholder.height();
-            surface.resize(width, height);
-            overlay.resize(width, height);
-        };
-
-        // public attributes
-        plot.hooks = hooks;
-
-        // initialize
-        initPlugins(plot);
-        parseOptions(options_);
-        setupCanvases();
-        setData(data_);
-        setupGrid();
-        draw();
-        bindEvents();
-
-
-        function executeHooks(hook, args) {
-            args = [plot].concat(args);
-            for (var i = 0; i < hook.length; ++i)
-                hook[i].apply(this, args);
-        }
-
-        function initPlugins() {
-
-            // References to key classes, allowing plugins to modify them
-
-            var classes = {
-                Canvas: Canvas
-            };
-
-            for (var i = 0; i < plugins.length; ++i) {
-                var p = plugins[i];
-                p.init(plot, classes);
-                if (p.options)
-                    $.extend(true, options, p.options);
-            }
-        }
-
-        function parseOptions(opts) {
-
-            $.extend(true, options, opts);
-
-            // $.extend merges arrays, rather than replacing them.  When less
-            // colors are provided than the size of the default palette, we
-            // end up with those colors plus the remaining defaults, which is
-            // not expected behavior; avoid it by replacing them here.
-
-            if (opts && opts.colors) {
-            	options.colors = opts.colors;
-            }
-
-            if (options.xaxis.color == null)
-                options.xaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-            if (options.yaxis.color == null)
-                options.yaxis.color = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-
-            if (options.xaxis.tickColor == null) // grid.tickColor for back-compatibility
-                options.xaxis.tickColor = options.grid.tickColor || options.xaxis.color;
-            if (options.yaxis.tickColor == null) // grid.tickColor for back-compatibility
-                options.yaxis.tickColor = options.grid.tickColor || options.yaxis.color;
-
-            if (options.grid.borderColor == null)
-                options.grid.borderColor = options.grid.color;
-            if (options.grid.tickColor == null)
-                options.grid.tickColor = $.color.parse(options.grid.color).scale('a', 0.22).toString();
-
-            // Fill in defaults for axis options, including any unspecified
-            // font-spec fields, if a font-spec was provided.
-
-            // If no x/y axis options were provided, create one of each anyway,
-            // since the rest of the code assumes that they exist.
-
-            var i, axisOptions, axisCount,
-                fontSize = placeholder.css("font-size"),
-                fontSizeDefault = fontSize ? +fontSize.replace("px", "") : 13,
-                fontDefaults = {
-                    style: placeholder.css("font-style"),
-                    size: Math.round(0.8 * fontSizeDefault),
-                    variant: placeholder.css("font-variant"),
-                    weight: placeholder.css("font-weight"),
-                    family: placeholder.css("font-family")
-                };
-
-            axisCount = options.xaxes.length || 1;
-            for (i = 0; i < axisCount; ++i) {
-
-                axisOptions = options.xaxes[i];
-                if (axisOptions && !axisOptions.tickColor) {
-                    axisOptions.tickColor = axisOptions.color;
-                }
-
-                axisOptions = $.extend(true, {}, options.xaxis, axisOptions);
-                options.xaxes[i] = axisOptions;
-
-                if (axisOptions.font) {
-                    axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
-                    if (!axisOptions.font.color) {
-                        axisOptions.font.color = axisOptions.color;
-                    }
-                    if (!axisOptions.font.lineHeight) {
-                        axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
-                    }
-                }
-            }
-
-            axisCount = options.yaxes.length || 1;
-            for (i = 0; i < axisCount; ++i) {
-
-                axisOptions = options.yaxes[i];
-                if (axisOptions && !axisOptions.tickColor) {
-                    axisOptions.tickColor = axisOptions.color;
-                }
-
-                axisOptions = $.extend(true, {}, options.yaxis, axisOptions);
-                options.yaxes[i] = axisOptions;
-
-                if (axisOptions.font) {
-                    axisOptions.font = $.extend({}, fontDefaults, axisOptions.font);
-                    if (!axisOptions.font.color) {
-                        axisOptions.font.color = axisOptions.color;
-                    }
-                    if (!axisOptions.font.lineHeight) {
-                        axisOptions.font.lineHeight = Math.round(axisOptions.font.size * 1.15);
-                    }
-                }
-            }
-
-            // backwards compatibility, to be removed in future
-            if (options.xaxis.noTicks && options.xaxis.ticks == null)
-                options.xaxis.ticks = options.xaxis.noTicks;
-            if (options.yaxis.noTicks && options.yaxis.ticks == null)
-                options.yaxis.ticks = options.yaxis.noTicks;
-            if (options.x2axis) {
-                options.xaxes[1] = $.extend(true, {}, options.xaxis, options.x2axis);
-                options.xaxes[1].position = "top";
-                // Override the inherit to allow the axis to auto-scale
-                if (options.x2axis.min == null) {
-                    options.xaxes[1].min = null;
-                }
-                if (options.x2axis.max == null) {
-                    options.xaxes[1].max = null;
-                }
-            }
-            if (options.y2axis) {
-                options.yaxes[1] = $.extend(true, {}, options.yaxis, options.y2axis);
-                options.yaxes[1].position = "right";
-                // Override the inherit to allow the axis to auto-scale
-                if (options.y2axis.min == null) {
-                    options.yaxes[1].min = null;
-                }
-                if (options.y2axis.max == null) {
-                    options.yaxes[1].max = null;
-                }
-            }
-            if (options.grid.coloredAreas)
-                options.grid.markings = options.grid.coloredAreas;
-            if (options.grid.coloredAreasColor)
-                options.grid.markingsColor = options.grid.coloredAreasColor;
-            if (options.lines)
-                $.extend(true, options.series.lines, options.lines);
-            if (options.points)
-                $.extend(true, options.series.points, options.points);
-            if (options.bars)
-                $.extend(true, options.series.bars, options.bars);
-            if (options.shadowSize != null)
-                options.series.shadowSize = options.shadowSize;
-            if (options.highlightColor != null)
-                options.series.highlightColor = options.highlightColor;
-
-            // save options on axes for future reference
-            for (i = 0; i < options.xaxes.length; ++i)
-                getOrCreateAxis(xaxes, i + 1).options = options.xaxes[i];
-            for (i = 0; i < options.yaxes.length; ++i)
-                getOrCreateAxis(yaxes, i + 1).options = options.yaxes[i];
-
-            // add hooks from options
-            for (var n in hooks)
-                if (options.hooks[n] && options.hooks[n].length)
-                    hooks[n] = hooks[n].concat(options.hooks[n]);
-
-            executeHooks(hooks.processOptions, [options]);
-        }
-
-        function setData(d) {
-            series = parseData(d);
-            fillInSeriesOptions();
-            processData();
-        }
-
-        function parseData(d) {
-            var res = [];
-            for (var i = 0; i < d.length; ++i) {
-                var s = $.extend(true, {}, options.series);
-
-                if (d[i].data != null) {
-                    s.data = d[i].data; // move the data instead of deep-copy
-                    delete d[i].data;
-
-                    $.extend(true, s, d[i]);
-
-                    d[i].data = s.data;
-                }
-                else
-                    s.data = d[i];
-                res.push(s);
-            }
-
-            return res;
-        }
-
-        function axisNumber(obj, coord) {
-            var a = obj[coord + "axis"];
-            if (typeof a == "object") // if we got a real axis, extract number
-                a = a.n;
-            if (typeof a != "number")
-                a = 1; // default to first axis
-            return a;
-        }
-
-        function allAxes() {
-            // return flat array without annoying null entries
-            return $.grep(xaxes.concat(yaxes), function (a) { return a; });
-        }
-
-        function canvasToAxisCoords(pos) {
-            // return an object with x/y corresponding to all used axes
-            var res = {}, i, axis;
-            for (i = 0; i < xaxes.length; ++i) {
-                axis = xaxes[i];
-                if (axis && axis.used)
-                    res["x" + axis.n] = axis.c2p(pos.left);
-            }
-
-            for (i = 0; i < yaxes.length; ++i) {
-                axis = yaxes[i];
-                if (axis && axis.used)
-                    res["y" + axis.n] = axis.c2p(pos.top);
-            }
-
-            if (res.x1 !== undefined)
-                res.x = res.x1;
-            if (res.y1 !== undefined)
-                res.y = res.y1;
-
-            return res;
-        }
-
-        function axisToCanvasCoords(pos) {
-            // get canvas coords from the first pair of x/y found in pos
-            var res = {}, i, axis, key;
-
-            for (i = 0; i < xaxes.length; ++i) {
-                axis = xaxes[i];
-                if (axis && axis.used) {
-                    key = "x" + axis.n;
-                    if (pos[key] == null && axis.n == 1)
-                        key = "x";
-
-                    if (pos[key] != null) {
-                        res.left = axis.p2c(pos[key]);
-                        break;
-                    }
-                }
-            }
-
-            for (i = 0; i < yaxes.length; ++i) {
-                axis = yaxes[i];
-                if (axis && axis.used) {
-                    key = "y" + axis.n;
-                    if (pos[key] == null && axis.n == 1)
-                        key = "y";
-
-                    if (pos[key] != null) {
-                        res.top = axis.p2c(pos[key]);
-                        break;
-                    }
-                }
-            }
-
-            return res;
-        }
-
-        function getOrCreateAxis(axes, number) {
-            if (!axes[number - 1])
-                axes[number - 1] = {
-                    n: number, // save the number for future reference
-                    direction: axes == xaxes ? "x" : "y",
-                    options: $.extend(true, {}, axes == xaxes ? options.xaxis : options.yaxis)
-                };
-
-            return axes[number - 1];
-        }
-
-        function fillInSeriesOptions() {
-
-            var neededColors = series.length, maxIndex = -1, i;
-
-            // Subtract the number of series that already have fixed colors or
-            // color indexes from the number that we still need to generate.
-
-            for (i = 0; i < series.length; ++i) {
-                var sc = series[i].color;
-                if (sc != null) {
-                    neededColors--;
-                    if (typeof sc == "number" && sc > maxIndex) {
-                        maxIndex = sc;
-                    }
-                }
-            }
-
-            // If any of the series have fixed color indexes, then we need to
-            // generate at least as many colors as the highest index.
-
-            if (neededColors <= maxIndex) {
-                neededColors = maxIndex + 1;
-            }
-
-            // Generate all the colors, using first the option colors and then
-            // variations on those colors once they're exhausted.
-
-            var c, colors = [], colorPool = options.colors,
-                colorPoolSize = colorPool.length, variation = 0;
-
-            for (i = 0; i < neededColors; i++) {
-
-                c = $.color.parse(colorPool[i % colorPoolSize] || "#666");
-
-                // Each time we exhaust the colors in the pool we adjust
-                // a scaling factor used to produce more variations on
-                // those colors. The factor alternates negative/positive
-                // to produce lighter/darker colors.
-
-                // Reset the variation after every few cycles, or else
-                // it will end up producing only white or black colors.
-
-                if (i % colorPoolSize == 0 && i) {
-                    if (variation >= 0) {
-                        if (variation < 0.5) {
-                            variation = -variation - 0.2;
-                        } else variation = 0;
-                    } else variation = -variation;
-                }
-
-                colors[i] = c.scale('rgb', 1 + variation);
-            }
-
-            // Finalize the series options, filling in their colors
-
-            var colori = 0, s;
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-
-                // assign colors
-                if (s.color == null) {
-                    s.color = colors[colori].toString();
-                    ++colori;
-                }
-                else if (typeof s.color == "number")
-                    s.color = colors[s.color].toString();
-
-                // turn on lines automatically in case nothing is set
-                if (s.lines.show == null) {
-                    var v, show = true;
-                    for (v in s)
-                        if (s[v] && s[v].show) {
-                            show = false;
-                            break;
-                        }
-                    if (show)
-                        s.lines.show = true;
-                }
-
-                // If nothing was provided for lines.zero, default it to match
-                // lines.fill, since areas by default should extend to zero.
-
-                if (s.lines.zero == null) {
-                    s.lines.zero = !!s.lines.fill;
-                }
-
-                // setup axes
-                s.xaxis = getOrCreateAxis(xaxes, axisNumber(s, "x"));
-                s.yaxis = getOrCreateAxis(yaxes, axisNumber(s, "y"));
-            }
-        }
-
-        function processData() {
-            var topSentry = Number.POSITIVE_INFINITY,
-                bottomSentry = Number.NEGATIVE_INFINITY,
-                fakeInfinity = Number.MAX_VALUE,
-                i, j, k, m, length,
-                s, points, ps, x, y, axis, val, f, p,
-                data, format;
-
-            function updateAxis(axis, min, max) {
-                if (min < axis.datamin && min != -fakeInfinity)
-                    axis.datamin = min;
-                if (max > axis.datamax && max != fakeInfinity)
-                    axis.datamax = max;
-            }
-
-            $.each(allAxes(), function (_, axis) {
-                // init axis
-                axis.datamin = topSentry;
-                axis.datamax = bottomSentry;
-                axis.used = false;
-            });
-
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-                s.datapoints = { points: [] };
-
-                executeHooks(hooks.processRawData, [ s, s.data, s.datapoints ]);
-            }
-
-            // first pass: clean and copy data
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-
-                data = s.data;
-                format = s.datapoints.format;
-
-                if (!format) {
-                    format = [];
-                    // find out how to copy
-                    format.push({ x: true, number: true, required: true });
-                    format.push({ y: true, number: true, required: true });
-
-                    if (s.bars.show || (s.lines.show && s.lines.fill)) {
-                        var autoscale = !!((s.bars.show && s.bars.zero) || (s.lines.show && s.lines.zero));
-                        format.push({ y: true, number: true, required: false, defaultValue: 0, autoscale: autoscale });
-                        if (s.bars.horizontal) {
-                            delete format[format.length - 1].y;
-                            format[format.length - 1].x = true;
-                        }
-                    }
-
-                    s.datapoints.format = format;
-                }
-
-                if (s.datapoints.pointsize != null)
-                    continue; // already filled in
-
-                s.datapoints.pointsize = format.length;
-
-                ps = s.datapoints.pointsize;
-                points = s.datapoints.points;
-
-                var insertSteps = s.lines.show && s.lines.steps;
-                s.xaxis.used = s.yaxis.used = true;
-
-                for (j = k = 0; j < data.length; ++j, k += ps) {
-                    p = data[j];
-
-                    var nullify = p == null;
-                    if (!nullify) {
-                        for (m = 0; m < ps; ++m) {
-                            val = p[m];
-                            f = format[m];
-
-                            if (f) {
-                                if (f.number && val != null) {
-                                    val = +val; // convert to number
-                                    if (isNaN(val))
-                                        val = null;
-                                    else if (val == Infinity)
-                                        val = fakeInfinity;
-                                    else if (val == -Infinity)
-                                        val = -fakeInfinity;
-                                }
-
-                                if (val == null) {
-                                    if (f.required)
-                                        nullify = true;
-
-                                    if (f.defaultValue != null)
-                                        val = f.defaultValue;
-                                }
-                            }
-
-                            points[k + m] = val;
-                        }
-                    }
-
-                    if (nullify) {
-                        for (m = 0; m < ps; ++m) {
-                            val = points[k + m];
-                            if (val != null) {
-                                f = format[m];
-                                // extract min/max info
-                                if (f.autoscale !== false) {
-                                    if (f.x) {
-                                        updateAxis(s.xaxis, val, val);
-                                    }
-                                    if (f.y) {
-                                        updateAxis(s.yaxis, val, val);
-                                    }
-                                }
-                            }
-                            points[k + m] = null;
-                        }
-                    }
-                    else {
-                        // a little bit of line specific stuff that
-                        // perhaps shouldn't be here, but lacking
-                        // better means...
-                        if (insertSteps && k > 0
-                            && points[k - ps] != null
-                            && points[k - ps] != points[k]
-                            && points[k - ps + 1] != points[k + 1]) {
-                            // copy the point to make room for a middle point
-                            for (m = 0; m < ps; ++m)
-                                points[k + ps + m] = points[k + m];
-
-                            // middle point has same y
-                            points[k + 1] = points[k - ps + 1];
-
-                            // we've added a point, better reflect that
-                            k += ps;
-                        }
-                    }
-                }
-            }
-
-            // give the hooks a chance to run
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-
-                executeHooks(hooks.processDatapoints, [ s, s.datapoints]);
-            }
-
-            // second pass: find datamax/datamin for auto-scaling
-            for (i = 0; i < series.length; ++i) {
-                s = series[i];
-                points = s.datapoints.points;
-                ps = s.datapoints.pointsize;
-                format = s.datapoints.format;
-
-                var xmin = topSentry, ymin = topSentry,
-                    xmax = bottomSentry, ymax = bottomSentry;
-
-                for (j = 0; j < points.length; j += ps) {
-                    if (points[j] == null)
-                        continue;
-
-                    for (m = 0; m < ps; ++m) {
-                        val = points[j + m];
-                        f = format[m];
-                        if (!f || f.autoscale === false || val == fakeInfinity || val == -fakeInfinity)
-                            continue;
-
-                        if (f.x) {
-                            if (val < xmin)
-                                xmin = val;
-                            if (val > xmax)
-                                xmax = val;
-                        }
-                        if (f.y) {
-                            if (val < ymin)
-                                ymin = val;
-                            if (val > ymax)
-                                ymax = val;
-                        }
-                    }
-                }
-
-                if (s.bars.show) {
-                    // make sure we got room for the bar on the dancing floor
-                    var delta;
-
-                    switch (s.bars.align) {
-                        case "left":
-                            delta = 0;
-                            break;
-                        case "right":
-                            delta = -s.bars.barWidth;
-                            break;
-                        default:
-                            delta = -s.bars.barWidth / 2;
-                    }
-
-                    if (s.bars.horizontal) {
-                        ymin += delta;
-                        ymax += delta + s.bars.barWidth;
-                    }
-                    else {
-                        xmin += delta;
-                        xmax += delta + s.bars.barWidth;
-                    }
-                }
-
-                updateAxis(s.xaxis, xmin, xmax);
-                updateAxis(s.yaxis, ymin, ymax);
-            }
-
-            $.each(allAxes(), function (_, axis) {
-                if (axis.datamin == topSentry)
-                    axis.datamin = null;
-                if (axis.datamax == bottomSentry)
-                    axis.datamax = null;
-            });
-        }
-
-        function setupCanvases() {
-
-            // Make sure the placeholder is clear of everything except canvases
-            // from a previous plot in this container that we'll try to re-use.
-
-            placeholder.css("padding", 0) // padding messes up the positioning
-                .children().filter(function(){
-                    return !$(this).hasClass("flot-overlay") && !$(this).hasClass('flot-base');
-                }).remove();
-
-            if (placeholder.css("position") == 'static')
-                placeholder.css("position", "relative"); // for positioning labels and overlay
-
-            surface = new Canvas("flot-base", placeholder);
-            overlay = new Canvas("flot-overlay", placeholder); // overlay canvas for interactive features
-
-            ctx = surface.context;
-            octx = overlay.context;
-
-            // define which element we're listening for events on
-            eventHolder = $(overlay.element).unbind();
-
-            // If we're re-using a plot object, shut down the old one
-
-            var existing = placeholder.data("plot");
-
-            if (existing) {
-                existing.shutdown();
-                overlay.clear();
-            }
-
-            // save in case we get replotted
-            placeholder.data("plot", plot);
-        }
-
-        function bindEvents() {
-            // bind events
-            if (options.grid.hoverable) {
-                eventHolder.mousemove(onMouseMove);
-
-                // Use bind, rather than .mouseleave, because we officially
-                // still support jQuery 1.2.6, which doesn't define a shortcut
-                // for mouseenter or mouseleave.  This was a bug/oversight that
-                // was fixed somewhere around 1.3.x.  We can return to using
-                // .mouseleave when we drop support for 1.2.6.
-
-                eventHolder.bind("mouseleave", onMouseLeave);
-            }
-
-            if (options.grid.clickable)
-                eventHolder.click(onClick);
-
-            executeHooks(hooks.bindEvents, [eventHolder]);
-        }
-
-        function shutdown() {
-            if (redrawTimeout)
-                clearTimeout(redrawTimeout);
-
-            eventHolder.unbind("mousemove", onMouseMove);
-            eventHolder.unbind("mouseleave", onMouseLeave);
-            eventHolder.unbind("click", onClick);
-
-            executeHooks(hooks.shutdown, [eventHolder]);
-        }
-
-        function setTransformationHelpers(axis) {
-            // set helper functions on the axis, assumes plot area
-            // has been computed already
-
-            function identity(x) { return x; }
-
-            var s, m, t = axis.options.transform || identity,
-                it = axis.options.inverseTransform;
-
-            // precompute how much the axis is scaling a point
-            // in canvas space
-            if (axis.direction == "x") {
-                s = axis.scale = plotWidth / Math.abs(t(axis.max) - t(axis.min));
-                m = Math.min(t(axis.max), t(axis.min));
-            }
-            else {
-                s = axis.scale = plotHeight / Math.abs(t(axis.max) - t(axis.min));
-                s = -s;
-                m = Math.max(t(axis.max), t(axis.min));
-            }
-
-            // data point to canvas coordinate
-            if (t == identity) // slight optimization
-                axis.p2c = function (p) { return (p - m) * s; };
-            else
-                axis.p2c = function (p) { return (t(p) - m) * s; };
-            // canvas coordinate to data point
-            if (!it)
-                axis.c2p = function (c) { return m + c / s; };
-            else
-                axis.c2p = function (c) { return it(m + c / s); };
-        }
-
-        function measureTickLabels(axis) {
-
-            var opts = axis.options,
-                ticks = axis.ticks || [],
-                labelWidth = opts.labelWidth || 0,
-                labelHeight = opts.labelHeight || 0,
-                maxWidth = labelWidth || (axis.direction == "x" ? Math.floor(surface.width / (ticks.length || 1)) : null),
-                legacyStyles = axis.direction + "Axis " + axis.direction + axis.n + "Axis",
-                layer = "flot-" + axis.direction + "-axis flot-" + axis.direction + axis.n + "-axis " + legacyStyles,
-                font = opts.font || "flot-tick-label tickLabel";
-
-            for (var i = 0; i < ticks.length; ++i) {
-
-                var t = ticks[i];
-
-                if (!t.label)
-                    continue;
-
-                var info = surface.getTextInfo(layer, t.label, font, null, maxWidth);
-
-                labelWidth = Math.max(labelWidth, info.width);
-                labelHeight = Math.max(labelHeight, info.height);
-            }
-
-            axis.labelWidth = opts.labelWidth || labelWidth;
-            axis.labelHeight = opts.labelHeight || labelHeight;
-        }
-
-        function allocateAxisBoxFirstPhase(axis) {
-            // find the bounding box of the axis by looking at label
-            // widths/heights and ticks, make room by diminishing the
-            // plotOffset; this first phase only looks at one
-            // dimension per axis, the other dimension depends on the
-            // other axes so will have to wait
-
-            var lw = axis.labelWidth,
-                lh = axis.labelHeight,
-                pos = axis.options.position,
-                isXAxis = axis.direction === "x",
-                tickLength = axis.options.tickLength,
-                axisMargin = options.grid.axisMargin,
-                padding = options.grid.labelMargin,
-                innermost = true,
-                outermost = true,
-                first = true,
-                found = false;
-
-            // Determine the axis's position in its direction and on its side
-
-            $.each(isXAxis ? xaxes : yaxes, function(i, a) {
-                if (a && (a.show || a.reserveSpace)) {
-                    if (a === axis) {
-                        found = true;
-                    } else if (a.options.position === pos) {
-                        if (found) {
-                            outermost = false;
-                        } else {
-                            innermost = false;
-                        }
-                    }
-                    if (!found) {
-                        first = false;
-                    }
-                }
-            });
-
-            // The outermost axis on each side has no margin
-
-            if (outermost) {
-                axisMargin = 0;
-            }
-
-            // The ticks for the first axis in each direction stretch across
-
-            if (tickLength == null) {
-                tickLength = first ? "full" : 5;
-            }
-
-            if (!isNaN(+tickLength))
-                padding += +tickLength;
-
-            if (isXAxis) {
-                lh += padding;
-
-                if (pos == "bottom") {
-                    plotOffset.bottom += lh + axisMargin;
-                    axis.box = { top: surface.height - plotOffset.bottom, height: lh };
-                }
-                else {
-                    axis.box = { top: plotOffset.top + axisMargin, height: lh };
-                    plotOffset.top += lh + axisMargin;
-                }
-            }
-            else {
-                lw += padding;
-
-                if (pos == "left") {
-                    axis.box = { left: plotOffset.left + axisMargin, width: lw };
-                    plotOffset.left += lw + axisMargin;
-                }
-                else {
-                    plotOffset.right += lw + axisMargin;
-                    axis.box = { left: surface.width - plotOffset.right, width: lw };
-                }
-            }
-
-             // save for future reference
-            axis.position = pos;
-            axis.tickLength = tickLength;
-            axis.box.padding = padding;
-            axis.innermost = innermost;
-        }
-
-        function allocateAxisBoxSecondPhase(axis) {
-            // now that all axis boxes have been placed in one
-            // dimension, we can set the remaining dimension coordinates
-            if (axis.direction == "x") {
-                axis.box.left = plotOffset.left - axis.labelWidth / 2;
-                axis.box.width = surface.width - plotOffset.left - plotOffset.right + axis.labelWidth;
-            }
-            else {
-                axis.box.top = plotOffset.top - axis.labelHeight / 2;
-                axis.box.height = surface.height - plotOffset.bottom - plotOffset.top + axis.labelHeight;
-            }
-        }
-
-        function adjustLayoutForThingsStickingOut() {
-            // possibly adjust plot offset to ensure everything stays
-            // inside the canvas and isn't clipped off
-
-            var minMargin = options.grid.minBorderMargin,
-                axis, i;
-
-            // check stuff from the plot (FIXME: this should just read
-            // a value from the series, otherwise it's impossible to
-            // customize)
-            if (minMargin == null) {
-                minMargin = 0;
-                for (i = 0; i < series.length; ++i)
-                    minMargin = Math.max(minMargin, 2 * (series[i].points.radius + series[i].points.lineWidth/2));
-            }
-
-            var margins = {
-                left: minMargin,
-                right: minMargin,
-                top: minMargin,
-                bottom: minMargin
-            };
-
-            // check axis labels, note we don't check the actual
-            // labels but instead use the overall width/height to not
-            // jump as much around with replots
-            $.each(allAxes(), function (_, axis) {
-                if (axis.reserveSpace && axis.ticks && axis.ticks.length) {
-                    if (axis.direction === "x") {
-                        margins.left = Math.max(margins.left, axis.labelWidth / 2);
-                        margins.right = Math.max(margins.right, axis.labelWidth / 2);
-                    } else {
-                        margins.bottom = Math.max(margins.bottom, axis.labelHeight / 2);
-                        margins.top = Math.max(margins.top, axis.labelHeight / 2);
-                    }
-                }
-            });
-
-            plotOffset.left = Math.ceil(Math.max(margins.left, plotOffset.left));
-            plotOffset.right = Math.ceil(Math.max(margins.right, plotOffset.right));
-            plotOffset.top = Math.ceil(Math.max(margins.top, plotOffset.top));
-            plotOffset.bottom = Math.ceil(Math.max(margins.bottom, plotOffset.bottom));
-        }
-
-        function setupGrid() {
-            var i, axes = allAxes(), showGrid = options.grid.show;
-
-            // Initialize the plot's offset from the edge of the canvas
-
-            for (var a in plotOffset) {
-                var margin = options.grid.margin || 0;
-                plotOffset[a] = typeof margin == "number" ? margin : margin[a] || 0;
-            }
-
-            executeHooks(hooks.processOffset, [plotOffset]);
-
-            // If the grid is visible, add its border width to the offset
-
-            for (var a in plotOffset) {
-                if(typeof(options.grid.borderWidth) == "object") {
-                    plotOffset[a] += showGrid ? options.grid.borderWidth[a] : 0;
-                }
-                else {
-                    plotOffset[a] += showGrid ? options.grid.borderWidth : 0;
-                }
-            }
-
-            $.each(axes, function (_, axis) {
-                var axisOpts = axis.options;
-                axis.show = axisOpts.show == null ? axis.used : axisOpts.show;
-                axis.reserveSpace = axisOpts.reserveSpace == null ? axis.show : axisOpts.reserveSpace;
-                setRange(axis);
-            });
-
-            if (showGrid) {
-
-                var allocatedAxes = $.grep(axes, function (axis) {
-                    return axis.show || axis.reserveSpace;
-                });
-
-                $.each(allocatedAxes, function (_, axis) {
-                    // make the ticks
-                    setupTickGeneration(axis);
-                    setTicks(axis);
-                    snapRangeToTicks(axis, axis.ticks);
-                    // find labelWidth/Height for axis
-                    measureTickLabels(axis);
-                });
-
-                // with all dimensions calculated, we can compute the
-                // axis bounding boxes, start from the outside
-                // (reverse order)
-                for (i = allocatedAxes.length - 1; i >= 0; --i)
-                    allocateAxisBoxFirstPhase(allocatedAxes[i]);
-
-                // make sure we've got enough space for things that
-                // might stick out
-                adjustLayoutForThingsStickingOut();
-
-                $.each(allocatedAxes, function (_, axis) {
-                    allocateAxisBoxSecondPhase(axis);
-                });
-            }
-
-            plotWidth = surface.width - plotOffset.left - plotOffset.right;
-            plotHeight = surface.height - plotOffset.bottom - plotOffset.top;
-
-            // now we got the proper plot dimensions, we can compute the scaling
-            $.each(axes, function (_, axis) {
-                setTransformationHelpers(axis);
-            });
-
-            if (showGrid) {
-                drawAxisLabels();
-            }
-
-            insertLegend();
-        }
-
-        function setRange(axis) {
-            var opts = axis.options,
-                min = +(opts.min != null ? opts.min : axis.datamin),
-                max = +(opts.max != null ? opts.max : axis.datamax),
-                delta = max - min;
-
-            if (delta == 0.0) {
-                // degenerate case
-                var widen = max == 0 ? 1 : 0.01;
-
-                if (opts.min == null)
-                    min -= widen;
-                // always widen max if we couldn't widen min to ensure we
-                // don't fall into min == max which doesn't work
-                if (opts.max == null || opts.min != null)
-                    max += widen;
-            }
-            else {
-                // consider autoscaling
-                var margin = opts.autoscaleMargin;
-                if (margin != null) {
-                    if (opts.min == null) {
-                        min -= delta * margin;
-                        // make sure we don't go below zero if all values
-                        // are positive
-                        if (min < 0 && axis.datamin != null && axis.datamin >= 0)
-                            min = 0;
-                    }
-                    if (opts.max == null) {
-                        max += delta * margin;
-                        if (max > 0 && axis.datamax != null && axis.datamax <= 0)
-                            max = 0;
-                    }
-                }
-            }
-            axis.min = min;
-            axis.max = max;
-        }
-
-        function setupTickGeneration(axis) {
-            var opts = axis.options;
-
-            // estimate number of ticks
-            var noTicks;
-            if (typeof opts.ticks == "number" && opts.ticks > 0)
-                noTicks = opts.ticks;
-            else
-                // heuristic based on the model a*sqrt(x) fitted to
-                // some data points that seemed reasonable
-                noTicks = 0.3 * Math.sqrt(axis.direction == "x" ? surface.width : surface.height);
-
-            var delta = (axis.max - axis.min) / noTicks,
-                dec = -Math.floor(Math.log(delta) / Math.LN10),
-                maxDec = opts.tickDecimals;
-
-            if (maxDec != null && dec > maxDec) {
-                dec = maxDec;
-            }
-
-            var magn = Math.pow(10, -dec),
-                norm = delta / magn, // norm is between 1.0 and 10.0
-                size;
-
-            if (norm < 1.5) {
-                size = 1;
-            } else if (norm < 3) {
-                size = 2;
-                // special case for 2.5, requires an extra decimal
-                if (norm > 2.25 && (maxDec == null || dec + 1 <= maxDec)) {
-                    size = 2.5;
-                    ++dec;
-                }
-            } else if (norm < 7.5) {
-                size = 5;
-            } else {
-                size = 10;
-            }
-
-            size *= magn;
-
-            if (opts.minTickSize != null && size < opts.minTickSize) {
-                size = opts.minTickSize;
-            }
-
-            axis.delta = delta;
-            axis.tickDecimals = Math.max(0, maxDec != null ? maxDec : dec);
-            axis.tickSize = opts.tickSize || size;
-
-            // Time mode was moved to a plug-in in 0.8, and since so many people use it
-            // we'll add an especially friendly reminder to make sure they included it.
-
-            if (opts.mode == "time" && !axis.tickGenerator) {
-                throw new Error("Time mode requires the flot.time plugin.");
-            }
-
-            // Flot supports base-10 axes; any other mode else is handled by a plug-in,
-            // like flot.time.js.
-
-            if (!axis.tickGenerator) {
-
-                axis.tickGenerator = function (axis) {
-
-                    var ticks = [],
-                        start = floorInBase(axis.min, axis.tickSize),
-                        i = 0,
-                        v = Number.NaN,
-                        prev;
-
-                    do {
-                        prev = v;
-                        v = start + i * axis.tickSize;
-                        ticks.push(v);
-                        ++i;
-                    } while (v < axis.max && v != prev);
-                    return ticks;
-                };
-
-				axis.tickFormatter = function (value, axis) {
-
-					var factor = axis.tickDecimals ? Math.pow(10, axis.tickDecimals) : 1;
-					var formatted = "" + Math.round(value * factor) / factor;
-
-					// If tickDecimals was specified, ensure that we have exactly that
-					// much precision; otherwise default to the value's own precision.
-
-					if (axis.tickDecimals != null) {
-						var decimal = formatted.indexOf(".");
-						var precision = decimal == -1 ? 0 : formatted.length - decimal - 1;
-						if (precision < axis.tickDecimals) {
-							return (precision ? formatted : formatted + ".") + ("" + factor).substr(1, axis.tickDecimals - precision);
-						}
-					}
-
-                    return formatted;
-                };
-            }
-
-            if ($.isFunction(opts.tickFormatter))
-                axis.tickFormatter = function (v, axis) { return "" + opts.tickFormatter(v, axis); };
-
-            if (opts.alignTicksWithAxis != null) {
-                var otherAxis = (axis.direction == "x" ? xaxes : yaxes)[opts.alignTicksWithAxis - 1];
-                if (otherAxis && otherAxis.used && otherAxis != axis) {
-                    // consider snapping min/max to outermost nice ticks
-                    var niceTicks = axis.tickGenerator(axis);
-                    if (niceTicks.length > 0) {
-                        if (opts.min == null)
-                            axis.min = Math.min(axis.min, niceTicks[0]);
-                        if (opts.max == null && niceTicks.length > 1)
-                            axis.max = Math.max(axis.max, niceTicks[niceTicks.length - 1]);
-                    }
-
-                    axis.tickGenerator = function (axis) {
-                        // copy ticks, scaled to this axis
-                        var ticks = [], v, i;
-                        for (i = 0; i < otherAxis.ticks.length; ++i) {
-                            v = (otherAxis.ticks[i].v - otherAxis.min) / (otherAxis.max - otherAxis.min);
-                            v = axis.min + v * (axis.max - axis.min);
-                            ticks.push(v);
-                        }
-                        return ticks;
-                    };
-
-                    // we might need an extra decimal since forced
-                    // ticks don't necessarily fit naturally
-                    if (!axis.mode && opts.tickDecimals == null) {
-                        var extraDec = Math.max(0, -Math.floor(Math.log(axis.delta) / Math.LN10) + 1),
-                            ts = axis.tickGenerator(axis);
-
-                        // only proceed if the tick interval rounded
-                        // with an extra decimal doesn't give us a
-                        // zero at end
-                        if (!(ts.length > 1 && /\..*0$/.test((ts[1] - ts[0]).toFixed(extraDec))))
-                            axis.tickDecimals = extraDec;
-                    }
-                }
-            }
-        }
-
-        function setTicks(axis) {
-            var oticks = axis.options.ticks, ticks = [];
-            if (oticks == null || (typeof oticks == "number" && oticks > 0))
-                ticks = axis.tickGenerator(axis);
-            else if (oticks) {
-                if ($.isFunction(oticks))
-                    // generate the ticks
-                    ticks = oticks(axis);
-                else
-                    ticks = oticks;
-            }
-
-            // clean up/labelify the supplied ticks, copy them over
-            var i, v;
-            axis.ticks = [];
-            for (i = 0; i < ticks.length; ++i) {
-                var label = null;
-                var t = ticks[i];
-                if (typeof t == "object") {
-                    v = +t[0];
-                    if (t.length > 1)
-                        label = t[1];
-                }
-                else
-                    v = +t;
-                if (label == null)
-                    label = axis.tickFormatter(v, axis);
-                if (!isNaN(v))
-                    axis.ticks.push({ v: v, label: label });
-            }
-        }
-
-        function snapRangeToTicks(axis, ticks) {
-            if (axis.options.autoscaleMargin && ticks.length > 0) {
-                // snap to ticks
-                if (axis.options.min == null)
-                    axis.min = Math.min(axis.min, ticks[0].v);
-                if (axis.options.max == null && ticks.length > 1)
-                    axis.max = Math.max(axis.max, ticks[ticks.length - 1].v);
-            }
-        }
-
-        function draw() {
-
-            surface.clear();
-
-            executeHooks(hooks.drawBackground, [ctx]);
-
-            var grid = options.grid;
-
-            // draw background, if any
-            if (grid.show && grid.backgroundColor)
-                drawBackground();
-
-            if (grid.show && !grid.aboveData) {
-                drawGrid();
-            }
-
-            for (var i = 0; i < series.length; ++i) {
-                executeHooks(hooks.drawSeries, [ctx, series[i]]);
-                drawSeries(series[i]);
-            }
-
-            executeHooks(hooks.draw, [ctx]);
-
-            if (grid.show && grid.aboveData) {
-                drawGrid();
-            }
-
-            surface.render();
-
-            // A draw implies that either the axes or data have changed, so we
-            // should probably update the overlay highlights as well.
-
-            triggerRedrawOverlay();
-        }
-
-        function extractRange(ranges, coord) {
-            var axis, from, to, key, axes = allAxes();
-
-            for (var i = 0; i < axes.length; ++i) {
-                axis = axes[i];
-                if (axis.direction == coord) {
-                    key = coord + axis.n + "axis";
-                    if (!ranges[key] && axis.n == 1)
-                        key = coord + "axis"; // support x1axis as xaxis
-                    if (ranges[key]) {
-                        from = ranges[key].from;
-                        to = ranges[key].to;
-                        break;
-                    }
-                }
-            }
-
-            // backwards-compat stuff - to be removed in future
-            if (!ranges[key]) {
-                axis = coord == "x" ? xaxes[0] : yaxes[0];
-                from = ranges[coord + "1"];
-                to = ranges[coord + "2"];
-            }
-
-            // auto-reverse as an added bonus
-            if (from != null && to != null && from > to) {
-                var tmp = from;
-                from = to;
-                to = tmp;
-            }
-
-            return { from: from, to: to, axis: axis };
-        }
-
-        function drawBackground() {
-            ctx.save();
-            ctx.translate(plotOffset.left, plotOffset.top);
-
-            ctx.fillStyle = getColorOrGradient(options.grid.backgroundColor, plotHeight, 0, "rgba(255, 255, 255, 0)");
-            ctx.fillRect(0, 0, plotWidth, plotHeight);
-            ctx.restore();
-        }
-
-        function drawGrid() {
-            var i, axes, bw, bc;
-
-            ctx.save();
-            ctx.translate(plotOffset.left, plotOffset.top);
-
-            // draw markings
-            var markings = options.grid.markings;
-            if (markings) {
-                if ($.isFunction(markings)) {
-                    axes = plot.getAxes();
-                    // xmin etc. is backwards compatibility, to be
-                    // removed in the future
-                    axes.xmin = axes.xaxis.min;
-                    axes.xmax = axes.xaxis.max;
-                    axes.ymin = axes.yaxis.min;
-                    axes.ymax = axes.yaxis.max;
-
-                    markings = markings(axes);
-                }
-
-                for (i = 0; i < markings.length; ++i) {
-                    var m = markings[i],
-                        xrange = extractRange(m, "x"),
-                        yrange = extractRange(m, "y");
-
-                    // fill in missing
-                    if (xrange.from == null)
-                        xrange.from = xrange.axis.min;
-                    if (xrange.to == null)
-                        xrange.to = xrange.axis.max;
-                    if (yrange.from == null)
-                        yrange.from = yrange.axis.min;
-                    if (yrange.to == null)
-                        yrange.to = yrange.axis.max;
-
-                    // clip
-                    if (xrange.to < xrange.axis.min || xrange.from > xrange.axis.max ||
-                        yrange.to < yrange.axis.min || yrange.from > yrange.axis.max)
-                        continue;
-
-                    xrange.from = Math.max(xrange.from, xrange.axis.min);
-                    xrange.to = Math.min(xrange.to, xrange.axis.max);
-                    yrange.from = Math.max(yrange.from, yrange.axis.min);
-                    yrange.to = Math.min(yrange.to, yrange.axis.max);
-
-                    var xequal = xrange.from === xrange.to,
-                        yequal = yrange.from === yrange.to;
-
-                    if (xequal && yequal) {
-                        continue;
-                    }
-
-                    // then draw
-                    xrange.from = Math.floor(xrange.axis.p2c(xrange.from));
-                    xrange.to = Math.floor(xrange.axis.p2c(xrange.to));
-                    yrange.from = Math.floor(yrange.axis.p2c(yrange.from));
-                    yrange.to = Math.floor(yrange.axis.p2c(yrange.to));
-
-                    if (xequal || yequal) {
-                        var lineWidth = m.lineWidth || options.grid.markingsLineWidth,
-                            subPixel = lineWidth % 2 ? 0.5 : 0;
-                        ctx.beginPath();
-                        ctx.strokeStyle = m.color || options.grid.markingsColor;
-                        ctx.lineWidth = lineWidth;
-                        if (xequal) {
-                            ctx.moveTo(xrange.to + subPixel, yrange.from);
-                            ctx.lineTo(xrange.to + subPixel, yrange.to);
-                        } else {
-                            ctx.moveTo(xrange.from, yrange.to + subPixel);
-                            ctx.lineTo(xrange.to, yrange.to + subPixel);                            
-                        }
-                        ctx.stroke();
-                    } else {
-                        ctx.fillStyle = m.color || options.grid.markingsColor;
-                        ctx.fillRect(xrange.from, yrange.to,
-                                     xrange.to - xrange.from,
-                                     yrange.from - yrange.to);
-                    }
-                }
-            }
-
-            // draw the ticks
-            axes = allAxes();
-            bw = options.grid.borderWidth;
-
-            for (var j = 0; j < axes.length; ++j) {
-                var axis = axes[j], box = axis.box,
-                    t = axis.tickLength, x, y, xoff, yoff;
-                if (!axis.show || axis.ticks.length == 0)
-                    continue;
-
-                ctx.lineWidth = 1;
-
-                // find the edges
-                if (axis.direction == "x") {
-                    x = 0;
-                    if (t == "full")
-                        y = (axis.position == "top" ? 0 : plotHeight);
-                    else
-                        y = box.top - plotOffset.top + (axis.position == "top" ? box.height : 0);
-                }
-                else {
-                    y = 0;
-                    if (t == "full")
-                        x = (axis.position == "left" ? 0 : plotWidth);
-                    else
-                        x = box.left - plotOffset.left + (axis.position == "left" ? box.width : 0);
-                }
-
-                // draw tick bar
-                if (!axis.innermost) {
-                    ctx.strokeStyle = axis.options.color;
-                    ctx.beginPath();
-                    xoff = yoff = 0;
-                    if (axis.direction == "x")
-                        xoff = plotWidth + 1;
-                    else
-                        yoff = plotHeight + 1;
-
-                    if (ctx.lineWidth == 1) {
-                        if (axis.direction == "x") {
-                            y = Math.floor(y) + 0.5;
-                        } else {
-                            x = Math.floor(x) + 0.5;
-                        }
-                    }
-
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(x + xoff, y + yoff);
-                    ctx.stroke();
-                }
-
-                // draw ticks
-
-                ctx.strokeStyle = axis.options.tickColor;
-
-                ctx.beginPath();
-                for (i = 0; i < axis.ticks.length; ++i) {
-                    var v = axis.ticks[i].v;
-
-                    xoff = yoff = 0;
-
-                    if (isNaN(v) || v < axis.min || v > axis.max
-                        // skip those lying on the axes if we got a border
-                        || (t == "full"
-                            && ((typeof bw == "object" && bw[axis.position] > 0) || bw > 0)
-                            && (v == axis.min || v == axis.max)))
-                        continue;
-
-                    if (axis.direction == "x") {
-                        x = axis.p2c(v);
-                        yoff = t == "full" ? -plotHeight : t;
-
-                        if (axis.position == "top")
-                            yoff = -yoff;
-                    }
-                    else {
-                        y = axis.p2c(v);
-                        xoff = t == "full" ? -plotWidth : t;
-
-                        if (axis.position == "left")
-                            xoff = -xoff;
-                    }
-
-                    if (ctx.lineWidth == 1) {
-                        if (axis.direction == "x")
-                            x = Math.floor(x) + 0.5;
-                        else
-                            y = Math.floor(y) + 0.5;
-                    }
-
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(x + xoff, y + yoff);
-                }
-
-                ctx.stroke();
-            }
-
-
-            // draw border
-            if (bw) {
-                // If either borderWidth or borderColor is an object, then draw the border
-                // line by line instead of as one rectangle
-                bc = options.grid.borderColor;
-                if(typeof bw == "object" || typeof bc == "object") {
-                    if (typeof bw !== "object") {
-                        bw = {top: bw, right: bw, bottom: bw, left: bw};
-                    }
-                    if (typeof bc !== "object") {
-                        bc = {top: bc, right: bc, bottom: bc, left: bc};
-                    }
-
-                    if (bw.top > 0) {
-                        ctx.strokeStyle = bc.top;
-                        ctx.lineWidth = bw.top;
-                        ctx.beginPath();
-                        ctx.moveTo(0 - bw.left, 0 - bw.top/2);
-                        ctx.lineTo(plotWidth, 0 - bw.top/2);
-                        ctx.stroke();
-                    }
-
-                    if (bw.right > 0) {
-                        ctx.strokeStyle = bc.right;
-                        ctx.lineWidth = bw.right;
-                        ctx.beginPath();
-                        ctx.moveTo(plotWidth + bw.right / 2, 0 - bw.top);
-                        ctx.lineTo(plotWidth + bw.right / 2, plotHeight);
-                        ctx.stroke();
-                    }
-
-                    if (bw.bottom > 0) {
-                        ctx.strokeStyle = bc.bottom;
-                        ctx.lineWidth = bw.bottom;
-                        ctx.beginPath();
-                        ctx.moveTo(plotWidth + bw.right, plotHeight + bw.bottom / 2);
-                        ctx.lineTo(0, plotHeight + bw.bottom / 2);
-                        ctx.stroke();
-                    }
-
-                    if (bw.left > 0) {
-                        ctx.strokeStyle = bc.left;
-                        ctx.lineWidth = bw.left;
-                        ctx.beginPath();
-                        ctx.moveTo(0 - bw.left/2, plotHeight + bw.bottom);
-                        ctx.lineTo(0- bw.left/2, 0);
-                        ctx.stroke();
-                    }
-                }
-                else {
-                    ctx.lineWidth = bw;
-                    ctx.strokeStyle = options.grid.borderColor;
-                    ctx.strokeRect(-bw/2, -bw/2, plotWidth + bw, plotHeight + bw);
-                }
-            }
-
-            ctx.restore();
-        }
-
-        function drawAxisLabels() {
-
-            $.each(allAxes(), function (_, axis) {
-                var box = axis.box,
-                    legacyStyles = axis.direction + "Axis " + axis.direction + axis.n + "Axis",
-                    layer = "flot-" + axis.direction + "-axis flot-" + axis.direction + axis.n + "-axis " + legacyStyles,
-                    font = axis.options.font || "flot-tick-label tickLabel",
-                    tick, x, y, halign, valign;
-
-                // Remove text before checking for axis.show and ticks.length;
-                // otherwise plugins, like flot-tickrotor, that draw their own
-                // tick labels will end up with both theirs and the defaults.
-
-                surface.removeText(layer);
-
-                if (!axis.show || axis.ticks.length == 0)
-                    return;
-
-                for (var i = 0; i < axis.ticks.length; ++i) {
-
-                    tick = axis.ticks[i];
-                    if (!tick.label || tick.v < axis.min || tick.v > axis.max)
-                        continue;
-
-                    if (axis.direction == "x") {
-                        halign = "center";
-                        x = plotOffset.left + axis.p2c(tick.v);
-                        if (axis.position == "bottom") {
-                            y = box.top + box.padding;
-                        } else {
-                            y = box.top + box.height - box.padding;
-                            valign = "bottom";
-                        }
-                    } else {
-                        valign = "middle";
-                        y = plotOffset.top + axis.p2c(tick.v);
-                        if (axis.position == "left") {
-                            x = box.left + box.width - box.padding;
-                            halign = "right";
-                        } else {
-                            x = box.left + box.padding;
-                        }
-                    }
-
-                    surface.addText(layer, x, y, tick.label, font, null, null, halign, valign);
-                }
-            });
-        }
-
-        function drawSeries(series) {
-            if (series.lines.show)
-                drawSeriesLines(series);
-            if (series.bars.show)
-                drawSeriesBars(series);
-            if (series.points.show)
-                drawSeriesPoints(series);
-        }
-
-        function drawSeriesLines(series) {
-            function plotLine(datapoints, xoffset, yoffset, axisx, axisy) {
-                var points = datapoints.points,
-                    ps = datapoints.pointsize,
-                    prevx = null, prevy = null;
-
-                ctx.beginPath();
-                for (var i = ps; i < points.length; i += ps) {
-                    var x1 = points[i - ps], y1 = points[i - ps + 1],
-                        x2 = points[i], y2 = points[i + 1];
-
-                    if (x1 == null || x2 == null)
-                        continue;
-
-                    // clip with ymin
-                    if (y1 <= y2 && y1 < axisy.min) {
-                        if (y2 < axisy.min)
-                            continue;   // line segment is outside
-                        // compute new intersection point
-                        x1 = (axisy.min - y1) / (y2 - y1) * (x2 - x1) + x1;
-                        y1 = axisy.min;
-                    }
-                    else if (y2 <= y1 && y2 < axisy.min) {
-                        if (y1 < axisy.min)
-                            continue;
-                        x2 = (axisy.min - y1) / (y2 - y1) * (x2 - x1) + x1;
-                        y2 = axisy.min;
-                    }
-
-                    // clip with ymax
-                    if (y1 >= y2 && y1 > axisy.max) {
-                        if (y2 > axisy.max)
-                            continue;
-                        x1 = (axisy.max - y1) / (y2 - y1) * (x2 - x1) + x1;
-                        y1 = axisy.max;
-                    }
-                    else if (y2 >= y1 && y2 > axisy.max) {
-                        if (y1 > axisy.max)
-                            continue;
-                        x2 = (axisy.max - y1) / (y2 - y1) * (x2 - x1) + x1;
-                        y2 = axisy.max;
-                    }
-
-                    // clip with xmin
-                    if (x1 <= x2 && x1 < axisx.min) {
-                        if (x2 < axisx.min)
-                            continue;
-                        y1 = (axisx.min - x1) / (x2 - x1) * (y2 - y1) + y1;
-                        x1 = axisx.min;
-                    }
-                    else if (x2 <= x1 && x2 < axisx.min) {
-                        if (x1 < axisx.min)
-                            continue;
-                        y2 = (axisx.min - x1) / (x2 - x1) * (y2 - y1) + y1;
-                        x2 = axisx.min;
-                    }
-
-                    // clip with xmax
-                    if (x1 >= x2 && x1 > axisx.max) {
-                        if (x2 > axisx.max)
-                            continue;
-                        y1 = (axisx.max - x1) / (x2 - x1) * (y2 - y1) + y1;
-                        x1 = axisx.max;
-                    }
-                    else if (x2 >= x1 && x2 > axisx.max) {
-                        if (x1 > axisx.max)
-                            continue;
-                        y2 = (axisx.max - x1) / (x2 - x1) * (y2 - y1) + y1;
-                        x2 = axisx.max;
-                    }
-
-                    if (x1 != prevx || y1 != prevy)
-                        ctx.moveTo(axisx.p2c(x1) + xoffset, axisy.p2c(y1) + yoffset);
-
-                    prevx = x2;
-                    prevy = y2;
-                    ctx.lineTo(axisx.p2c(x2) + xoffset, axisy.p2c(y2) + yoffset);
-                }
-                ctx.stroke();
-            }
-
-            function plotLineArea(datapoints, axisx, axisy) {
-                var points = datapoints.points,
-                    ps = datapoints.pointsize,
-                    bottom = Math.min(Math.max(0, axisy.min), axisy.max),
-                    i = 0, top, areaOpen = false,
-                    ypos = 1, segmentStart = 0, segmentEnd = 0;
-
-                // we process each segment in two turns, first forward
-                // direction to sketch out top, then once we hit the
-                // end we go backwards to sketch the bottom
-                while (true) {
-                    if (ps > 0 && i > points.length + ps)
-                        break;
-
-                    i += ps; // ps is negative if going backwards
-
-                    var x1 = points[i - ps],
-                        y1 = points[i - ps + ypos],
-                        x2 = points[i], y2 = points[i + ypos];
-
-                    if (areaOpen) {
-                        if (ps > 0 && x1 != null && x2 == null) {
-                            // at turning point
-                            segmentEnd = i;
-                            ps = -ps;
-                            ypos = 2;
-                            continue;
-                        }
-
-                        if (ps < 0 && i == segmentStart + ps) {
-                            // done with the reverse sweep
-                            ctx.fill();
-                            areaOpen = false;
-                            ps = -ps;
-                            ypos = 1;
-                            i = segmentStart = segmentEnd + ps;
-                            continue;
-                        }
-                    }
-
-                    if (x1 == null || x2 == null)
-                        continue;
-
-                    // clip x values
-
-                    // clip with xmin
-                    if (x1 <= x2 && x1 < axisx.min) {
-                        if (x2 < axisx.min)
-                            continue;
-                        y1 = (axisx.min - x1) / (x2 - x1) * (y2 - y1) + y1;
-                        x1 = axisx.min;
-                    }
-                    else if (x2 <= x1 && x2 < axisx.min) {
-                        if (x1 < axisx.min)
-                            continue;
-                        y2 = (axisx.min - x1) / (x2 - x1) * (y2 - y1) + y1;
-                        x2 = axisx.min;
-                    }
-
-                    // clip with xmax
-                    if (x1 >= x2 && x1 > axisx.max) {
-                        if (x2 > axisx.max)
-                            continue;
-                        y1 = (axisx.max - x1) / (x2 - x1) * (y2 - y1) + y1;
-                        x1 = axisx.max;
-                    }
-                    else if (x2 >= x1 && x2 > axisx.max) {
-                        if (x1 > axisx.max)
-                            continue;
-                        y2 = (axisx.max - x1) / (x2 - x1) * (y2 - y1) + y1;
-                        x2 = axisx.max;
-                    }
-
-                    if (!areaOpen) {
-                        // open area
-                        ctx.beginPath();
-                        ctx.moveTo(axisx.p2c(x1), axisy.p2c(bottom));
-                        areaOpen = true;
-                    }
-
-                    // now first check the case where both is outside
-                    if (y1 >= axisy.max && y2 >= axisy.max) {
-                        ctx.lineTo(axisx.p2c(x1), axisy.p2c(axisy.max));
-                        ctx.lineTo(axisx.p2c(x2), axisy.p2c(axisy.max));
-                        continue;
-                    }
-                    else if (y1 <= axisy.min && y2 <= axisy.min) {
-                        ctx.lineTo(axisx.p2c(x1), axisy.p2c(axisy.min));
-                        ctx.lineTo(axisx.p2c(x2), axisy.p2c(axisy.min));
-                        continue;
-                    }
-
-                    // else it's a bit more complicated, there might
-                    // be a flat maxed out rectangle first, then a
-                    // triangular cutout or reverse; to find these
-                    // keep track of the current x values
-                    var x1old = x1, x2old = x2;
-
-                    // clip the y values, without shortcutting, we
-                    // go through all cases in turn
-
-                    // clip with ymin
-                    if (y1 <= y2 && y1 < axisy.min && y2 >= axisy.min) {
-                        x1 = (axisy.min - y1) / (y2 - y1) * (x2 - x1) + x1;
-                        y1 = axisy.min;
-                    }
-                    else if (y2 <= y1 && y2 < axisy.min && y1 >= axisy.min) {
-                        x2 = (axisy.min - y1) / (y2 - y1) * (x2 - x1) + x1;
-                        y2 = axisy.min;
-                    }
-
-                    // clip with ymax
-                    if (y1 >= y2 && y1 > axisy.max && y2 <= axisy.max) {
-                        x1 = (axisy.max - y1) / (y2 - y1) * (x2 - x1) + x1;
-                        y1 = axisy.max;
-                    }
-                    else if (y2 >= y1 && y2 > axisy.max && y1 <= axisy.max) {
-                        x2 = (axisy.max - y1) / (y2 - y1) * (x2 - x1) + x1;
-                        y2 = axisy.max;
-                    }
-
-                    // if the x value was changed we got a rectangle
-                    // to fill
-                    if (x1 != x1old) {
-                        ctx.lineTo(axisx.p2c(x1old), axisy.p2c(y1));
-                        // it goes to (x1, y1), but we fill that below
-                    }
-
-                    // fill triangular section, this sometimes result
-                    // in redundant points if (x1, y1) hasn't changed
-                    // from previous line to, but we just ignore that
-                    ctx.lineTo(axisx.p2c(x1), axisy.p2c(y1));
-                    ctx.lineTo(axisx.p2c(x2), axisy.p2c(y2));
-
-                    // fill the other rectangle if it's there
-                    if (x2 != x2old) {
-                        ctx.lineTo(axisx.p2c(x2), axisy.p2c(y2));
-                        ctx.lineTo(axisx.p2c(x2old), axisy.p2c(y2));
-                    }
-                }
-            }
-
-            ctx.save();
-            ctx.translate(plotOffset.left, plotOffset.top);
-            ctx.lineJoin = "round";
-
-            var lw = series.lines.lineWidth,
-                sw = series.shadowSize;
-            // FIXME: consider another form of shadow when filling is turned on
-            if (lw > 0 && sw > 0) {
-                // draw shadow as a thick and thin line with transparency
-                ctx.lineWidth = sw;
-                ctx.strokeStyle = "rgba(0,0,0,0.1)";
-                // position shadow at angle from the mid of line
-                var angle = Math.PI/18;
-                plotLine(series.datapoints, Math.sin(angle) * (lw/2 + sw/2), Math.cos(angle) * (lw/2 + sw/2), series.xaxis, series.yaxis);
-                ctx.lineWidth = sw/2;
-                plotLine(series.datapoints, Math.sin(angle) * (lw/2 + sw/4), Math.cos(angle) * (lw/2 + sw/4), series.xaxis, series.yaxis);
-            }
-
-            ctx.lineWidth = lw;
-            ctx.strokeStyle = series.color;
-            var fillStyle = getFillStyle(series.lines, series.color, 0, plotHeight);
-            if (fillStyle) {
-                ctx.fillStyle = fillStyle;
-                plotLineArea(series.datapoints, series.xaxis, series.yaxis);
-            }
-
-            if (lw > 0)
-                plotLine(series.datapoints, 0, 0, series.xaxis, series.yaxis);
-            ctx.restore();
-        }
-
-        function drawSeriesPoints(series) {
-            function plotPoints(datapoints, radius, fillStyle, offset, shadow, axisx, axisy, symbol) {
-                var points = datapoints.points, ps = datapoints.pointsize;
-
-                for (var i = 0; i < points.length; i += ps) {
-                    var x = points[i], y = points[i + 1];
-                    if (x == null || x < axisx.min || x > axisx.max || y < axisy.min || y > axisy.max)
-                        continue;
-
-                    ctx.beginPath();
-                    x = axisx.p2c(x);
-                    y = axisy.p2c(y) + offset;
-                    if (symbol == "circle")
-                        ctx.arc(x, y, radius, 0, shadow ? Math.PI : Math.PI * 2, false);
-                    else
-                        symbol(ctx, x, y, radius, shadow);
-                    ctx.closePath();
-
-                    if (fillStyle) {
-                        ctx.fillStyle = fillStyle;
-                        ctx.fill();
-                    }
-                    ctx.stroke();
-                }
-            }
-
-            ctx.save();
-            ctx.translate(plotOffset.left, plotOffset.top);
-
-            var lw = series.points.lineWidth,
-                sw = series.shadowSize,
-                radius = series.points.radius,
-                symbol = series.points.symbol;
-
-            // If the user sets the line width to 0, we change it to a very 
-            // small value. A line width of 0 seems to force the default of 1.
-            // Doing the conditional here allows the shadow setting to still be 
-            // optional even with a lineWidth of 0.
-
-            if( lw == 0 )
-                lw = 0.0001;
-
-            if (lw > 0 && sw > 0) {
-                // draw shadow in two steps
-                var w = sw / 2;
-                ctx.lineWidth = w;
-                ctx.strokeStyle = "rgba(0,0,0,0.1)";
-                plotPoints(series.datapoints, radius, null, w + w/2, true,
-                           series.xaxis, series.yaxis, symbol);
-
-                ctx.strokeStyle = "rgba(0,0,0,0.2)";
-                plotPoints(series.datapoints, radius, null, w/2, true,
-                           series.xaxis, series.yaxis, symbol);
-            }
-
-            ctx.lineWidth = lw;
-            ctx.strokeStyle = series.color;
-            plotPoints(series.datapoints, radius,
-                       getFillStyle(series.points, series.color), 0, false,
-                       series.xaxis, series.yaxis, symbol);
-            ctx.restore();
-        }
-
-        function drawBar(x, y, b, barLeft, barRight, fillStyleCallback, axisx, axisy, c, horizontal, lineWidth) {
-            var left, right, bottom, top,
-                drawLeft, drawRight, drawTop, drawBottom,
-                tmp;
-
-            // in horizontal mode, we start the bar from the left
-            // instead of from the bottom so it appears to be
-            // horizontal rather than vertical
-            if (horizontal) {
-                drawBottom = drawRight = drawTop = true;
-                drawLeft = false;
-                left = b;
-                right = x;
-                top = y + barLeft;
-                bottom = y + barRight;
-
-                // account for negative bars
-                if (right < left) {
-                    tmp = right;
-                    right = left;
-                    left = tmp;
-                    drawLeft = true;
-                    drawRight = false;
-                }
-            }
-            else {
-                drawLeft = drawRight = drawTop = true;
-                drawBottom = false;
-                left = x + barLeft;
-                right = x + barRight;
-                bottom = b;
-                top = y;
-
-                // account for negative bars
-                if (top < bottom) {
-                    tmp = top;
-                    top = bottom;
-                    bottom = tmp;
-                    drawBottom = true;
-                    drawTop = false;
-                }
-            }
-
-            // clip
-            if (right < axisx.min || left > axisx.max ||
-                top < axisy.min || bottom > axisy.max)
-                return;
-
-            if (left < axisx.min) {
-                left = axisx.min;
-                drawLeft = false;
-            }
-
-            if (right > axisx.max) {
-                right = axisx.max;
-                drawRight = false;
-            }
-
-            if (bottom < axisy.min) {
-                bottom = axisy.min;
-                drawBottom = false;
-            }
-
-            if (top > axisy.max) {
-                top = axisy.max;
-                drawTop = false;
-            }
-
-            left = axisx.p2c(left);
-            bottom = axisy.p2c(bottom);
-            right = axisx.p2c(right);
-            top = axisy.p2c(top);
-
-            // fill the bar
-            if (fillStyleCallback) {
-                c.fillStyle = fillStyleCallback(bottom, top);
-                c.fillRect(left, top, right - left, bottom - top)
-            }
-
-            // draw outline
-            if (lineWidth > 0 && (drawLeft || drawRight || drawTop || drawBottom)) {
-                c.beginPath();
-
-                // FIXME: inline moveTo is buggy with excanvas
-                c.moveTo(left, bottom);
-                if (drawLeft)
-                    c.lineTo(left, top);
-                else
-                    c.moveTo(left, top);
-                if (drawTop)
-                    c.lineTo(right, top);
-                else
-                    c.moveTo(right, top);
-                if (drawRight)
-                    c.lineTo(right, bottom);
-                else
-                    c.moveTo(right, bottom);
-                if (drawBottom)
-                    c.lineTo(left, bottom);
-                else
-                    c.moveTo(left, bottom);
-                c.stroke();
-            }
-        }
-
-        function drawSeriesBars(series) {
-            function plotBars(datapoints, barLeft, barRight, fillStyleCallback, axisx, axisy) {
-                var points = datapoints.points, ps = datapoints.pointsize;
-
-                for (var i = 0; i < points.length; i += ps) {
-                    if (points[i] == null)
-                        continue;
-                    drawBar(points[i], points[i + 1], points[i + 2], barLeft, barRight, fillStyleCallback, axisx, axisy, ctx, series.bars.horizontal, series.bars.lineWidth);
-                }
-            }
-
-            ctx.save();
-            ctx.translate(plotOffset.left, plotOffset.top);
-
-            // FIXME: figure out a way to add shadows (for instance along the right edge)
-            ctx.lineWidth = series.bars.lineWidth;
-            ctx.strokeStyle = series.color;
-
-            var barLeft;
-
-            switch (series.bars.align) {
-                case "left":
-                    barLeft = 0;
-                    break;
-                case "right":
-                    barLeft = -series.bars.barWidth;
-                    break;
-                default:
-                    barLeft = -series.bars.barWidth / 2;
-            }
-
-            var fillStyleCallback = series.bars.fill ? function (bottom, top) { return getFillStyle(series.bars, series.color, bottom, top); } : null;
-            plotBars(series.datapoints, barLeft, barLeft + series.bars.barWidth, fillStyleCallback, series.xaxis, series.yaxis);
-            ctx.restore();
-        }
-
-        function getFillStyle(filloptions, seriesColor, bottom, top) {
-            var fill = filloptions.fill;
-            if (!fill)
-                return null;
-
-            if (filloptions.fillColor)
-                return getColorOrGradient(filloptions.fillColor, bottom, top, seriesColor);
-
-            var c = $.color.parse(seriesColor);
-            c.a = typeof fill == "number" ? fill : 0.4;
-            c.normalize();
-            return c.toString();
-        }
-
-        function insertLegend() {
-
-            if (options.legend.container != null) {
-                $(options.legend.container).html("");
-            } else {
-                placeholder.find(".legend").remove();
-            }
-
-            if (!options.legend.show) {
-                return;
-            }
-
-            var fragments = [], entries = [], rowStarted = false,
-                lf = options.legend.labelFormatter, s, label;
-
-            // Build a list of legend entries, with each having a label and a color
-
-            for (var i = 0; i < series.length; ++i) {
-                s = series[i];
-                if (s.label) {
-                    label = lf ? lf(s.label, s) : s.label;
-                    if (label) {
-                        entries.push({
-                            label: label,
-                            color: s.color
-                        });
-                    }
-                }
-            }
-
-            // Sort the legend using either the default or a custom comparator
-
-            if (options.legend.sorted) {
-                if ($.isFunction(options.legend.sorted)) {
-                    entries.sort(options.legend.sorted);
-                } else if (options.legend.sorted == "reverse") {
-                	entries.reverse();
-                } else {
-                    var ascending = options.legend.sorted != "descending";
-                    entries.sort(function(a, b) {
-                        return a.label == b.label ? 0 : (
-                            (a.label < b.label) != ascending ? 1 : -1   // Logical XOR
-                        );
-                    });
-                }
-            }
-
-            // Generate markup for the list of entries, in their final order
-
-            for (var i = 0; i < entries.length; ++i) {
-
-                var entry = entries[i];
-
-                if (i % options.legend.noColumns == 0) {
-                    if (rowStarted)
-                        fragments.push('</tr>');
-                    fragments.push('<tr>');
-                    rowStarted = true;
-                }
-
-                fragments.push(
-                    '<td class="legendColorBox"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
-                    '<td class="legendLabel">' + entry.label + '</td>'
-                );
-            }
-
-            if (rowStarted)
-                fragments.push('</tr>');
-
-            if (fragments.length == 0)
-                return;
-
-            var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
-            if (options.legend.container != null)
-                $(options.legend.container).html(table);
-            else {
-                var pos = "",
-                    p = options.legend.position,
-                    m = options.legend.margin;
-                if (m[0] == null)
-                    m = [m, m];
-                if (p.charAt(0) == "n")
-                    pos += 'top:' + (m[1] + plotOffset.top) + 'px;';
-                else if (p.charAt(0) == "s")
-                    pos += 'bottom:' + (m[1] + plotOffset.bottom) + 'px;';
-                if (p.charAt(1) == "e")
-                    pos += 'right:' + (m[0] + plotOffset.right) + 'px;';
-                else if (p.charAt(1) == "w")
-                    pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
-                var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
-                if (options.legend.backgroundOpacity != 0.0) {
-                    // put in the transparent background
-                    // separately to avoid blended labels and
-                    // label boxes
-                    var c = options.legend.backgroundColor;
-                    if (c == null) {
-                        c = options.grid.backgroundColor;
-                        if (c && typeof c == "string")
-                            c = $.color.parse(c);
-                        else
-                            c = $.color.extract(legend, 'background-color');
-                        c.a = 1;
-                        c = c.toString();
-                    }
-                    var div = legend.children();
-                    $('<div style="position:absolute;width:' + div.width() + 'px;height:' + div.height() + 'px;' + pos +'background-color:' + c + ';"> </div>').prependTo(legend).css('opacity', options.legend.backgroundOpacity);
-                }
-            }
-        }
-
-
-        // interactive features
-
-        var highlights = [],
-            redrawTimeout = null;
-
-        // returns the data item the mouse is over, or null if none is found
-        function findNearbyItem(mouseX, mouseY, seriesFilter) {
-            var maxDistance = options.grid.mouseActiveRadius,
-                smallestDistance = maxDistance * maxDistance + 1,
-                item = null, foundPoint = false, i, j, ps;
-
-            for (i = series.length - 1; i >= 0; --i) {
-                if (!seriesFilter(series[i]))
-                    continue;
-
-                var s = series[i],
-                    axisx = s.xaxis,
-                    axisy = s.yaxis,
-                    points = s.datapoints.points,
-                    mx = axisx.c2p(mouseX), // precompute some stuff to make the loop faster
-                    my = axisy.c2p(mouseY),
-                    maxx = maxDistance / axisx.scale,
-                    maxy = maxDistance / axisy.scale;
-
-                ps = s.datapoints.pointsize;
-                // with inverse transforms, we can't use the maxx/maxy
-                // optimization, sadly
-                if (axisx.options.inverseTransform)
-                    maxx = Number.MAX_VALUE;
-                if (axisy.options.inverseTransform)
-                    maxy = Number.MAX_VALUE;
-
-                if (s.lines.show || s.points.show) {
-                    for (j = 0; j < points.length; j += ps) {
-                        var x = points[j], y = points[j + 1];
-                        if (x == null)
-                            continue;
-
-                        // For points and lines, the cursor must be within a
-                        // certain distance to the data point
-                        if (x - mx > maxx || x - mx < -maxx ||
-                            y - my > maxy || y - my < -maxy)
-                            continue;
-
-                        // We have to calculate distances in pixels, not in
-                        // data units, because the scales of the axes may be different
-                        var dx = Math.abs(axisx.p2c(x) - mouseX),
-                            dy = Math.abs(axisy.p2c(y) - mouseY),
-                            dist = dx * dx + dy * dy; // we save the sqrt
-
-                        // use <= to ensure last point takes precedence
-                        // (last generally means on top of)
-                        if (dist < smallestDistance) {
-                            smallestDistance = dist;
-                            item = [i, j / ps];
-                        }
-                    }
-                }
-
-                if (s.bars.show && !item) { // no other point can be nearby
-
-                    var barLeft, barRight;
-
-                    switch (s.bars.align) {
-                        case "left":
-                            barLeft = 0;
-                            break;
-                        case "right":
-                            barLeft = -s.bars.barWidth;
-                            break;
-                        default:
-                            barLeft = -s.bars.barWidth / 2;
-                    }
-
-                    barRight = barLeft + s.bars.barWidth;
-
-                    for (j = 0; j < points.length; j += ps) {
-                        var x = points[j], y = points[j + 1], b = points[j + 2];
-                        if (x == null)
-                            continue;
-
-                        // for a bar graph, the cursor must be inside the bar
-                        if (series[i].bars.horizontal ?
-                            (mx <= Math.max(b, x) && mx >= Math.min(b, x) &&
-                             my >= y + barLeft && my <= y + barRight) :
-                            (mx >= x + barLeft && mx <= x + barRight &&
-                             my >= Math.min(b, y) && my <= Math.max(b, y)))
-                                item = [i, j / ps];
-                    }
-                }
-            }
-
-            if (item) {
-                i = item[0];
-                j = item[1];
-                ps = series[i].datapoints.pointsize;
-
-                return { datapoint: series[i].datapoints.points.slice(j * ps, (j + 1) * ps),
-                         dataIndex: j,
-                         series: series[i],
-                         seriesIndex: i };
-            }
-
-            return null;
-        }
-
-        function onMouseMove(e) {
-            if (options.grid.hoverable)
-                triggerClickHoverEvent("plothover", e,
-                                       function (s) { return s["hoverable"] != false; });
-        }
-
-        function onMouseLeave(e) {
-            if (options.grid.hoverable)
-                triggerClickHoverEvent("plothover", e,
-                                       function (s) { return false; });
-        }
-
-        function onClick(e) {
-            triggerClickHoverEvent("plotclick", e,
-                                   function (s) { return s["clickable"] != false; });
-        }
-
-        // trigger click or hover event (they send the same parameters
-        // so we share their code)
-        function triggerClickHoverEvent(eventname, event, seriesFilter) {
-            var offset = eventHolder.offset(),
-                canvasX = event.pageX - offset.left - plotOffset.left,
-                canvasY = event.pageY - offset.top - plotOffset.top,
-            pos = canvasToAxisCoords({ left: canvasX, top: canvasY });
-
-            pos.pageX = event.pageX;
-            pos.pageY = event.pageY;
-
-            var item = findNearbyItem(canvasX, canvasY, seriesFilter);
-
-            if (item) {
-                // fill in mouse pos for any listeners out there
-                item.pageX = parseInt(item.series.xaxis.p2c(item.datapoint[0]) + offset.left + plotOffset.left, 10);
-                item.pageY = parseInt(item.series.yaxis.p2c(item.datapoint[1]) + offset.top + plotOffset.top, 10);
-            }
-
-            if (options.grid.autoHighlight) {
-                // clear auto-highlights
-                for (var i = 0; i < highlights.length; ++i) {
-                    var h = highlights[i];
-                    if (h.auto == eventname &&
-                        !(item && h.series == item.series &&
-                          h.point[0] == item.datapoint[0] &&
-                          h.point[1] == item.datapoint[1]))
-                        unhighlight(h.series, h.point);
-                }
-
-                if (item)
-                    highlight(item.series, item.datapoint, eventname);
-            }
-
-            placeholder.trigger(eventname, [ pos, item ]);
-        }
-
-        function triggerRedrawOverlay() {
-            var t = options.interaction.redrawOverlayInterval;
-            if (t == -1) {      // skip event queue
-                drawOverlay();
-                return;
-            }
-
-            if (!redrawTimeout)
-                redrawTimeout = setTimeout(drawOverlay, t);
-        }
-
-        function drawOverlay() {
-            redrawTimeout = null;
-
-            // draw highlights
-            octx.save();
-            overlay.clear();
-            octx.translate(plotOffset.left, plotOffset.top);
-
-            var i, hi;
-            for (i = 0; i < highlights.length; ++i) {
-                hi = highlights[i];
-
-                if (hi.series.bars.show)
-                    drawBarHighlight(hi.series, hi.point);
-                else
-                    drawPointHighlight(hi.series, hi.point);
-            }
-            octx.restore();
-
-            executeHooks(hooks.drawOverlay, [octx]);
-        }
-
-        function highlight(s, point, auto) {
-            if (typeof s == "number")
-                s = series[s];
-
-            if (typeof point == "number") {
-                var ps = s.datapoints.pointsize;
-                point = s.datapoints.points.slice(ps * point, ps * (point + 1));
-            }
-
-            var i = indexOfHighlight(s, point);
-            if (i == -1) {
-                highlights.push({ series: s, point: point, auto: auto });
-
-                triggerRedrawOverlay();
-            }
-            else if (!auto)
-                highlights[i].auto = false;
-        }
-
-        function unhighlight(s, point) {
-            if (s == null && point == null) {
-                highlights = [];
-                triggerRedrawOverlay();
-                return;
-            }
-
-            if (typeof s == "number")
-                s = series[s];
-
-            if (typeof point == "number") {
-                var ps = s.datapoints.pointsize;
-                point = s.datapoints.points.slice(ps * point, ps * (point + 1));
-            }
-
-            var i = indexOfHighlight(s, point);
-            if (i != -1) {
-                highlights.splice(i, 1);
-
-                triggerRedrawOverlay();
-            }
-        }
-
-        function indexOfHighlight(s, p) {
-            for (var i = 0; i < highlights.length; ++i) {
-                var h = highlights[i];
-                if (h.series == s && h.point[0] == p[0]
-                    && h.point[1] == p[1])
-                    return i;
-            }
-            return -1;
-        }
-
-        function drawPointHighlight(series, point) {
-            var x = point[0], y = point[1],
-                axisx = series.xaxis, axisy = series.yaxis,
-                highlightColor = (typeof series.highlightColor === "string") ? series.highlightColor : $.color.parse(series.color).scale('a', 0.5).toString();
-
-            if (x < axisx.min || x > axisx.max || y < axisy.min || y > axisy.max)
-                return;
-
-            var pointRadius = series.points.radius + series.points.lineWidth / 2;
-            octx.lineWidth = pointRadius;
-            octx.strokeStyle = highlightColor;
-            var radius = 1.5 * pointRadius;
-            x = axisx.p2c(x);
-            y = axisy.p2c(y);
-
-            octx.beginPath();
-            if (series.points.symbol == "circle")
-                octx.arc(x, y, radius, 0, 2 * Math.PI, false);
-            else
-                series.points.symbol(octx, x, y, radius, false);
-            octx.closePath();
-            octx.stroke();
-        }
-
-        function drawBarHighlight(series, point) {
-            var highlightColor = (typeof series.highlightColor === "string") ? series.highlightColor : $.color.parse(series.color).scale('a', 0.5).toString(),
-                fillStyle = highlightColor,
-                barLeft;
-
-            switch (series.bars.align) {
-                case "left":
-                    barLeft = 0;
-                    break;
-                case "right":
-                    barLeft = -series.bars.barWidth;
-                    break;
-                default:
-                    barLeft = -series.bars.barWidth / 2;
-            }
-
-            octx.lineWidth = series.bars.lineWidth;
-            octx.strokeStyle = highlightColor;
-
-            drawBar(point[0], point[1], point[2] || 0, barLeft, barLeft + series.bars.barWidth,
-                    function () { return fillStyle; }, series.xaxis, series.yaxis, octx, series.bars.horizontal, series.bars.lineWidth);
-        }
-
-        function getColorOrGradient(spec, bottom, top, defaultColor) {
-            if (typeof spec == "string")
-                return spec;
-            else {
-                // assume this is a gradient spec; IE currently only
-                // supports a simple vertical gradient properly, so that's
-                // what we support too
-                var gradient = ctx.createLinearGradient(0, top, 0, bottom);
-
-                for (var i = 0, l = spec.colors.length; i < l; ++i) {
-                    var c = spec.colors[i];
-                    if (typeof c != "string") {
-                        var co = $.color.parse(defaultColor);
-                        if (c.brightness != null)
-                            co = co.scale('rgb', c.brightness);
-                        if (c.opacity != null)
-                            co.a *= c.opacity;
-                        c = co.toString();
-                    }
-                    gradient.addColorStop(i / (l - 1), c);
-                }
-
-                return gradient;
-            }
-        }
-    }
-
-    // Add the plot function to the top level of the jQuery object
-
-    $.plot = function(placeholder, data, options) {
-        //var t0 = new Date();
-        var plot = new Plot($(placeholder), data, options, $.plot.plugins);
-        //(window.console ? console.log : alert)("time used (msecs): " + ((new Date()).getTime() - t0.getTime()));
-        return plot;
-    };
-
-    $.plot.version = "0.8.3";
-
-    $.plot.plugins = [];
-
-    // Also add the plot function as a chainable property
-
-    $.fn.plot = function(data, options) {
-        return this.each(function() {
-            $.plot(this, data, options);
-        });
-    };
-
-    // round to nearby lower multiple of base
-    function floorInBase(n, base) {
-        return base * Math.floor(n / base);
-    }
-
-})(jQuery);
 
 
 /***/ }),

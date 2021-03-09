@@ -1,19 +1,19 @@
 <body>
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
-        <div class="container">
+        <div class="container-fluid">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
                 <i class="icon-reorder shaded"></i></a><a class="brand" href="index.html">Edmin </a>
-            <div class="nav-collapse collapse navbar-inverse-collapse">
+            <div class="nav-collapse collapse navbar-inverse-collapse show">
                 <ul class="nav nav-icons">
-                    <li class="active"><a href="#"><i class="icon-envelope"></i></a></li>
-                    <li><a href="#"><i class="icon-eye-open"></i></a></li>
-                    <li><a href="#"><i class="icon-bar-chart"></i></a></li>
+                    <li class="active"><a href="#"><i class="fas fa-envelope"></i></a></li>
+                    <li><a href="#"><i class="fas fa-eye"></i></a></li>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i></a></li>
                 </ul>
                 <form class="navbar-search pull-left input-append" action="#">
                     <input type="text" class="span3">
                     <button class="btn" type="button">
-                        <i class="icon-search"></i>
+                        <i class="fas fa-search"></i>
                     </button>
                 </form>
                 <ul class="nav pull-right">

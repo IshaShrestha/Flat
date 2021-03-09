@@ -39,6 +39,21 @@ Route::group(['prefix'=>'library'],function (){
 Route::group(['prefix'=>'category'],function (){
     Route::get('/index','CategoryController@index')->name('category.index');
     Route::get('/create','CategoryController@create')->name('category.create');
+    Route::post('/store','CategoryController@store')->name('category.store');
+    Route::get('/update/{slug}', 'CategoryController@edit')->name('category.edit');
+    Route::post('/update/{slug}','CategoryController@update')->name('category.update');
+    Route::delete('/index/{slug}','CategoryController@destroy')->name('category.delete');
+});
+
+Route::group(['prefix'=>'post'],function (){
+    Route::get('/index','PostController@index')->name('post.index');
+    Route::get('/create','PostController@create')->name('post.create');
+    Route::post('/store','PostController@store')->name('post.store');
+    Route::get('/update/{slug}','PostController@edit')->name('post.edit');
+    Route::post('/update/{url_slug}','PostController@update')->name('post.update');
+    Route::delete('/index/{url_slug}', 'PostController@destroy')->name('post.delete');
+
+
 
 
 });

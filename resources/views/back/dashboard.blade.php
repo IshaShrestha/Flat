@@ -1130,7 +1130,7 @@
 
         <!--/.content-->
         </div>
-    </div>
+
 
 
 @endsection
